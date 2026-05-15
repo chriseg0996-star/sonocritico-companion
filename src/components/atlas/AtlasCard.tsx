@@ -11,10 +11,13 @@ type Props = {
 };
 
 export function AtlasCard({ entry, onOpen }: Props) {
+  const isClip = entry.kind === "clip";
+
   return (
     <button
       type="button"
       onClick={() => onOpen(entry)}
+      className="atlas-card"
       style={{
         textAlign: "left",
         width: "100%",
@@ -25,24 +28,28 @@ export function AtlasCard({ entry, onOpen }: Props) {
         overflow: "hidden",
         cursor: "pointer",
         boxShadow: theme.shadow.inset,
-        transition: `transform ${theme.motion.base}, box-shadow ${theme.motion.base}, background ${theme.motion.base}`,
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-1px)";
-        e.currentTarget.style.boxShadow = theme.shadow.card;
-        e.currentTarget.style.background = theme.bg.elevated;
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0)";
-        e.currentTarget.style.boxShadow = theme.shadow.inset;
-        e.currentTarget.style.background = theme.bg.card;
       }}
     >
       <AtlasThumbnail entry={entry} aspectRatio="5/3" />
       <div style={{ padding: "10px 11px 11px" }}>
-        <p style={{ ...type.titleSm, fontSize: 12, fontWeight: 500, color: theme.text.primary, margin: "0 0 3px" }}>
-          {entry.title}
-        </p>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, marginBottom: 4 }}>
+          <p style={{ ...type.titleSm, fontSize: 12, fontWeight: 500, color: theme.text.primary, margin: 0 }}>
+            {entry.title}
+          </p>
+          <span
+            style={{
+              fontSize: 8,
+              fontWeight: 600,
+              padding: "2px 5px",
+              borderRadius: 3,
+              flexShrink: 0,
+              background: theme.surface.glass,
+              color: theme.text.faint,
+            }}
+          >
+            {entry.protocol}
+          </span>
+        </div>
         <p style={{ fontSize: 10, color: theme.text.faint, margin: "0 0 6px" }}>{entry.window}</p>
         <p
           style={{
@@ -58,7 +65,7 @@ export function AtlasCard({ entry, onOpen }: Props) {
         >
           {entry.description}
         </p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 8 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 8, alignItems: "center" }}>
           {entry.tags.slice(0, 3).map((tag) => (
             <span
               key={tag}
@@ -73,6 +80,9 @@ export function AtlasCard({ entry, onOpen }: Props) {
               {tag}
             </span>
           ))}
+          {isClip && entry.duration && (
+            <span style={{ fontSize: 8, color: theme.text.faint, marginLeft: "auto" }}>{entry.duration}</span>
+          )}
         </div>
       </div>
     </button>

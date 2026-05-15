@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { Badge, Btn, ScanLineCard } from "@/components/ui/base";
@@ -13,7 +13,7 @@ import { ErrorsCompactCard } from "@/components/modules/reference/ErrorsCompactC
 import { PulmonAtlasPanel, PulmonCompareSection } from "@/components/atlas/PulmonAtlasPanel";
 import { MediaViewerModal } from "@/components/atlas/MediaViewerModal";
 import { pulmonAtlasEntries } from "@/lib/modules/pulmon-atlas";
-import type { AtlasEntry } from "@/lib/atlas/types";
+import type { AtlasComparisonPair, AtlasEntry } from "@/lib/atlas/types";
 import {
   pulmonHeader,
   operationalSummary,
@@ -43,6 +43,23 @@ const gridCalc = {
 export function PulmonBlueReferenceView({ onOpenSecondary }: Props) {
   const router = useRouter();
   const [viewerEntry, setViewerEntry] = useState<AtlasEntry | null>(null);
+  const [viewerCompare, setViewerCompare] = useState<AtlasComparisonPair | null>(null);
+  const [viewerNav, setViewerNav] = useState<AtlasEntry[]>(pulmonAtlasEntries);
+  const handleNavListChange = useCallback((entries: AtlasEntry[]) => {
+    setViewerNav(entries.length > 0 ? entries : pulmonAtlasEntries);
+  }, []);
+  const openEntry = useCallback((entry: AtlasEntry) => {
+    setViewerCompare(null);
+    setViewerEntry(entry);
+  }, []);
+  const openCompare = useCallback((pair: AtlasComparisonPair) => {
+    setViewerEntry(null);
+    setViewerCompare(pair);
+  }, []);
+  const closeViewer = useCallback(() => {
+    setViewerEntry(null);
+    setViewerCompare(null);
+  }, []);
 
   return (
     <div style={{ maxWidth: 720, margin: "0 auto" }}>
@@ -159,7 +176,7 @@ export function PulmonBlueReferenceView({ onOpenSecondary }: Props) {
           title="Atlas visual"
           subtitle="Viewer tipo PACS — clic en hallazgo"
         >
-          <PulmonAtlasPanel onOpenEntry={setViewerEntry} />
+          <PulmonAtlasPanel onOpenEntry={openEntry} onNavListChange={handleNavListChange} />
         </ModuleSection>
 
         <ModuleSection
@@ -169,7 +186,7 @@ export function PulmonBlueReferenceView({ onOpenSecondary }: Props) {
           title="Comparar patrones"
           subtitle="Normal vs patológico lado a lado"
         >
-          <PulmonCompareSection onOpen={setViewerEntry} />
+          <PulmonCompareSection onOpen={openEntry} onCompare={openCompare} />
         </ModuleSection>
       </ModuleClinicalBlock>
 
@@ -253,9 +270,10 @@ export function PulmonBlueReferenceView({ onOpenSecondary }: Props) {
 
       <MediaViewerModal
         entry={viewerEntry}
-        entries={pulmonAtlasEntries}
-        onClose={() => setViewerEntry(null)}
-        onNavigate={setViewerEntry}
+        comparePair={viewerCompare}
+        entries={viewerNav}
+        onClose={closeViewer}
+        onNavigate={openEntry}
       />
     </div>
   );

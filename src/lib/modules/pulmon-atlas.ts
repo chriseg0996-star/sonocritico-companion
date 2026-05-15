@@ -1,8 +1,12 @@
 /**
  * Atlas pulmonar — hallazgos, clips y pares de comparación.
- * Media: imageId → mock-data; src opcional para jpg/png/gif/mp4/webm en public/.
+ * Media: imageId → mock-data; src en entry o pulmonAtlasMedia cuando exista en public/.
  */
 import type { AtlasComparisonPair, AtlasEntry, AtlasFilterDef, AtlasFilterId } from "@/lib/atlas/types";
+import { matchesAtlasQuery } from "@/lib/atlas/search";
+import { lungAtlasMedia } from "@/lib/atlas/media-registry";
+
+const M = lungAtlasMedia;
 
 export const PULMON_ATLAS_SEARCH_PLACEHOLDER = "Buscar hallazgo, ventana o protocolo…";
 
@@ -25,11 +29,15 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     title: "Patrón A",
     category: "normal",
     isPathological: false,
+    protocol: "BLUE",
     window: "BLUE anterior",
     description: "Líneas A dominantes con deslizamiento pleural conservado.",
     tags: ["patrón A", "líneas A", "BLUE", "normal", "aireación"],
     mediaType: "image",
-    imageId: "img-05",
+    src: M.stills.patternA,
+    thumbnailSrc: M.stills.patternA,
+    overlayLabel: "Perfil A · líneas A",
+    orientation: "Anterior bilateral",
     placeholderVariant: "pattern-a",
     kind: "still",
     clinicalInterpretation:
@@ -41,11 +49,15 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     title: "Líneas B",
     category: "pathology",
     isPathological: true,
+    protocol: "BLUE",
     window: "BLUE anterior",
     description: "Cometas verticales — perfil B, edema intersticial/alveolar.",
     tags: ["líneas B", "perfil B", "BLUE", "edema", "patológico"],
     mediaType: "image",
-    imageId: "img-06",
+    src: M.stills.bLines,
+    thumbnailSrc: M.stills.bLines,
+    overlayLabel: "Perfil B · líneas B",
+    orientation: "Anterior",
     placeholderVariant: "blines",
     kind: "still",
     clinicalInterpretation:
@@ -58,11 +70,15 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     title: "Consolidación",
     category: "pathology",
     isPathological: true,
+    protocol: "PLAPS",
     window: "PLAPS",
     description: "Hepatización subpleural con broncograma aéreo dinámico.",
-    tags: ["consolidación", "PLAPS", "neumonía", "BLUE", "patológico"],
+    tags: ["consolidación", "PLAPS", "neumonía", "patológico"],
     mediaType: "image",
-    imageId: "img-07",
+    src: M.stills.consolidation,
+    thumbnailSrc: M.stills.consolidation,
+    overlayLabel: "Consolidación subpleural",
+    orientation: "PLAPS posterolateral",
     placeholderVariant: "consolidation",
     kind: "still",
     clinicalInterpretation: "Neumonía o atelectasia consolidativa en zona posterolateral.",
@@ -74,10 +90,15 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     title: "Derrame pleural",
     category: "pathology",
     isPathological: true,
+    protocol: "LUS",
     window: "PLAPS / costofrénico",
     description: "Colección anecoica dependiente; valorar septaciones.",
     tags: ["derrame", "PLAPS", "LUS", "pleura", "patológico"],
     mediaType: "image",
+    src: M.stills.effusion,
+    thumbnailSrc: M.stills.effusion,
+    overlayLabel: "Derrame pleural",
+    orientation: "Costofrénico / PLAPS",
     placeholderVariant: "effusion",
     kind: "still",
     clinicalInterpretation: "Derrame pleural — trasudado vs exudado según contexto.",
@@ -89,10 +110,15 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     title: "Lung point",
     category: "pathology",
     isPathological: true,
+    protocol: "BLUE",
     window: "Anterior / lateral",
     description: "Transición entre sliding ausente y presente — signo del punto de pulmón.",
     tags: ["lung point", "neumotórax", "BLUE", "sliding", "patológico"],
     mediaType: "image",
+    src: M.stills.lungPoint,
+    thumbnailSrc: M.stills.lungPoint,
+    overlayLabel: "Lung point",
+    orientation: "Anterior / lateral",
     placeholderVariant: "lung-point",
     kind: "still",
     clinicalInterpretation: "Neumotórax con alta especificidad cuando se confirma en varios puntos.",
@@ -104,13 +130,18 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     title: "PLAPS positivo",
     category: "pathology",
     isPathological: true,
+    protocol: "PLAPS",
     window: "Zona PLAPS (posterolateral)",
     description: "Consolidación o derrame en región posterolateral no vista en BLUE anterior.",
     tags: ["PLAPS", "neumonía", "posterior", "consolidación", "patológico"],
     mediaType: "image",
+    src: M.stills.plaps,
+    thumbnailSrc: M.stills.plaps,
+    overlayLabel: "PLAPS positivo",
+    orientation: "Posterolateral",
     placeholderVariant: "plaps",
     kind: "still",
-    clinicalInterpretation: "Neumonía posterior o derrame no detectado en exploración anterior.",
+    clinicalInterpretation: "Neumonía posterior o derrame no detectado en exploración solo anterior.",
     frequentError: "Ignorar PLAPS en neumonía con exploración solo anterior.",
     clinicalAction: "Completar protocolo BLUE + PLAPS; tratar foco infeccioso.",
   },
@@ -119,10 +150,15 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     title: "Deslizamiento pleural",
     category: "normal",
     isPathological: false,
+    protocol: "BLUE",
     window: "BLUE / intercostal",
     description: "Destello pleural en tiempo real — hallazgo normal esencial.",
     tags: ["sliding", "deslizamiento", "BLUE", "normal", "clip"],
-    mediaType: "video",
+    mediaType: "gif",
+    src: M.clips.sliding,
+    thumbnailSrc: M.clips.sliding,
+    overlayLabel: "Sliding pleural",
+    orientation: "Intercostal",
     placeholderVariant: "sliding",
     duration: "~15 s",
     kind: "clip",
@@ -134,10 +170,15 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     title: "Líneas B (clip)",
     category: "pathology",
     isPathological: true,
+    protocol: "BLUE",
     window: "BLUE anterior",
     description: "Cometas verticales móviles con la ventilación.",
     tags: ["líneas B", "perfil B", "clip", "patológico", "BLUE"],
-    mediaType: "video",
+    mediaType: "gif",
+    src: M.clips.bLines,
+    thumbnailSrc: M.clips.bLines,
+    overlayLabel: "Líneas B dinámicas",
+    orientation: "Anterior",
     placeholderVariant: "blines",
     duration: "~15 s",
     kind: "clip",
@@ -149,10 +190,15 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     title: "Consolidación con broncograma",
     category: "pathology",
     isPathological: true,
+    protocol: "PLAPS",
     window: "PLAPS",
     description: "Broncograma aéreo dinámico dentro de área consolidada.",
     tags: ["consolidación", "broncograma", "PLAPS", "clip", "patológico"],
-    mediaType: "video",
+    mediaType: "gif",
+    src: M.clips.consolidation,
+    thumbnailSrc: M.clips.consolidation,
+    overlayLabel: "Broncograma aéreo",
+    orientation: "PLAPS",
     placeholderVariant: "consolidation",
     duration: "~20 s",
     kind: "clip",
@@ -165,10 +211,15 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     title: "Lung point (clip)",
     category: "pathology",
     isPathological: true,
+    protocol: "BLUE",
     window: "Anterior / lateral",
     description: "Punto de transición sliding presente / ausente.",
     tags: ["lung point", "neumotórax", "clip", "patológico"],
-    mediaType: "video",
+    mediaType: "gif",
+    src: M.clips.lungPoint,
+    thumbnailSrc: M.clips.lungPoint,
+    overlayLabel: "Lung point",
+    orientation: "Lateral",
     placeholderVariant: "lung-point",
     duration: "~15 s",
     kind: "clip",
@@ -185,6 +236,7 @@ export const pulmonAtlasComparisons: AtlasComparisonPair[] = [
     subtitle: "Perfil A (normal) frente a perfil B (edema/intersticial)",
     leftId: "atlas-pattern-a",
     rightId: "atlas-b-lines",
+    insight: "A = líneas horizontales (aireación); B = cometas verticales (líquido/intersticio).",
   },
   {
     id: "cmp-sliding-vs-lp",
@@ -192,6 +244,7 @@ export const pulmonAtlasComparisons: AtlasComparisonPair[] = [
     subtitle: "Deslizamiento conservado vs transición neumotórax",
     leftId: "clip-sliding",
     rightId: "atlas-lung-point",
+    insight: "Sliding presente descarta NTX en la zona; lung point = borde entre sliding ±.",
   },
   {
     id: "cmp-cons-vs-eff",
@@ -199,6 +252,7 @@ export const pulmonAtlasComparisons: AtlasComparisonPair[] = [
     subtitle: "Hepatización vs colección anecoica dependiente",
     leftId: "atlas-consolidation",
     rightId: "atlas-effusion",
+    insight: "Consolidación = tejido sólido/hepatización; derrame = líquido libre anecoico.",
   },
 ];
 
@@ -208,18 +262,18 @@ export function getAtlasEntryById(id: string): AtlasEntry | undefined {
 
 function matchesFilter(entry: AtlasEntry, filterId: AtlasFilterId): boolean {
   if (filterId === "all") return true;
-  const blob = `${entry.title} ${entry.window} ${entry.tags.join(" ")}`.toLowerCase();
+  const blob = `${entry.title} ${entry.window} ${entry.protocol} ${entry.tags.join(" ")}`.toLowerCase();
   switch (filterId) {
     case "normal":
       return !entry.isPathological;
     case "pathology":
       return entry.isPathological;
     case "blue":
-      return blob.includes("blue");
+      return entry.protocol === "BLUE" || blob.includes("blue");
     case "lus":
-      return blob.includes("lus");
+      return entry.protocol === "LUS" || blob.includes("lus");
     case "plaps":
-      return blob.includes("plaps");
+      return entry.protocol === "PLAPS" || blob.includes("plaps");
     case "neumotorax":
       return blob.includes("neumotórax") || blob.includes("neumotorax") || blob.includes("lung point");
     case "derrame":
@@ -238,19 +292,15 @@ export function filterAtlasEntries(
   query: string,
   filterId: AtlasFilterId
 ): AtlasEntry[] {
-  const q = query.trim().toLowerCase();
-  return entries.filter((entry) => {
-    if (!matchesFilter(entry, filterId)) return false;
-    if (!q) return true;
-    const haystack = [
-      entry.title,
-      entry.window,
-      entry.description,
-      entry.clinicalInterpretation,
-      ...entry.tags,
-    ]
-      .join(" ")
-      .toLowerCase();
-    return haystack.includes(q);
-  });
+  return entries.filter((entry) => matchesFilter(entry, filterId) && matchesAtlasQuery(entry, query));
+}
+
+/** Lista plana para navegación en viewer (stills + clips en orden clínico). */
+export function buildAtlasNavList(filtered: AtlasEntry[], filterId: AtlasFilterId): AtlasEntry[] {
+  if (filterId === "clip") return filtered.filter((e) => e.kind === "clip");
+  const stills = filtered.filter((e) => e.kind === "still");
+  const clips = filtered.filter((e) => e.kind === "clip");
+  if (stills.length === 0 && clips.length === 0) return filtered;
+  if (stills.length === 0) return clips;
+  return [...stills, ...clips];
 }

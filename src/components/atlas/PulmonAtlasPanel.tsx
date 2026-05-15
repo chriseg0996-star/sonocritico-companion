@@ -1,25 +1,26 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import type { AtlasEntry, AtlasFilterId } from "@/lib/atlas/types";
+import { useEffect, useMemo, useState } from "react";
+import type { AtlasComparisonPair, AtlasEntry, AtlasFilterId } from "@/lib/atlas/types";
 import { SearchBar } from "@/components/atlas/SearchBar";
 import { FilterChips } from "@/components/atlas/FilterChips";
 import { AtlasGrid } from "@/components/atlas/AtlasGrid";
 import { ComparisonCard } from "@/components/atlas/ComparisonCard";
 import {
   PULMON_ATLAS_SEARCH_PLACEHOLDER,
+  buildAtlasNavList,
   filterAtlasEntries,
   pulmonAtlasComparisons,
   pulmonAtlasEntries,
   pulmonAtlasFilters,
 } from "@/lib/modules/pulmon-atlas";
-import { theme } from "@/lib/theme";
 
 type PanelProps = {
   onOpenEntry: (entry: AtlasEntry) => void;
+  onNavListChange?: (entries: AtlasEntry[]) => void;
 };
 
-export function PulmonAtlasPanel({ onOpenEntry }: PanelProps) {
+export function PulmonAtlasPanel({ onOpenEntry, onNavListChange }: PanelProps) {
   const [query, setQuery] = useState("");
   const [filterId, setFilterId] = useState<AtlasFilterId>("all");
 
@@ -28,58 +29,62 @@ export function PulmonAtlasPanel({ onOpenEntry }: PanelProps) {
     [query, filterId]
   );
 
+  const navList = useMemo(() => buildAtlasNavList(filtered, filterId), [filtered, filterId]);
+
+  useEffect(() => {
+    onNavListChange?.(navList);
+  }, [navList, onNavListChange]);
+
   const stills = useMemo(() => filtered.filter((e) => e.kind === "still"), [filtered]);
   const clips = useMemo(() => filtered.filter((e) => e.kind === "clip"), [filtered]);
+  const gridStills = filterId === "clip" ? [] : stills.length > 0 ? stills : [];
+  const gridClips = clips;
+  const listKey = `${filterId}-${query.trim().toLowerCase()}`;
 
   return (
-    <>
-      <SearchBar value={query} onChange={setQuery} placeholder={PULMON_ATLAS_SEARCH_PLACEHOLDER} />
-      <FilterChips filters={pulmonAtlasFilters} active={filterId} onChange={setFilterId} />
+    <div className="atlas-workspace">
+      <div className="atlas-toolbar-sticky">
+        <SearchBar
+          value={query}
+          onChange={setQuery}
+          placeholder={PULMON_ATLAS_SEARCH_PLACEHOLDER}
+          resultCount={filtered.length}
+        />
+        <FilterChips filters={pulmonAtlasFilters} active={filterId} onChange={setFilterId} />
+      </div>
 
-      <p style={{ fontSize: 10, color: theme.text.faint, margin: "0 0 12px" }}>
-        {filtered.length} hallazgo{filtered.length !== 1 ? "s" : ""} · clic para abrir viewer
-      </p>
+      <p className="atlas-hint">Clic en miniatura para abrir viewer PACS · ← → en modal</p>
 
       <AtlasGrid
-        entries={filterId === "clip" ? clips : stills.length > 0 ? stills : filtered}
+        entries={filterId === "clip" ? gridClips : gridStills.length > 0 ? gridStills : filtered}
         onOpen={onOpenEntry}
+        listKey={`stills-${listKey}`}
         emptyMessage="No hay hallazgos con este filtro. Prueba otro chip o búsqueda."
       />
 
-      {filterId !== "clip" && clips.length > 0 && (
-        <div id="clips" style={{ marginTop: 28, scrollMarginTop: 56 }}>
-          <h3
-            style={{
-              fontSize: 12,
-              fontWeight: 500,
-              color: theme.text.secondary,
-              margin: "0 0 10px",
-            }}
-          >
-            Clips ecográficos
-          </h3>
-          <p style={{ fontSize: 10, color: theme.text.faint, margin: "0 0 12px" }}>
-            Contenido audiovisual — reproducción en viewer (muted)
-          </p>
-          <AtlasGrid entries={clips} onOpen={onOpenEntry} />
-        </div>
+      {filterId !== "clip" && gridClips.length > 0 && (
+        <section id="clips" className="atlas-clips-section">
+          <h3 className="atlas-clips-title">Clips ecográficos</h3>
+          <p className="atlas-clips-sub">Reproducción en viewer (muted, loop)</p>
+          <AtlasGrid entries={gridClips} onOpen={onOpenEntry} listKey={`clips-${listKey}`} />
+        </section>
       )}
-    </>
+    </div>
   );
 }
 
 /** Sección comparar — usar en ModuleSection separada */
-export function PulmonCompareSection({ onOpen }: { onOpen: (entry: AtlasEntry) => void }) {
+export function PulmonCompareSection({
+  onOpen,
+  onCompare,
+}: {
+  onOpen: (entry: AtlasEntry) => void;
+  onCompare?: (pair: AtlasComparisonPair) => void;
+}) {
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-        gap: 12,
-      }}
-    >
+    <div className="atlas-compare-grid">
       {pulmonAtlasComparisons.map((pair) => (
-        <ComparisonCard key={pair.id} pair={pair} onOpen={onOpen} />
+        <ComparisonCard key={pair.id} pair={pair} onOpen={onOpen} onCompare={onCompare} />
       ))}
     </div>
   );

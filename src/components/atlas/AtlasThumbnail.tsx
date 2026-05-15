@@ -16,21 +16,31 @@ type Props = {
 export function AtlasThumbnail({ entry, aspectRatio = "4/3", showPlayOverlay }: Props) {
   const media = resolveAtlasMedia(entry);
   const [failed, setFailed] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const showPlaceholder = media.isPlaceholder || failed;
   const variant = entry.placeholderVariant ?? "pattern-a";
   const ph = placeholderGradients[variant];
-  const isClip = entry.kind === "clip" || entry.mediaType === "video";
+  const isClip = entry.kind === "clip" || entry.mediaType === "video" || entry.mediaType === "gif";
 
   return (
-    <div style={{ position: "relative", aspectRatio, background: theme.bg.primary, overflow: "hidden" }}>
+    <div className="atlas-thumb" style={{ position: "relative", aspectRatio, background: theme.bg.primary, overflow: "hidden" }}>
+      {!showPlaceholder && !loaded && <div className="atlas-thumb-skeleton" aria-hidden />}
       {!showPlaceholder ? (
         <img
           src={media.thumbnailSrc}
           alt={media.alt}
           loading="lazy"
           decoding="async"
+          onLoad={() => setLoaded(true)}
           onError={() => setFailed(true)}
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
+            opacity: loaded ? 1 : 0,
+            transition: "opacity 140ms ease",
+          }}
         />
       ) : (
         <div
@@ -94,6 +104,23 @@ export function AtlasThumbnail({ entry, aspectRatio = "4/3", showPlayOverlay }: 
       >
         {entry.isPathological ? "Patol." : "Normal"}
       </span>
+
+      {isClip && entry.duration && (
+        <span
+          style={{
+            position: "absolute",
+            bottom: 6,
+            right: 6,
+            fontSize: 8,
+            padding: "2px 6px",
+            borderRadius: 4,
+            background: "rgba(11, 14, 18, 0.8)",
+            color: theme.text.secondary,
+          }}
+        >
+          {entry.duration}
+        </span>
+      )}
 
       {isClip && (
         <span

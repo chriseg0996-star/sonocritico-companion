@@ -21,11 +21,15 @@ export interface AtlasFilterDef {
   label: string;
 }
 
+export type AtlasProtocol = "BLUE" | "LUS" | "PLAPS";
+
 export interface AtlasEntry {
   id: string;
   title: string;
   category: AtlasCategory;
   isPathological: boolean;
+  /** Protocolo principal (BLUE / LUS / PLAPS) */
+  protocol: AtlasProtocol;
   window: string;
   description: string;
   tags: string[];
@@ -48,6 +52,10 @@ export interface AtlasEntry {
   clinicalInterpretation: string;
   frequentError?: string;
   clinicalAction?: string;
+  /** Etiqueta overlay en viewer (ej. "Perfil B bilateral") */
+  overlayLabel?: string;
+  /** Orientación en pantalla ecógrafo */
+  orientation?: string;
 }
 
 export interface AtlasComparisonPair {
@@ -56,4 +64,6 @@ export interface AtlasComparisonPair {
   subtitle: string;
   leftId: string;
   rightId: string;
+  /** Diferencia clave para lectura rápida en guardia */
+  insight: string;
 }

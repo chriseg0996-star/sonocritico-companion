@@ -8,25 +8,26 @@ type Props = {
   entries: AtlasEntry[];
   onOpen: (entry: AtlasEntry) => void;
   emptyMessage?: string;
+  /** Cambia con filtro/búsqueda para transición suave */
+  listKey?: string;
 };
 
-export function AtlasGrid({ entries, onOpen, emptyMessage = "Sin hallazgos para este filtro." }: Props) {
+export function AtlasGrid({
+  entries,
+  onOpen,
+  emptyMessage = "Sin hallazgos para este filtro.",
+  listKey = "default",
+}: Props) {
   if (entries.length === 0) {
     return (
-      <p style={{ fontSize: 12, color: theme.text.faint, margin: "8px 0 0", textAlign: "center", padding: "24px 0" }}>
+      <p className="atlas-grid-empty" style={{ fontSize: 12, color: theme.text.faint, textAlign: "center", padding: "28px 0" }}>
         {emptyMessage}
       </p>
     );
   }
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
-        gap: 10,
-      }}
-    >
+    <div key={listKey} className="atlas-grid">
       {entries.map((entry) => (
         <AtlasCard key={entry.id} entry={entry} onOpen={onOpen} />
       ))}

@@ -11,21 +11,17 @@ type Props = {
 
 export function FilterChips({ filters, active, onChange }: Props) {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: 5,
-        marginBottom: 16,
-      }}
-    >
+    <div className="atlas-filter-chips" role="tablist" aria-label="Filtrar atlas">
       {filters.map((f) => {
         const isActive = active === f.id;
         return (
           <button
             key={f.id}
             type="button"
+            role="tab"
+            aria-selected={isActive}
             onClick={() => onChange(f.id)}
+            className={`atlas-filter-chip${isActive ? " atlas-filter-chip--active" : ""}`}
             style={{
               fontSize: 10,
               fontWeight: 500,
@@ -35,7 +31,6 @@ export function FilterChips({ filters, active, onChange }: Props) {
               cursor: "pointer",
               background: isActive ? theme.accent.muted : theme.surface.glass,
               color: isActive ? theme.accent.soft : theme.text.faint,
-              transition: `background ${theme.motion.fast}, color ${theme.motion.fast}`,
             }}
           >
             {f.label}

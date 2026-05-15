@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+  <defs>
+  <filter id="speckle" x="0" y="0">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="2" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.12  0 0 0 0 0.14  0 0 0 0 0.16  0 0 0 0.35 0"/>
+  </filter>
+</defs>
+  <rect width="640" height="480" fill="#050608"/>
+  <rect width="640" height="480" filter="url(#speckle)" opacity="0.55"/>
+  <rect x="0" y="0" width="640" height="28" fill="rgba(0,0,0,0.45)"/>
+  <text x="12" y="18" fill="rgba(180,190,205,0.7)" font-family="system-ui,sans-serif" font-size="11" letter-spacing="0.06em">SONOCRÍTICO · SIM</text>
+  
+    <ellipse cx="320" cy="280" rx="180" ry="140" fill="rgba(90,100,115,0.55)"/>
+    <ellipse cx="320" cy="280" rx="120" ry="90" fill="rgba(60,68,80,0.4)"/>
+    <ellipse cx="280" cy="260" rx="8" ry="14" fill="rgba(30,35,45,0.8)"/><ellipse cx="320" cy="275" rx="8" ry="14" fill="rgba(30,35,45,0.8)"/><ellipse cx="360" cy="290" rx="8" ry="14" fill="rgba(30,35,45,0.8)"/>
+    <text x="320" y="440" text-anchor="middle" fill="rgba(201,107,107,0.45)" font-size="10">PLAPS · consolidación</text>
+  
+</svg>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+  <defs>
+  <filter id="speckle" x="0" y="0">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="2" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.12  0 0 0 0 0.14  0 0 0 0 0.16  0 0 0 0.35 0"/>
+  </filter>
+</defs>
+  <rect width="640" height="480" fill="#050608"/>
+  <rect width="640" height="480" filter="url(#speckle)" opacity="0.55"/>
+  <rect x="0" y="0" width="640" height="28" fill="rgba(0,0,0,0.45)"/>
+  <text x="12" y="18" fill="rgba(180,190,205,0.7)" font-family="system-ui,sans-serif" font-size="11" letter-spacing="0.06em">SONOCRÍTICO · SIM</text>
+  
+    <line x1="0" y1="68" x2="640" y2="68" stroke="rgba(220,230,240,0.35)" stroke-width="1"/>
+    <line x1="140" y1="68" x2="120" y2="220" stroke="rgba(201,107,107,0.3)" stroke-width="1.2">
+        <animate attributeName="opacity" values="0.2;0.55;0.2" dur="1.5s" begin="0s" repeatCount="indefinite"/>
+      </line><line x1="260" y1="68" x2="240" y2="220" stroke="rgba(201,107,107,0.3)" stroke-width="1.2">
+        <animate attributeName="opacity" values="0.2;0.55;0.2" dur="1.5s" begin="0.2s" repeatCount="indefinite"/>
+      </line><line x1="380" y1="68" x2="360" y2="220" stroke="rgba(201,107,107,0.3)" stroke-width="1.2">
+        <animate attributeName="opacity" values="0.2;0.55;0.2" dur="1.5s" begin="0.4s" repeatCount="indefinite"/>
+      </line><line x1="500" y1="68" x2="480" y2="220" stroke="rgba(201,107,107,0.3)" stroke-width="1.2">
+        <animate attributeName="opacity" values="0.2;0.55;0.2" dur="1.5s" begin="0.6000000000000001s" repeatCount="indefinite"/>
+      </line>
+    <text x="320" y="440" text-anchor="middle" fill="rgba(201,107,107,0.45)" font-size="10">Líneas B · clip</text>
+  
+</svg>
