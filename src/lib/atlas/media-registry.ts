@@ -1,33 +1,29 @@
 /**
- * Registro de media por módulo — rutas bajo public/media/{module}/
- * Reutilizable: lung, cardiac, fast, vascular, etc.
+ * Registro de media por módulo — public/media/{module}/{category}/
+ * Soporta: jpg, png, webp, gif, mp4, webm (prioridad vía manifest).
  */
 import { withBasePath } from "@/lib/paths";
+import type { AtlasModuleId } from "@/lib/atlas/types";
 
-export type AtlasModuleId = "lung" | "cardiac" | "fast" | "vascular" | "neuro" | "abdomen";
+export const STILL_EXTENSIONS = ["webp", "jpg", "jpeg", "png", "gif", "svg"] as const;
+export const CLIP_EXTENSIONS = ["webm", "mp4", "gif", "webp", "svg"] as const;
+export const THUMB_EXTENSIONS = ["webp", "jpg", "jpeg", "png", "gif", "svg"] as const;
 
-function mediaRoot(module: AtlasModuleId): string {
+export function mediaRoot(module: AtlasModuleId): string {
   return `/media/${module}`;
 }
 
-export function atlasMediaPath(module: AtlasModuleId, file: string): string {
-  return withBasePath(`${mediaRoot(module)}/${file}`);
+export function categoryDir(module: AtlasModuleId, category: string): string {
+  return `${mediaRoot(module)}/${category}`;
 }
 
-/** Media pulmonar — SVG locales (sustituir por webp/mp4 reales en la misma ruta). */
-export const lungAtlasMedia = {
-  stills: {
-    patternA: atlasMediaPath("lung", "pattern-a.svg"),
-    bLines: atlasMediaPath("lung", "b-lines.svg"),
-    consolidation: atlasMediaPath("lung", "consolidation.svg"),
-    effusion: atlasMediaPath("lung", "effusion.svg"),
-    lungPoint: atlasMediaPath("lung", "lung-point.svg"),
-    plaps: atlasMediaPath("lung", "plaps.svg"),
-  },
-  clips: {
-    sliding: atlasMediaPath("lung", "sliding-clip.svg"),
-    bLines: atlasMediaPath("lung", "b-lines-clip.svg"),
-    consolidation: atlasMediaPath("lung", "consolidation-clip.svg"),
-    lungPoint: atlasMediaPath("lung", "lung-point-clip.svg"),
-  },
-} as const;
+export function atlasMediaPath(module: AtlasModuleId, category: string, file: string): string {
+  return withBasePath(`${categoryDir(module, category)}/${file}`);
+}
+
+/** Slots estándar por carpeta de hallazgo */
+export type MediaSlot = "still" | "clip" | "thumb" | "poster";
+
+export function manifestKey(category: string, slot: MediaSlot): string {
+  return `${category}/${slot}`;
+}

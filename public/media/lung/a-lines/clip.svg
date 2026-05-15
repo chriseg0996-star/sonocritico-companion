@@ -9,10 +9,11 @@
   <rect width="640" height="480" fill="#050608"/>
   <rect width="640" height="480" filter="url(#speckle)" opacity="0.55"/>
   <rect x="0" y="0" width="640" height="28" fill="rgba(0,0,0,0.45)"/>
-  <text x="12" y="18" fill="rgba(180,190,205,0.7)" font-family="system-ui,sans-serif" font-size="11" letter-spacing="0.06em">SONOCRÍTICO · SIM</text>
+  <text x="12" y="18" fill="rgba(180,190,205,0.7)" font-family="system-ui,sans-serif" font-size="11">SONOCRÍTICO</text>
   
-    <line x1="0" y1="120" x2="640" y2="120" stroke="rgba(220,230,240,0.3)" stroke-width="1"/>
-    <path d="M0 120 Q160 200 320 340 T640 420 L640 480 L0 480 Z" fill="rgba(25,35,55,0.75)"/>
-    <text x="320" y="440" text-anchor="middle" fill="rgba(201,107,107,0.45)" font-size="10">Derrame pleural</text>
-  
+    <line x1="0" y1="70" x2="640" y2="70" stroke="rgba(220,230,240,0.4)" stroke-width="1.2">
+      <animate attributeName="y1" values="68;74;68" dur="1.2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="68;74;68" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+    <text x="320" y="440" text-anchor="middle" fill="rgba(143,167,196,0.5)" font-size="10">Sliding pleural</text>
 </svg>

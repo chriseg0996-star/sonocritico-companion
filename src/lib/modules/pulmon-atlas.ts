@@ -2,11 +2,19 @@
  * Atlas pulmonar — hallazgos, clips y pares de comparación.
  * Media: imageId → mock-data; src en entry o pulmonAtlasMedia cuando exista en public/.
  */
-import type { AtlasComparisonPair, AtlasEntry, AtlasFilterDef, AtlasFilterId } from "@/lib/atlas/types";
+import type {
+  AtlasComparisonPair,
+  AtlasEntry,
+  AtlasFilterDef,
+  AtlasFilterId,
+  AtlasMediaRef,
+  LungMediaCategory,
+} from "@/lib/atlas/types";
 import { matchesAtlasQuery } from "@/lib/atlas/search";
-import { lungAtlasMedia } from "@/lib/atlas/media-registry";
 
-const M = lungAtlasMedia;
+function lungRef(category: LungMediaCategory): AtlasMediaRef {
+  return { module: "lung", category };
+}
 
 export const PULMON_ATLAS_SEARCH_PLACEHOLDER = "Buscar hallazgo, ventana o protocolo…";
 
@@ -34,8 +42,7 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     description: "Líneas A dominantes con deslizamiento pleural conservado.",
     tags: ["patrón A", "líneas A", "BLUE", "normal", "aireación"],
     mediaType: "image",
-    src: M.stills.patternA,
-    thumbnailSrc: M.stills.patternA,
+    mediaRef: lungRef("a-lines"),
     overlayLabel: "Perfil A · líneas A",
     orientation: "Anterior bilateral",
     placeholderVariant: "pattern-a",
@@ -54,8 +61,7 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     description: "Cometas verticales — perfil B, edema intersticial/alveolar.",
     tags: ["líneas B", "perfil B", "BLUE", "edema", "patológico"],
     mediaType: "image",
-    src: M.stills.bLines,
-    thumbnailSrc: M.stills.bLines,
+    mediaRef: lungRef("b-lines"),
     overlayLabel: "Perfil B · líneas B",
     orientation: "Anterior",
     placeholderVariant: "blines",
@@ -75,8 +81,7 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     description: "Hepatización subpleural con broncograma aéreo dinámico.",
     tags: ["consolidación", "PLAPS", "neumonía", "patológico"],
     mediaType: "image",
-    src: M.stills.consolidation,
-    thumbnailSrc: M.stills.consolidation,
+    mediaRef: lungRef("consolidation"),
     overlayLabel: "Consolidación subpleural",
     orientation: "PLAPS posterolateral",
     placeholderVariant: "consolidation",
@@ -95,8 +100,7 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     description: "Colección anecoica dependiente; valorar septaciones.",
     tags: ["derrame", "PLAPS", "LUS", "pleura", "patológico"],
     mediaType: "image",
-    src: M.stills.effusion,
-    thumbnailSrc: M.stills.effusion,
+    mediaRef: lungRef("pleural-effusion"),
     overlayLabel: "Derrame pleural",
     orientation: "Costofrénico / PLAPS",
     placeholderVariant: "effusion",
@@ -115,8 +119,7 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     description: "Transición entre sliding ausente y presente — signo del punto de pulmón.",
     tags: ["lung point", "neumotórax", "BLUE", "sliding", "patológico"],
     mediaType: "image",
-    src: M.stills.lungPoint,
-    thumbnailSrc: M.stills.lungPoint,
+    mediaRef: lungRef("lung-point"),
     overlayLabel: "Lung point",
     orientation: "Anterior / lateral",
     placeholderVariant: "lung-point",
@@ -135,8 +138,7 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     description: "Consolidación o derrame en región posterolateral no vista en BLUE anterior.",
     tags: ["PLAPS", "neumonía", "posterior", "consolidación", "patológico"],
     mediaType: "image",
-    src: M.stills.plaps,
-    thumbnailSrc: M.stills.plaps,
+    mediaRef: lungRef("plaps"),
     overlayLabel: "PLAPS positivo",
     orientation: "Posterolateral",
     placeholderVariant: "plaps",
@@ -155,8 +157,7 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     description: "Destello pleural en tiempo real — hallazgo normal esencial.",
     tags: ["sliding", "deslizamiento", "BLUE", "normal", "clip"],
     mediaType: "gif",
-    src: M.clips.sliding,
-    thumbnailSrc: M.clips.sliding,
+    mediaRef: lungRef("a-lines"),
     overlayLabel: "Sliding pleural",
     orientation: "Intercostal",
     placeholderVariant: "sliding",
@@ -175,8 +176,7 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     description: "Cometas verticales móviles con la ventilación.",
     tags: ["líneas B", "perfil B", "clip", "patológico", "BLUE"],
     mediaType: "gif",
-    src: M.clips.bLines,
-    thumbnailSrc: M.clips.bLines,
+    mediaRef: lungRef("b-lines"),
     overlayLabel: "Líneas B dinámicas",
     orientation: "Anterior",
     placeholderVariant: "blines",
@@ -195,8 +195,7 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     description: "Broncograma aéreo dinámico dentro de área consolidada.",
     tags: ["consolidación", "broncograma", "PLAPS", "clip", "patológico"],
     mediaType: "gif",
-    src: M.clips.consolidation,
-    thumbnailSrc: M.clips.consolidation,
+    mediaRef: lungRef("consolidation"),
     overlayLabel: "Broncograma aéreo",
     orientation: "PLAPS",
     placeholderVariant: "consolidation",
@@ -216,8 +215,7 @@ export const pulmonAtlasEntries: AtlasEntry[] = [
     description: "Punto de transición sliding presente / ausente.",
     tags: ["lung point", "neumotórax", "clip", "patológico"],
     mediaType: "gif",
-    src: M.clips.lungPoint,
-    thumbnailSrc: M.clips.lungPoint,
+    mediaRef: lungRef("lung-point"),
     overlayLabel: "Lung point",
     orientation: "Lateral",
     placeholderVariant: "lung-point",

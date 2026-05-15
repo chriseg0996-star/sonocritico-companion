@@ -17,10 +17,11 @@ export function AtlasCard({ entry, onOpen }: Props) {
     <button
       type="button"
       onClick={() => onOpen(entry)}
-      className="atlas-card"
+      className="atlas-card atlas-card--touch"
       style={{
         textAlign: "left",
         width: "100%",
+        minHeight: 44,
         padding: 0,
         border: "none",
         background: theme.bg.card,
@@ -28,6 +29,7 @@ export function AtlasCard({ entry, onOpen }: Props) {
         overflow: "hidden",
         cursor: "pointer",
         boxShadow: theme.shadow.inset,
+        WebkitTapHighlightColor: "transparent",
       }}
     >
       <AtlasThumbnail entry={entry} aspectRatio="5/3" />
@@ -36,18 +38,20 @@ export function AtlasCard({ entry, onOpen }: Props) {
           <p style={{ ...type.titleSm, fontSize: 12, fontWeight: 500, color: theme.text.primary, margin: 0 }}>
             {entry.title}
           </p>
-          <span
-            style={{
-              fontSize: 8,
-              fontWeight: 600,
-              padding: "2px 5px",
-              borderRadius: 3,
-              flexShrink: 0,
-              background: theme.surface.glass,
-              color: theme.text.faint,
-            }}
-          >
-            {entry.protocol}
+          <span className="atlas-card-badges">
+            <span className="atlas-card-kind">{isClip ? "CLIP" : "IMG"}</span>
+            <span
+              style={{
+                fontSize: 8,
+                fontWeight: 600,
+                padding: "2px 5px",
+                borderRadius: 3,
+                background: entry.isPathological ? theme.state.errorMuted : theme.accent.muted,
+                color: entry.isPathological ? theme.state.danger : theme.accent.soft,
+              }}
+            >
+              {entry.isPathological ? "Patol." : "Normal"}
+            </span>
           </span>
         </div>
         <p style={{ fontSize: 10, color: theme.text.faint, margin: "0 0 6px" }}>{entry.window}</p>

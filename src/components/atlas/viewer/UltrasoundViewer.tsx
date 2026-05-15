@@ -63,7 +63,7 @@ export function UltrasoundViewer({ mode, entries, onClose, onNavigate }: Props) 
   const isCompare = mode.type === "compare";
 
   return (
-    <div className="us-viewer-backdrop" role="dialog" aria-modal="true" onClick={onClose}>
+    <div className="us-viewer-backdrop us-viewer-backdrop--fullscreen" role="dialog" aria-modal="true" onClick={onClose}>
       <div className="us-viewer-shell" onClick={(e) => e.stopPropagation()}>
         <header className="us-viewer-header">
           <div className="us-viewer-header-main">
@@ -73,11 +73,16 @@ export function UltrasoundViewer({ mode, entries, onClose, onNavigate }: Props) 
                 <h2 className="us-viewer-title">{comparePair!.title}</h2>
               </>
             ) : (
-              <h2 className="us-viewer-title">{entry!.title}</h2>
+              <>
+                <h2 className="us-viewer-title">{entry!.title}</h2>
+                <span className="us-viewer-header-meta">
+                  {entry!.isPathological ? "Patológico" : "Normal"} · {entry!.protocol}
+                </span>
+              </>
             )}
           </div>
           <button type="button" className="us-viewer-close" onClick={onClose} aria-label="Cerrar">
-            <X size={18} />
+            <X size={20} />
           </button>
         </header>
 
@@ -87,15 +92,12 @@ export function UltrasoundViewer({ mode, entries, onClose, onNavigate }: Props) 
           ) : entry ? (
             <>
               <div className="us-viewer-stage-wrap">
-                <ViewerViewport entry={entry} />
-                {hasPrev && (
-                  <NavBtn side="left" onClick={goPrev} label="Anterior" />
-                )}
-                {hasNext && (
-                  <NavBtn side="right" onClick={goNext} label="Siguiente" />
-                )}
+                <ViewerViewport entry={entry} onSwipePrev={hasPrev ? goPrev : undefined} onSwipeNext={hasNext ? goNext : undefined} />
+                {hasPrev && <NavBtn side="left" onClick={goPrev} label="Anterior" />}
+                {hasNext && <NavBtn side="right" onClick={goNext} label="Siguiente" />}
               </div>
               <aside className="us-viewer-meta">
+                <MetaTags entry={entry} />
                 <p className="us-viewer-desc">{entry.description}</p>
                 <Meta label="Interpretación" value={entry.clinicalInterpretation} />
                 {entry.clinicalAction && <Meta label="Siguiente paso" value={entry.clinicalAction} danger />}
@@ -109,22 +111,49 @@ export function UltrasoundViewer({ mode, entries, onClose, onNavigate }: Props) 
           <ViewerFilmstrip entries={entries} activeId={entry.id} onSelect={onNavigate} />
         )}
 
-        <footer className="us-viewer-footer">
-          {!isCompare && entry && (
-            <span>
+        {!isCompare && entry && (
+          <div className="us-viewer-mobile-nav" aria-hidden={false}>
+            <button type="button" className="us-viewer-mobile-btn" disabled={!hasPrev} onClick={goPrev} aria-label="Anterior">
+              <ChevronLeft size={22} />
+            </button>
+            <span className="us-viewer-mobile-count">
               {index + 1} / {entries.length}
             </span>
-          )}
-          <span>← → · ESC</span>
+            <button type="button" className="us-viewer-mobile-btn" disabled={!hasNext} onClick={goNext} aria-label="Siguiente">
+              <ChevronRight size={22} />
+            </button>
+          </div>
+        )}
+
+        <footer className="us-viewer-footer us-viewer-footer--desktop">
+          {!isCompare && entry && <span>{index + 1} / {entries.length}</span>}
+          <span>Desliza · ← → · ESC</span>
         </footer>
       </div>
     </div>
   );
 }
 
+function MetaTags({ entry }: { entry: AtlasEntry }) {
+  return (
+    <div className="us-viewer-tags">
+      <span className={`us-viewer-tag${entry.isPathological ? " us-viewer-tag--path" : ""}`}>
+        {entry.isPathological ? "Patológico" : "Normal"}
+      </span>
+      <span className="us-viewer-tag">{entry.window}</span>
+      <span className="us-viewer-tag">{entry.kind === "clip" ? "CLIP" : "IMG"}</span>
+      {entry.tags.slice(0, 2).map((t) => (
+        <span key={t} className="us-viewer-tag us-viewer-tag--muted">
+          {t}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function NavBtn({ side, onClick, label }: { side: "left" | "right"; onClick: () => void; label: string }) {
   return (
-    <button type="button" className={`us-viewer-nav us-viewer-nav--${side}`} aria-label={label} onClick={onClick}>
+    <button type="button" className={`us-viewer-nav us-viewer-nav--${side} us-viewer-nav--desktop`} aria-label={label} onClick={onClick}>
       {side === "left" ? <ChevronLeft size={22} /> : <ChevronRight size={22} />}
     </button>
   );

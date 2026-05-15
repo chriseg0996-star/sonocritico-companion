@@ -6,14 +6,16 @@ import { resolveAtlasMedia } from "@/lib/atlas/resolve-media";
 import { placeholderGradients } from "@/lib/atlas/placeholders";
 import { ViewerOverlays } from "@/components/atlas/viewer/ViewerOverlays";
 import { useViewerZoomPan } from "@/hooks/useViewerZoomPan";
-import { theme } from "@/lib/theme";
+import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 
 type Props = {
   entry: AtlasEntry;
   compact?: boolean;
+  onSwipePrev?: () => void;
+  onSwipeNext?: () => void;
 };
 
-export function ViewerViewport({ entry, compact }: Props) {
+export function ViewerViewport({ entry, compact, onSwipePrev, onSwipeNext }: Props) {
   const media = resolveAtlasMedia(entry);
   const [failed, setFailed] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -21,7 +23,12 @@ export function ViewerViewport({ entry, compact }: Props) {
   const ph = placeholderGradients[entry.placeholderVariant ?? "pattern-a"];
   const useVideo = Boolean(media.isRasterClip && media.src);
   const useImage = Boolean(!useVideo && media.src && !showPlaceholder);
-  const zoomPan = useViewerZoomPan(useImage);
+  const zoomPan = useViewerZoomPan(useImage && !compact);
+  const swipe = useSwipeNavigation({
+    onPrev: onSwipePrev,
+    onNext: onSwipeNext,
+    enabled: Boolean(onSwipePrev || onSwipeNext),
+  });
 
   useEffect(() => {
     setFailed(false);
@@ -38,7 +45,9 @@ export function ViewerViewport({ entry, compact }: Props) {
         onPointerMove={zoomPan.onPointerMove}
         onPointerUp={zoomPan.onPointerUp}
         onPointerLeave={zoomPan.onPointerUp}
-        style={{ cursor: zoomPan.canPan ? "grab" : "default" }}
+        onTouchStart={swipe.onTouchStart}
+        onTouchEnd={swipe.onTouchEnd}
+        style={{ cursor: zoomPan.canPan ? "grab" : "default", touchAction: "pan-y pinch-zoom" }}
       >
         {!loaded && !showPlaceholder && <div className="us-viewport-skeleton" aria-hidden />}
 
@@ -62,15 +71,16 @@ export function ViewerViewport({ entry, compact }: Props) {
             src={media.src}
             alt={media.alt}
             draggable={false}
-            style={{ transform: zoomPan.transform, transition: loaded ? "opacity 160ms ease" : undefined, opacity: loaded ? 1 : 0 }}
+            style={{
+              transform: zoomPan.transform,
+              transition: loaded ? "opacity 160ms ease" : undefined,
+              opacity: loaded ? 1 : 0,
+            }}
             onLoad={() => setLoaded(true)}
             onError={() => setFailed(true)}
           />
         ) : (
-          <div
-            className="us-viewport-placeholder"
-            style={{ background: ph.gradient }}
-          >
+          <div className="us-viewport-placeholder" style={{ background: ph.gradient }}>
             <span>{ph.label}</span>
           </div>
         )}

@@ -4,6 +4,22 @@ export type AtlasMediaType = "image" | "video" | "gif";
 
 export type AtlasCategory = "normal" | "pathology";
 
+export type AtlasModuleId = "lung" | "cardiac" | "fast" | "vascular" | "neuro" | "abdomen";
+
+/** Carpeta bajo public/media/lung/ */
+export type LungMediaCategory =
+  | "a-lines"
+  | "b-lines"
+  | "consolidation"
+  | "pleural-effusion"
+  | "lung-point"
+  | "plaps";
+
+export interface AtlasMediaRef {
+  module: AtlasModuleId;
+  category: LungMediaCategory | string;
+}
+
 export type AtlasFilterId =
   | "all"
   | "normal"
@@ -28,12 +44,13 @@ export interface AtlasEntry {
   title: string;
   category: AtlasCategory;
   isPathological: boolean;
-  /** Protocolo principal (BLUE / LUS / PLAPS) */
   protocol: AtlasProtocol;
   window: string;
   description: string;
   tags: string[];
-  /** Referencia mock (img-05) o ruta en public cuando exista */
+  /** Resolución vía public/media/{module}/{category}/still|clip|thumb */
+  mediaRef?: AtlasMediaRef;
+  /** Fallback mock (img-05) si no hay mediaRef/manifest */
   imageId?: string;
   src?: string;
   thumbnailSrc?: string;
@@ -52,9 +69,7 @@ export interface AtlasEntry {
   clinicalInterpretation: string;
   frequentError?: string;
   clinicalAction?: string;
-  /** Etiqueta overlay en viewer (ej. "Perfil B bilateral") */
   overlayLabel?: string;
-  /** Orientación en pantalla ecógrafo */
   orientation?: string;
 }
 
@@ -64,6 +79,5 @@ export interface AtlasComparisonPair {
   subtitle: string;
   leftId: string;
   rightId: string;
-  /** Diferencia clave para lectura rápida en guardia */
   insight: string;
 }
