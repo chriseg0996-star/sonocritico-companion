@@ -11,16 +11,42 @@ import {
   User,
 } from "lucide-react";
 import { logout } from "@/lib/auth";
+import { fonts } from "@/lib/typography";
 import { theme } from "@/lib/theme";
 import type { User as UserType } from "@/types";
 
-const navItems = [
+type NavItem = { href: string; icon: React.ElementType; label: string };
+
+const navSections: { label: string; items: NavItem[] }[] = [
+  {
+    label: "Aprender",
+    items: [
+      { href: "/dashboard", icon: LayoutDashboard, label: "Inicio" },
+      { href: "/modulos", icon: BookOpen, label: "Módulos" },
+    ],
+  },
+  {
+    label: "Practicar",
+    items: [
+      { href: "/casos", icon: Activity, label: "Casos" },
+      { href: "/repaso", icon: Brain, label: "Repaso" },
+      { href: "/imagenes", icon: Image, label: "Biblioteca" },
+    ],
+  },
+  {
+    label: "Herramientas",
+    items: [{ href: "/herramientas", icon: Wrench, label: "Calculadoras" }],
+  },
+  {
+    label: "Cuenta",
+    items: [{ href: "/progreso", icon: User, label: "Progreso" }],
+  },
+];
+
+const bottomNavItems: NavItem[] = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Inicio" },
   { href: "/modulos", icon: BookOpen, label: "Módulos" },
   { href: "/casos", icon: Activity, label: "Casos" },
-  { href: "/herramientas", icon: Wrench, label: "Herramientas" },
-  { href: "/repaso", icon: Brain, label: "Repaso" },
-  { href: "/imagenes", icon: Image, label: "Biblioteca" },
   { href: "/progreso", icon: User, label: "Progreso" },
 ];
 
@@ -30,34 +56,23 @@ function NavLink({
   label,
   active,
   onClick,
-}: {
-  href: string;
-  icon: React.ElementType;
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
+}: NavItem & { active: boolean; onClick: () => void }) {
   return (
-    <div
+    <button
+      type="button"
       onClick={onClick}
+      className={`nav-link${active ? " nav-link--active" : ""}`}
       style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 10,
-        padding: "9px 10px",
-        borderRadius: 8,
-        marginBottom: 2,
-        cursor: "pointer",
+        width: "100%",
+        textAlign: "left",
         background: active ? theme.brand.redMuted : "transparent",
         border: active ? `1px solid ${theme.brand.redBorder}` : "1px solid transparent",
         color: active ? theme.brand.red : theme.text.secondary,
-        transition: "all 200ms ease-out",
-        fontSize: 13,
       }}
     >
       <Icon size={16} strokeWidth={1.5} />
       {label}
-    </div>
+    </button>
   );
 }
 
@@ -80,7 +95,7 @@ export function AppLayout({ children, user }: { children: React.ReactNode; user:
         <div style={{ padding: "20px 16px 16px", borderBottom: `1px solid ${theme.bg.border}` }}>
           <div
             style={{
-              fontFamily: "'Bebas Neue', sans-serif",
+              fontFamily: fonts.display,
               fontSize: 22,
               letterSpacing: 2,
               color: theme.text.primary,
@@ -90,7 +105,7 @@ export function AppLayout({ children, user }: { children: React.ReactNode; user:
           </div>
           <div
             style={{
-              fontFamily: "'Bebas Neue', sans-serif",
+              fontFamily: fonts.display,
               fontSize: 11,
               letterSpacing: 3,
               color: theme.brand.red,
@@ -112,18 +127,19 @@ export function AppLayout({ children, user }: { children: React.ReactNode; user:
         >
           <div
             style={{
-              width: 32,
-              height: 32,
+              width: 36,
+              height: 36,
               borderRadius: "50%",
               background: theme.brand.redMuted,
               border: `1px solid ${theme.brand.redBorder}`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 11,
+              fontSize: 12,
               color: theme.brand.red,
-              fontWeight: 500,
+              fontWeight: 600,
               flexShrink: 0,
+              fontFamily: fonts.sans,
             }}
           >
             {user.initials}
@@ -131,70 +147,68 @@ export function AppLayout({ children, user }: { children: React.ReactNode; user:
           <div style={{ minWidth: 0 }}>
             <div
               style={{
-                fontSize: 12,
-                fontWeight: 500,
+                fontSize: 13,
+                fontWeight: 600,
                 color: theme.text.primary,
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
+                fontFamily: fonts.sans,
               }}
             >
               {user.name}
             </div>
-            <div style={{ fontSize: 10, color: theme.text.muted }}>{user.specialty}</div>
+            <div style={{ fontSize: 11, color: theme.text.muted, fontFamily: fonts.sans }}>{user.specialty}</div>
           </div>
         </div>
 
-        <nav style={{ flex: 1, padding: "12px 8px" }}>
-          {navItems.map((item) => (
-            <NavLink
-              key={item.href}
-              {...item}
-              active={isActive(item.href)}
-              onClick={() => router.push(item.href)}
-            />
+        <nav style={{ flex: 1, padding: "8px 8px 12px", overflowY: "auto" }}>
+          {navSections.map((section) => (
+            <div key={section.label}>
+              <p className="nav-section-label">{section.label}</p>
+              {section.items.map((item) => (
+                <NavLink
+                  key={item.href}
+                  {...item}
+                  active={isActive(item.href)}
+                  onClick={() => router.push(item.href)}
+                />
+              ))}
+            </div>
           ))}
-          <NavLink
-            href="/imagenes"
-            icon={Image}
-            label="Biblioteca"
-            active={pathname === "/imagenes"}
-            onClick={() => router.push("/imagenes")}
-          />
         </nav>
 
         <div style={{ padding: "12px 8px", borderTop: `1px solid ${theme.bg.border}` }}>
-          <div
+          <button
+            type="button"
             onClick={handleLogout}
+            className="nav-link"
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              padding: "9px 10px",
-              borderRadius: 8,
-              cursor: "pointer",
+              width: "100%",
               color: theme.text.muted,
-              fontSize: 13,
+              background: "transparent",
+              border: "1px solid transparent",
             }}
           >
             <LogOut size={16} strokeWidth={1.5} />
             Cerrar sesión
-          </div>
+          </button>
         </div>
       </aside>
 
       <main className="app-main">{children}</main>
 
       <nav className="app-bottom-nav">
-        {navItems.slice(0, 4).map(({ href, icon: Icon, label }) => {
+        {bottomNavItems.map(({ href, icon: Icon, label }) => {
           const active = isActive(href);
           return (
             <button
               key={href}
+              type="button"
               onClick={() => router.push(href)}
               style={{
                 flex: 1,
-                padding: "12px 6px",
+                padding: "10px 6px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -203,8 +217,9 @@ export function AppLayout({ children, user }: { children: React.ReactNode; user:
                 border: "none",
                 cursor: "pointer",
                 color: active ? theme.brand.red : theme.text.muted,
-                fontSize: 11,
-                fontFamily: "'IBM Plex Sans', sans-serif",
+                fontSize: 10,
+                fontWeight: active ? 600 : 400,
+                fontFamily: fonts.sans,
               }}
             >
               <Icon size={20} strokeWidth={1.5} />
@@ -216,3 +231,4 @@ export function AppLayout({ children, user }: { children: React.ReactNode; user:
     </div>
   );
 }
+

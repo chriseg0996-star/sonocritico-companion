@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth, LoadingScreen } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { PageShell } from "@/components/layout/PageShell";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { ScanLineCard, Badge, ProgressBar, Btn } from "@/components/ui/base";
 import { clinicalCases, quizQuestions } from "@/lib/mock-data";
 import { getProgress } from "@/lib/auth";
@@ -13,6 +15,7 @@ import {
   getModuleProgressBreakdown,
   getModuleStatus,
 } from "@/lib/module-progress";
+import { type } from "@/lib/typography";
 import { theme } from "@/lib/theme";
 import type { LocalProgress } from "@/lib/auth";
 
@@ -36,22 +39,11 @@ export default function ProgresoPage() {
 
   return (
     <AppLayout user={user}>
-      <div style={{ maxWidth: 800, margin: "0 auto", padding: "16px 16px 24px" }}>
-        <div style={{ marginBottom: 20 }}>
-          <div
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 28,
-              letterSpacing: 1,
-              color: theme.text.primary,
-            }}
-          >
-            Mi progreso
-          </div>
-          <div style={{ fontSize: 12, color: theme.text.secondary }}>
-            Avance por módulos del curso SonoCrítico MX
-          </div>
-        </div>
+      <PageShell>
+        <PageHeader
+          title="Mi progreso"
+          subtitle="Avance por modulos del curso SonoCritico MX"
+        />
 
         <ScanLineCard style={{ padding: 20, marginBottom: 16, textAlign: "center" }}>
           <div
@@ -101,17 +93,9 @@ export default function ProgresoPage() {
           ))}
         </div>
 
-        <div
-          style={{
-            fontSize: 10,
-            color: theme.brand.red,
-            fontFamily: "'IBM Plex Mono', monospace",
-            letterSpacing: 1,
-            marginBottom: 8,
-          }}
-        >
-          MÓDULOS DEL CURSO
-        </div>
+        <h2 style={{ ...type.eyebrow, color: theme.brand.red, margin: "0 0 8px" }}>
+          Modulos del curso
+        </h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
           {courseModules.map((mod) => {
             const breakdown = getModuleProgressBreakdown(mod.slug, progress);
@@ -173,17 +157,9 @@ export default function ProgresoPage() {
 
         {progress.quizResults.length > 0 && (
           <>
-            <div
-              style={{
-                fontSize: 10,
-                color: theme.brand.red,
-                fontFamily: "'IBM Plex Mono', monospace",
-                letterSpacing: 1,
-                marginBottom: 8,
-              }}
-            >
-              HISTORIAL DE QUIZZES · PROMEDIO {quizAvg > 0 ? `${quizAvg}%` : "—"}
-            </div>
+            <h2 style={{ ...type.eyebrow, color: theme.brand.red, margin: "0 0 8px" }}>
+              Historial de quizzes · promedio {quizAvg > 0 ? `${quizAvg}%` : "—"}
+            </h2>
             <ScanLineCard style={{ padding: 12 }}>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 {progress.quizResults.map((r, i) => {
@@ -238,7 +214,7 @@ export default function ProgresoPage() {
         <Btn variant="ghost" onClick={() => router.push("/modulos")} style={{ marginTop: 16, width: "100%" }}>
           Ver todos los módulos
         </Btn>
-      </div>
+      </PageShell>
     </AppLayout>
   );
 }

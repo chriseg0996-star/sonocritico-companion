@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { Activity, CheckCircle2, ChevronRight, Clock } from "lucide-react";
 import { useAuth, LoadingScreen } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { PageShell } from "@/components/layout/PageShell";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { ScanLineCard, Badge } from "@/components/ui/base";
 import { clinicalCases } from "@/lib/mock-data";
 import { getProgress } from "@/lib/auth";
@@ -25,22 +27,11 @@ export default function CasosPage() {
 
   return (
     <AppLayout user={user}>
-      <div style={{ maxWidth: 800, margin: "0 auto", padding: "16px 16px 24px" }}>
-        <div style={{ marginBottom: 20 }}>
-          <div
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 28,
-              letterSpacing: 1,
-              color: theme.text.primary,
-            }}
-          >
-            Casos clínicos
-          </div>
-          <div style={{ fontSize: 12, color: theme.text.secondary }}>
-            {progress.completedCases.length} de {clinicalCases.length} completados · Módulo 10
-          </div>
-        </div>
+      <PageShell>
+        <PageHeader
+          title="Casos clinicos"
+          subtitle={`${progress.completedCases.length} de ${clinicalCases.length} completados · Modulo 10`}
+        />
 
         {clinicalCases.length === 0 ? (
           <ScanLineCard style={{ padding: 24, textAlign: "center" }}>
@@ -202,7 +193,7 @@ export default function CasosPage() {
             })}
           </div>
         )}
-      </div>
+      </PageShell>
     </AppLayout>
   );
 }

@@ -13,6 +13,8 @@ import { getProgress, completeModule } from "@/lib/auth";
 import { getModulePercent, getModuleStatus } from "@/lib/module-progress";
 import { getModuleSteps } from "@/lib/module-steps";
 import { parseModuleTab } from "@/lib/module-tabs";
+import { PageShell } from "@/components/layout/PageShell";
+import { type } from "@/lib/typography";
 import { theme } from "@/lib/theme";
 import type { LocalProgress } from "@/lib/auth";
 
@@ -68,7 +70,7 @@ export default function ModuloDetailPage({ params }: { params: Promise<{ slug: s
 
   return (
     <AppLayout user={user}>
-      <div className="module-page" style={{ maxWidth: 900, margin: "0 auto", padding: "16px 16px 24px" }}>
+      <PageShell>
         <div
           onClick={() => router.push("/modulos")}
           style={{
@@ -101,20 +103,12 @@ export default function ModuloDetailPage({ params }: { params: Promise<{ slug: s
             <Icon size={22} color={theme.brand.red} strokeWidth={1.5} />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 10, color: theme.text.muted, fontFamily: "'IBM Plex Mono', monospace" }}>
-              MÓDULO {mod.order} DE {courseModules.length}
-            </div>
-            <div
-              style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: 28,
-                letterSpacing: 1,
-                color: theme.text.primary,
-                lineHeight: 1.1,
-              }}
-            >
+                        <p style={{ ...type.eyebrow, color: theme.text.muted, margin: "0 0 4px" }}>
+              Modulo {mod.order} de {courseModules.length}
+            </p>
+            <h1 style={{ ...type.title, color: theme.text.primary, margin: 0, lineHeight: 1.2 }}>
               {mod.title}
-            </div>
+            </h1>
             <div style={{ fontSize: 12, color: theme.text.secondary, marginTop: 4 }}>{mod.subtitle}</div>
             <div style={{ marginTop: 8, display: "flex", gap: 6, flexWrap: "wrap" }}>
               <Badge variant={status === "complete" ? "white" : "brand"}>
@@ -127,9 +121,9 @@ export default function ModuloDetailPage({ params }: { params: Promise<{ slug: s
 
         <div style={{ marginBottom: 16 }}>
           <ProgressBar value={pct} />
-          <div style={{ fontSize: 10, color: theme.text.muted, marginTop: 4, fontFamily: "'IBM Plex Mono', monospace" }}>
-            {pct}% del módulo
-          </div>
+          <p style={{ ...type.caption, color: theme.text.muted, marginTop: 6 }}>
+            {pct}% del modulo
+          </p>
         </div>
 
         {isReference ? (
@@ -175,7 +169,7 @@ export default function ModuloDetailPage({ params }: { params: Promise<{ slug: s
             </Btn>
           )}
         </div>
-      </div>
+      </PageShell>
     </AppLayout>
   );
 }

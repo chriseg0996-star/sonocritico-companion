@@ -77,6 +77,93 @@ body {
   border-radius: 4px;
 }
 
+/* Page layout */
+.page-shell {
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem 2rem;
+}
+
+@media (min-width: 768px) {
+  .page-shell {
+    padding: 1.75rem 2rem 2.5rem;
+  }
+}
+
+.page-shell--narrow {
+  max-width: 720px;
+}
+
+/* Interactive cards */
+.card-interactive {
+  transition:
+    border-color 200ms ease,
+    background 200ms ease,
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.card-interactive:hover {
+  border-color: var(--accent-border) !important;
+  background: var(--bg-elevated) !important;
+}
+
+.scan-line.card-interactive:active {
+  transform: scale(0.995);
+}
+
+.continue-hero.card-interactive:hover {
+  box-shadow: 0 0 0 1px var(--accent-border), 0 12px 40px rgba(220, 38, 38, 0.08);
+}
+
+.module-row {
+  transition: background 150ms ease;
+  border-radius: 10px;
+}
+
+.module-row:hover {
+  background: var(--bg-elevated);
+}
+
+.nav-section-label {
+  font-family: var(--font-ibm-plex-sans);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 12px 10px 6px;
+  margin: 0;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  margin-bottom: 2px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  font-size: 0.8125rem;
+  font-family: var(--font-ibm-plex-sans);
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.nav-link:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.nav-link--active {
+  background: var(--accent-muted);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
 /* Layout shell — evita conflictos inline vs Tailwind responsive */
 .app-sidebar {
   display: none;
@@ -85,8 +172,8 @@ body {
   top: 0;
   left: 0;
   bottom: 0;
-  width: 220px;
-  min-width: 220px;
+  width: 240px;
+  min-width: 240px;
   z-index: 40;
   background: var(--bg-card);
   border-right: 1px solid var(--bg-border);
@@ -96,6 +183,7 @@ body {
   flex: 1;
   min-width: 0;
   padding-bottom: 72px;
+  background: var(--bg-primary);
 }
 
 .app-bottom-nav {
@@ -115,7 +203,7 @@ body {
   }
 
   .app-main {
-    margin-left: 220px;
+    margin-left: 240px;
     padding-bottom: 0;
   }
 

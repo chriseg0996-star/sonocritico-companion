@@ -4,6 +4,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
 import { useAuth, LoadingScreen } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { PageShell } from "@/components/layout/PageShell";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { ScanLineCard, Badge } from "@/components/ui/base";
 import { EchoMedia } from "@/components/media/EchoMedia";
 import { echoImages, protocols } from "@/lib/mock-data";
@@ -49,22 +51,11 @@ function ImagenesContent() {
 
   return (
     <AppLayout user={user}>
-      <div style={{ maxWidth: 800, margin: "0 auto", padding: "16px 16px 24px" }}>
-        <div style={{ marginBottom: 20 }}>
-          <div
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 28,
-              letterSpacing: 1,
-              color: theme.text.primary,
-            }}
-          >
-            Biblioteca de imágenes
-          </div>
-          <div style={{ fontSize: 12, color: theme.text.secondary }}>
-            {echoImages.length} imágenes anotadas del curso
-          </div>
-        </div>
+      <PageShell>
+        <PageHeader
+          title="Biblioteca de imagenes"
+          subtitle={`${echoImages.length} imagenes anotadas del curso`}
+        />
 
         <div style={{ display: "flex", gap: 6, marginBottom: 10, overflowX: "auto", paddingBottom: 4 }}>
           {["todos", ...protocols.map((p) => p.slug)].map((slug) => {
@@ -196,7 +187,7 @@ function ImagenesContent() {
             </div>
           </div>
         )}
-      </div>
+      </PageShell>
     </AppLayout>
   );
 }

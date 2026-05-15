@@ -18,14 +18,14 @@ export function ScanLineCard({ children, className, glow, onClick, style }: Scan
       style={{
         background: theme.bg.card,
         border: `1px solid ${glow ? theme.brand.redBorder : theme.bg.border}`,
-        borderRadius: "10px",
+        borderRadius: "12px",
         position: "relative",
         overflow: "hidden",
         transition: "border-color 200ms ease-out, background 200ms ease-out",
         cursor: onClick ? "pointer" : "default",
         ...style,
       }}
-      className={cn("scan-line", className)}
+      className={cn("scan-line", onClick && "card-interactive", className)}
     >
       {children}
     </div>
@@ -61,7 +61,8 @@ export function Badge({ children, variant = "gray", className }: BadgeProps) {
         padding: "2px 8px",
         borderRadius: 20,
         fontSize: 10,
-        fontFamily: "'IBM Plex Mono', monospace",
+        fontFamily: "'IBM Plex Sans', sans-serif",
+        fontWeight: 500,
         background: c.bg,
         border: `1px solid ${c.border}`,
         color: c.color,
@@ -128,10 +129,10 @@ export function StatCard({ value, label, sub, color = theme.brand.red }: StatCar
       {sub && (
         <div
           style={{
-            fontSize: 9,
+            fontSize: 11,
             color: theme.text.muted,
-            marginTop: 1,
-            fontFamily: "'IBM Plex Mono', monospace",
+            marginTop: 4,
+            fontFamily: "'IBM Plex Sans', sans-serif",
           }}
         >
           {sub}

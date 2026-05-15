@@ -8,6 +8,9 @@ import { ScanLineCard, Badge, ProgressBar } from "@/components/ui/base";
 import { courseModules, getModuleIcon } from "@/lib/course-modules";
 import { getProgress } from "@/lib/auth";
 import { getModulePercent, getModuleStatus } from "@/lib/module-progress";
+import { PageShell } from "@/components/layout/PageShell";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { type } from "@/lib/typography";
 import { theme } from "@/lib/theme";
 import type { LocalProgress } from "@/lib/auth";
 
@@ -24,22 +27,11 @@ export default function ModulosPage() {
 
   return (
     <AppLayout user={user}>
-      <div style={{ maxWidth: 800, margin: "0 auto", padding: "16px 16px 24px" }}>
-        <div style={{ marginBottom: 20 }}>
-          <div
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 28,
-              letterSpacing: 1,
-              color: theme.text.primary,
-            }}
-          >
-            Módulos del curso
-          </div>
-          <div style={{ fontSize: 12, color: theme.text.secondary, marginTop: 4 }}>
-            SonoCrítico MX · {courseModules.length} temas en orden
-          </div>
-        </div>
+      <PageShell>
+        <PageHeader
+          title="Modulos del curso"
+          subtitle={`SonoCritico MX · ${courseModules.length} temas en orden`}
+        />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {courseModules.map((mod) => {
@@ -107,7 +99,7 @@ export default function ModulosPage() {
             );
           })}
         </div>
-      </div>
+      </PageShell>
     </AppLayout>
   );
 }

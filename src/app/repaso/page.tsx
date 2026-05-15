@@ -5,6 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Shuffle } from "lucide-react";
 import { useAuth, LoadingScreen } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { PageShell } from "@/components/layout/PageShell";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { ScanLineCard, Badge, Btn } from "@/components/ui/base";
 import { EchoMedia } from "@/components/media/EchoMedia";
 import { echoImages, protocols } from "@/lib/mock-data";
@@ -50,9 +52,12 @@ function RepasoContent() {
   if (!card) {
     return (
       <AppLayout user={user}>
-        <ScanLineCard style={{ padding: 24, textAlign: "center" }}>
-          <p style={{ fontSize: 13, color: theme.text.secondary }}>No hay tarjetas para este filtro.</p>
-        </ScanLineCard>
+        <PageShell narrow>
+          <PageHeader title="Repaso flashcards" subtitle="Sin tarjetas para este filtro" />
+          <ScanLineCard style={{ padding: 24, textAlign: "center" }}>
+            <p style={{ fontSize: 13, color: theme.text.secondary }}>No hay tarjetas para este filtro.</p>
+          </ScanLineCard>
+        </PageShell>
       </AppLayout>
     );
   }
@@ -71,22 +76,11 @@ function RepasoContent() {
 
   return (
     <AppLayout user={user}>
-      <div style={{ maxWidth: 520, margin: "0 auto", padding: "16px 16px 24px" }}>
-        <div style={{ marginBottom: 16 }}>
-          <div
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 28,
-              letterSpacing: 1,
-              color: theme.text.primary,
-            }}
-          >
-            Repaso flashcards
-          </div>
-          <div style={{ fontSize: 12, color: theme.text.secondary, marginTop: 4 }}>
-            Toca la tarjeta para ver el hallazgo · {index + 1} / {deck.length}
-          </div>
-        </div>
+      <PageShell narrow>
+        <PageHeader
+          title="Repaso flashcards"
+          subtitle={`Toca la tarjeta para ver el hallazgo · ${index + 1} / ${deck.length}`}
+        />
 
         <div style={{ display: "flex", gap: 6, marginBottom: 14, overflowX: "auto", paddingBottom: 4 }}>
           {["todos", ...protocols.map((p) => p.slug)].map((slug) => (
@@ -165,7 +159,7 @@ function RepasoContent() {
             Ver en biblioteca
           </Btn>
         </div>
-      </div>
+      </PageShell>
     </AppLayout>
   );
 }
