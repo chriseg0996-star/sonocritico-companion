@@ -1,0 +1,34 @@
+---
+description: Mobile-first obligatorio — diseño y UX para uso en celular (curso/guardia)
+alwaysApply: true
+---
+
+# Mobile-first obligatorio (SONOCRÍTICO Companion)
+
+Uso principal: **celular** en curso, guardia o cabecera. Diseñar **390px primero**; desktop/tablet son adaptaciones secundarias.
+
+## Reglas
+
+1. Cada componente debe funcionar bien en móvil antes que en desktop.
+2. **Touch targets** ≥ 44px; cards y botones usables con pulgar. Sin depender de `:hover`.
+3. Textos breves en mobile; metadata en segunda línea o panel colapsable.
+4. Patrones preferidos: **bottom sheets**, tabs horizontales scrollables, **sticky nav**, modales **fullscreen**.
+5. **Search** visible arriba o como acción principal; no enterrar en menús.
+6. **Viewer/atlas**: fullscreen en móvil; filmstrip horizontal; metadata en panel inferior scrollable.
+7. **Comparaciones**: stacked o swipe en móvil; side-by-side solo desde `md`/`lg`.
+8. Navegación **una mano**: acciones críticas abajo o en thumb zone; evitar controles solo en esquina superior derecha lejana.
+9. Performance: lazy load media, grids ligeros, sin layouts pesados; transiciones 120–180ms sin bounce/glow.
+10. **No** crear UI que solo funcione en desktop.
+
+## Ámbitos (aplicar en cada sprint)
+
+Dashboard · módulos · atlas · viewer · calculadoras · casos · bibliografía · sidebar / nav móvil.
+
+## Checklist antes de cerrar un cambio UI
+
+- [ ] ¿Funciona en ~390px sin scroll horizontal?
+- [ ] ¿Botones tocables sin hover?
+- [ ] ¿Modal/viewer fullscreen en móvil?
+- [ ] ¿Comparación stacked en móvil?
+
+No rediseñar pantallas enteras salvo que el sprint lo pida; aplicar incrementalmente.
