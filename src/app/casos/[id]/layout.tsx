@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 import { LoadingScreen } from "@/hooks/useAuth";
-import { MODULE_IDS } from "@/lib/course-modules";
+import { clinicalCases } from "@/lib/mock-data";
 
 export function generateStaticParams() {
-  return MODULE_IDS.map((slug) => ({ slug }));
+  return clinicalCases.map((c) => ({ id: c.id }));
 }
 
-export default function ModuloSlugLayout({ children }: { children: React.ReactNode }) {
+export default function CasoIdLayout({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<LoadingScreen />}>{children}</Suspense>;
 }

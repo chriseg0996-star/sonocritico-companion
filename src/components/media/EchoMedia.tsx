@@ -1,6 +1,7 @@
 "use client";
 
 import type { EchoImage } from "@/types";
+import { withBasePath } from "@/lib/paths";
 import { theme } from "@/lib/theme";
 import { EchoAnnotations } from "./EchoAnnotations";
 
@@ -15,13 +16,14 @@ type EchoMediaProps = {
 
 export function EchoMedia({ image, showAnnotations = false, maxHeight = 280 }: EchoMediaProps) {
   const mediaType = image.mediaType ?? "image";
-  const poster = image.posterSrc ?? image.thumbnailSrc;
+  const src = withBasePath(image.src);
+  const poster = withBasePath(image.posterSrc ?? image.thumbnailSrc);
 
   return (
     <div style={{ position: "relative", width: "100%" }}>
       {mediaType === "video" ? (
         <video
-          src={image.src}
+          src={src}
           poster={poster}
           autoPlay
           loop
@@ -37,7 +39,7 @@ export function EchoMedia({ image, showAnnotations = false, maxHeight = 280 }: E
         />
       ) : (
         <img
-          src={image.src}
+          src={src}
           alt={image.finding}
           style={{
             width: "100%",

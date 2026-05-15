@@ -10,6 +10,7 @@ import { ScanLineCard, Badge } from "@/components/ui/base";
 import { EchoMedia } from "@/components/media/EchoMedia";
 import { echoImages, protocols } from "@/lib/mock-data";
 import { getModuleSlugForProtocol } from "@/lib/course-modules";
+import { withBasePath } from "@/lib/paths";
 import { theme } from "@/lib/theme";
 
 function ImagenesContent() {
@@ -93,7 +94,7 @@ function ImagenesContent() {
             {filtered.map((img) => (
               <ScanLineCard key={img.id} onClick={() => setSelected(img)} style={{ cursor: "pointer", overflow: "hidden" }}>
                 <img
-                  src={img.thumbnailSrc}
+                  src={withBasePath(img.thumbnailSrc)}
                   alt={img.finding}
                   style={{ width: "100%", height: 120, objectFit: "cover", display: "block", background: theme.bg.elevated }}
                 />
