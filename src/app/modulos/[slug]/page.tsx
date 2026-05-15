@@ -9,7 +9,13 @@ import { ModuleTabBar } from "@/components/modules/ModuleTabBar";
 import { ModuleTabContent } from "@/components/modules/ModuleTabContent";
 import { ModuleLessonFlow } from "@/components/modules/ModuleLessonFlow";
 import { PulmonBlueReferenceView } from "@/components/modules/PulmonBlueReferenceView";
+import { FastEfastReferenceView } from "@/components/modules/FastEfastReferenceView";
+import { EcoCriticoReferenceView } from "@/components/modules/EcoCriticoReferenceView";
+import { VexusReferenceView } from "@/components/modules/VexusReferenceView";
 import { courseModules, getModule, getModuleIcon } from "@/lib/course-modules";
+import { ECO_CRITICO_SLUG } from "@/lib/modules/eco-critico-reference";
+import { VEXUS_SLUG } from "@/lib/modules/vexus-reference";
+import { FAST_EFAST_SLUG } from "@/lib/modules/fast-efast-reference";
 import { PULMON_BLUE_SLUG } from "@/lib/modules/pulmonar-blue-reference";
 import { getProgress, completeModule } from "@/lib/auth";
 import { getModulePercent, getModuleStatus } from "@/lib/module-progress";
@@ -21,6 +27,8 @@ import { theme } from "@/lib/theme";
 import type { LocalProgress } from "@/lib/auth";
 
 const PULMON_SECONDARY_TABS: ModuleTabId[] = ["quiz", "checklist", "protocolo"];
+const FAST_SECONDARY_TABS: ModuleTabId[] = ["quiz", "checklist", "protocolo"];
+const GOLD_REFERENCE_SLUGS = [PULMON_BLUE_SLUG, FAST_EFAST_SLUG, ECO_CRITICO_SLUG, VEXUS_SLUG] as const;
 
 export default function ModuloDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -32,10 +40,21 @@ export default function ModuloDetailPage({ params }: { params: Promise<{ slug: s
   const tabParam = searchParams.get("tab");
   const tab = parseModuleTab(tabParam);
   const isPulmonGold = slug === PULMON_BLUE_SLUG;
+  const isFastGold = slug === FAST_EFAST_SLUG;
+  const isEcoGold = slug === ECO_CRITICO_SLUG;
+  const isVexusGold = slug === VEXUS_SLUG;
+  const isGoldModule = isPulmonGold || isFastGold || isEcoGold || isVexusGold;
   const pulmonSecondary =
     isPulmonGold && tabParam !== null && PULMON_SECONDARY_TABS.includes(tab);
-  const pulmonReference = isPulmonGold && !pulmonSecondary;
-  const isReference = tabParam !== null && !pulmonReference;
+  const fastSecondary =
+    isFastGold && tabParam !== null && FAST_SECONDARY_TABS.includes(tab);
+  const ecoSecondary =
+    isEcoGold && tabParam !== null && FAST_SECONDARY_TABS.includes(tab);
+  const vexusSecondary =
+    isVexusGold && tabParam !== null && FAST_SECONDARY_TABS.includes(tab);
+  const goldSecondary = pulmonSecondary || fastSecondary || ecoSecondary || vexusSecondary;
+  const goldReference = isGoldModule && !goldSecondary;
+  const isReference = tabParam !== null && !goldReference;
   const stepParam = searchParams.get("step");
   const steps = getModuleSteps(slug);
   const stepIndex = Math.min(
@@ -94,7 +113,7 @@ export default function ModuloDetailPage({ params }: { params: Promise<{ slug: s
           <ArrowLeft size={14} /> Volver a módulos
         </div>
 
-        {!pulmonReference && (
+        {!goldReference && (
           <>
             <div style={{ display: "flex", gap: 12, marginBottom: 16, alignItems: "flex-start" }}>
               <div
@@ -140,9 +159,15 @@ export default function ModuloDetailPage({ params }: { params: Promise<{ slug: s
           </>
         )}
 
-        {pulmonReference ? (
+        {goldReference && isPulmonGold ? (
           <PulmonBlueReferenceView onOpenSecondary={setTab} />
-        ) : pulmonSecondary ? (
+        ) : goldReference && isFastGold ? (
+          <FastEfastReferenceView onOpenSecondary={setTab} />
+        ) : goldReference && isEcoGold ? (
+          <EcoCriticoReferenceView onOpenSecondary={setTab} />
+        ) : goldReference && isVexusGold ? (
+          <VexusReferenceView onOpenSecondary={setTab} />
+        ) : goldSecondary ? (
           <>
             <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
               <Btn variant="ghost" onClick={() => router.replace(`/modulos/${slug}`)} style={{ fontSize: 11 }}>
@@ -194,7 +219,7 @@ export default function ModuloDetailPage({ params }: { params: Promise<{ slug: s
               variant="ghost"
               onClick={() =>
                 router.push(
-                  `/modulos/${prev.slug}${prev.slug === PULMON_BLUE_SLUG ? "" : "?step=0"}`
+                  `/modulos/${prev.slug}${GOLD_REFERENCE_SLUGS.includes(prev.slug as (typeof GOLD_REFERENCE_SLUGS)[number]) ? "" : "?step=0"}`
                 )
               }
             >
@@ -208,7 +233,7 @@ export default function ModuloDetailPage({ params }: { params: Promise<{ slug: s
               variant="ghost"
               onClick={() =>
                 router.push(
-                  `/modulos/${next.slug}${next.slug === PULMON_BLUE_SLUG ? "" : "?step=0"}`
+                  `/modulos/${next.slug}${GOLD_REFERENCE_SLUGS.includes(next.slug as (typeof GOLD_REFERENCE_SLUGS)[number]) ? "" : "?step=0"}`
                 )
               }
             >

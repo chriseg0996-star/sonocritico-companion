@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+  <defs>
+  <filter id="speckle" x="0" y="0">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="9" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.12  0 0 0 0 0.14  0 0 0 0 0.16  0 0 0 0.35 0"/>
+  </filter>
+</defs>
+  <rect width="640" height="480" fill="#050608"/>
+  <rect width="640" height="480" filter="url(#speckle)" opacity="0.55"/>
+  <rect x="0" y="0" width="640" height="28" fill="rgba(0,0,0,0.45)"/>
+  <text x="12" y="18" fill="rgba(180,190,205,0.7)" font-family="system-ui,sans-serif" font-size="11">VExUS · SONOCRÍTICO</text>
+  
+    <rect x="80" y="100" width="120" height="60" fill="rgba(201,107,107,0.25)" rx="4"/>
+    <rect x="260" y="100" width="120" height="60" fill="rgba(201,107,107,0.35)" rx="4"/>
+    <rect x="440" y="100" width="120" height="60" fill="rgba(201,107,107,0.45)" rx="4"/>
+    <text x="140" y="135" fill="rgba(201,107,107,0.7)" font-size="9" text-anchor="middle">Portal</text>
+    <text x="320" y="135" fill="rgba(201,107,107,0.7)" font-size="9" text-anchor="middle">Hepático</text>
+    <text x="500" y="135" fill="rgba(201,107,107,0.7)" font-size="9" text-anchor="middle">Renal</text>
+    <text x="320" y="440" text-anchor="middle" fill="rgba(201,107,107,0.55)" font-size="10">VExUS severo</text>
+</svg>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+  <defs>
+  <filter id="speckle" x="0" y="0">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="9" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.12  0 0 0 0 0.14  0 0 0 0 0.16  0 0 0 0.35 0"/>
+  </filter>
+</defs>
+  <rect width="640" height="480" fill="#050608"/>
+  <rect width="640" height="480" filter="url(#speckle)" opacity="0.55"/>
+  <rect x="0" y="0" width="640" height="28" fill="rgba(0,0,0,0.45)"/>
+  <text x="12" y="18" fill="rgba(180,190,205,0.7)" font-family="system-ui,sans-serif" font-size="11">VExUS · SONOCRÍTICO</text>
+  
+  <rect x="40" y="60" width="560" height="320" fill="rgba(12,16,22,0.9)" rx="4"/>
+  <path d="M40 190 L40 178 L64 209.59591837027844 L88 215.73809513979228 L112 193.53776859967974 L136 204.0297867028063 L160 191.68590190158685 L184 162.31163609655542 L208 180.315852972762 L232 186.63720051829822 L256 178.3026502087183 L280 209.8257587769382 L304 215.787028209786 L328 193.38278034558905 L352 203.74377052228834 L376 191.40337567346532 L400 162.16547632050992 L424 180.3748008752763 L448 186.87353197973337 L472 178.60521484998046 L496 210.05225571953883 L520 215.83093240250767 L544 193.2234429605728 L568 203.45613042142267 L592 191.12271449068788" fill="none" stroke="rgba(143,167,196,0.55)" stroke-width="2"/>
+  <text x="320" y="440" text-anchor="middle" fill="rgba(143,167,196,0.55)" font-size="10">Hepático · S > D</text>
+</svg>

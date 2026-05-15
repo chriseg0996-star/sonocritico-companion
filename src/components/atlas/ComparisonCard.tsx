@@ -11,11 +11,12 @@ type Props = {
   pair: AtlasComparisonPair;
   onOpen: (entry: AtlasEntry) => void;
   onCompare?: (pair: AtlasComparisonPair) => void;
+  getEntryById?: (id: string) => AtlasEntry | undefined;
 };
 
-export function ComparisonCard({ pair, onOpen, onCompare }: Props) {
-  const left = getAtlasEntryById(pair.leftId);
-  const right = getAtlasEntryById(pair.rightId);
+export function ComparisonCard({ pair, onOpen, onCompare, getEntryById = getAtlasEntryById }: Props) {
+  const left = getEntryById(pair.leftId);
+  const right = getEntryById(pair.rightId);
   if (!left || !right) return null;
 
   return (

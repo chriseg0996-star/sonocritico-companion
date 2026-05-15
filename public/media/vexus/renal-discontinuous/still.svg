@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+  <defs>
+  <filter id="speckle" x="0" y="0">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="9" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.12  0 0 0 0 0.14  0 0 0 0 0.16  0 0 0 0.35 0"/>
+  </filter>
+</defs>
+  <rect width="640" height="480" fill="#050608"/>
+  <rect width="640" height="480" filter="url(#speckle)" opacity="0.55"/>
+  <rect x="0" y="0" width="640" height="28" fill="rgba(0,0,0,0.45)"/>
+  <text x="12" y="18" fill="rgba(180,190,205,0.7)" font-family="system-ui,sans-serif" font-size="11">VExUS · SONOCRÍTICO</text>
+  
+  <rect x="40" y="60" width="560" height="320" fill="rgba(12,16,22,0.9)" rx="4"/>
+  <path d="M40 200 L40 188 L64 219.59591837027844 L88 225.73809513979228 L112 203.53776859967974 L136 214.0297867028063 L160 201.68590190158685 L184 172.31163609655542 L208 190.315852972762 L232 196.63720051829822 L256 188.3026502087183 L280 219.8257587769382 L304 225.787028209786 L328 203.38278034558905 L352 213.74377052228834 L376 201.40337567346532 L400 172.16547632050992 L424 190.3748008752763 L448 196.87353197973337 L472 188.60521484998046 L496 220.05225571953883 L520 225.83093240250767 L544 203.2234429605728 L568 213.45613042142267 L592 201.12271449068788" fill="none" stroke="rgba(201,107,107,0.5)" stroke-width="2"/>
+  <text x="320" y="440" text-anchor="middle" fill="rgba(143,167,196,0.55)" font-size="10">Renal · discontinuo</text>
+</svg>

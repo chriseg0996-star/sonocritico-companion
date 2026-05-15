@@ -4,7 +4,7 @@ export type AtlasMediaType = "image" | "video" | "gif";
 
 export type AtlasCategory = "normal" | "pathology";
 
-export type AtlasModuleId = "lung" | "cardiac" | "fast" | "vascular" | "neuro" | "abdomen";
+export type AtlasModuleId = "lung" | "cardiac" | "fast" | "vexus" | "vascular" | "neuro" | "abdomen";
 
 /** Carpeta bajo public/media/lung/ */
 export type LungMediaCategory =
@@ -30,14 +30,33 @@ export type AtlasFilterId =
   | "neumotorax"
   | "derrame"
   | "consolidacion"
-  | "clip";
+  | "clip"
+  | "ruq"
+  | "luq"
+  | "pelvis"
+  | "subxiphoid"
+  | "pleura"
+  | "pericardio"
+  | "efast"
+  | "hemotorax"
+  | "plax"
+  | "psax"
+  | "a4c"
+  | "ivc"
+  | "fevi"
+  | "vd"
+  | "taponamiento"
+  | "portal"
+  | "hepatic"
+  | "renal"
+  | "doppler";
 
 export interface AtlasFilterDef {
   id: AtlasFilterId;
   label: string;
 }
 
-export type AtlasProtocol = "BLUE" | "LUS" | "PLAPS";
+export type AtlasProtocol = "BLUE" | "LUS" | "PLAPS" | "FAST" | "eFAST" | "ECO" | "VExUS";
 
 export interface AtlasEntry {
   id: string;
@@ -63,7 +82,33 @@ export interface AtlasEntry {
     | "effusion"
     | "lung-point"
     | "plaps"
-    | "sliding";
+    | "sliding"
+    | "ruq-fluid"
+    | "luq-fluid"
+    | "pelvis-fluid"
+    | "pericardial"
+    | "pleural-sliding"
+    | "pneumothorax"
+    | "hemothorax"
+    | "morrison"
+    | "plax-normal"
+    | "fevi-reduced"
+    | "fevi-hyper"
+    | "psax-mitral"
+    | "a4c-normal"
+    | "pericardial-echo"
+    | "tamponade"
+    | "rv-dilated"
+    | "d-shape"
+    | "ivc-normal"
+    | "ivc-plethoric"
+    | "portal-normal"
+    | "portal-pulsatile"
+    | "hepatic-s-wave"
+    | "hepatic-s-inversion"
+    | "renal-continuous"
+    | "renal-discontinuous"
+    | "vexus-severe";
   duration?: string;
   kind: "still" | "clip";
   clinicalInterpretation: string;

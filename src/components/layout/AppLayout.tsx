@@ -7,9 +7,11 @@ import {
   Image,
   LayoutDashboard,
   LogOut,
+  Search,
   Wrench,
   User,
 } from "lucide-react";
+import { ClinicalSearchProvider, useClinicalSearch } from "@/components/search/ClinicalSearchProvider";
 import { logout } from "@/lib/auth";
 import { fonts } from "@/lib/typography";
 import { theme } from "@/lib/theme";
@@ -65,9 +67,10 @@ function NavLink({
   );
 }
 
-export function AppLayout({ children, user }: { children: React.ReactNode; user: UserType }) {
+function AppLayoutShell({ children, user }: { children: React.ReactNode; user: UserType }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { openSearch } = useClinicalSearch();
 
   function handleLogout() {
     logout();
@@ -131,6 +134,17 @@ export function AppLayout({ children, user }: { children: React.ReactNode; user:
           </div>
         </div>
 
+        <button
+          type="button"
+          className="clinical-search-trigger clinical-search-trigger--sidebar"
+          onClick={openSearch}
+          aria-label="Búsqueda clínica (Ctrl+K)"
+        >
+          <Search size={16} strokeWidth={1.5} />
+          <span>Buscar clínico</span>
+          <kbd className="clinical-search-kbd">{typeof navigator !== "undefined" && /Mac/i.test(navigator.platform) ? "⌘K" : "Ctrl+K"}</kbd>
+        </button>
+
         <nav style={{ flex: 1, padding: "8px 10px 12px", overflowY: "auto" }}>
           {navSections.map((section) => (
             <div key={section.label}>
@@ -153,28 +167,40 @@ export function AppLayout({ children, user }: { children: React.ReactNode; user:
       <main className="app-main">{children}</main>
 
       <nav className="app-bottom-nav">
-        {bottomNavItems.map(({ href, icon: Icon, label }) => {
+        {bottomNavItems.slice(0, 2).map(({ href, icon: Icon, label }) => {
           const active = isActive(href);
           return (
             <button
               key={href}
               type="button"
               onClick={() => router.push(href)}
-              style={{
-                flex: 1,
-                padding: "10px 6px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 4,
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                color: active ? theme.accent.primary : theme.text.muted,
-                fontSize: 10,
-                fontWeight: active ? 600 : 400,
-                fontFamily: fonts.sans,
-              }}
+              className="app-bottom-nav-item"
+              data-active={active}
+              style={{ color: active ? theme.accent.primary : theme.text.muted, fontWeight: active ? 600 : 400 }}
+            >
+              <Icon size={20} strokeWidth={1.5} />
+              {label}
+            </button>
+          );
+        })}
+        <button
+          type="button"
+          className="app-bottom-nav-search"
+          onClick={openSearch}
+          aria-label="Búsqueda clínica"
+        >
+          <Search size={22} strokeWidth={1.5} />
+        </button>
+        {bottomNavItems.slice(2).map(({ href, icon: Icon, label }) => {
+          const active = isActive(href);
+          return (
+            <button
+              key={href}
+              type="button"
+              onClick={() => router.push(href)}
+              className="app-bottom-nav-item"
+              data-active={active}
+              style={{ color: active ? theme.accent.primary : theme.text.muted, fontWeight: active ? 600 : 400 }}
             >
               <Icon size={20} strokeWidth={1.5} />
               {label}
@@ -183,5 +209,13 @@ export function AppLayout({ children, user }: { children: React.ReactNode; user:
         })}
       </nav>
     </div>
+  );
+}
+
+export function AppLayout(props: { children: React.ReactNode; user: UserType }) {
+  return (
+    <ClinicalSearchProvider>
+      <AppLayoutShell {...props} />
+    </ClinicalSearchProvider>
   );
 }

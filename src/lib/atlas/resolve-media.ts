@@ -1,6 +1,10 @@
 import { getImage } from "@/lib/mock-data";
 import { withBasePath } from "@/lib/paths";
+import { getCardiacManifestMedia } from "@/lib/atlas/cardiac-media-manifest";
+import { getVexusManifestMedia } from "@/lib/atlas/vexus-media-manifest";
+import { getFastManifestMedia } from "@/lib/atlas/fast-media-manifest";
 import { getLungManifestMedia } from "@/lib/atlas/lung-media-manifest";
+import type { AtlasModuleId } from "@/lib/atlas/types";
 import type { AtlasEntry } from "@/lib/atlas/types";
 
 export type ResolvedAtlasMedia = {
@@ -16,13 +20,24 @@ function isVideoFile(src: string): boolean {
   return /\.(mp4|webm|ogg)(\?|$)/i.test(src);
 }
 
+const MANIFEST_GETTERS: Partial<
+  Record<AtlasModuleId, (category: string, slot: "still" | "clip") => ReturnType<typeof getLungManifestMedia>>
+> = {
+  lung: getLungManifestMedia,
+  fast: getFastManifestMedia,
+  cardiac: getCardiacManifestMedia,
+  vexus: getVexusManifestMedia,
+};
+
 function fromManifest(entry: AtlasEntry): ResolvedAtlasMedia | null {
-  if (!entry.mediaRef || entry.mediaRef.module !== "lung") return null;
+  if (!entry.mediaRef) return null;
   const slot = entry.kind === "clip" ? "clip" : "still";
-  const m = getLungManifestMedia(entry.mediaRef.category, slot);
+  const getManifest = MANIFEST_GETTERS[entry.mediaRef.module];
+  if (!getManifest) return null;
+  const m = getManifest(entry.mediaRef.category, slot);
   if (!m) {
     if (slot === "clip") return null;
-    const still = getLungManifestMedia(entry.mediaRef.category, "still");
+    const still = getManifest(entry.mediaRef.category, "still");
     if (!still) return null;
     return buildResolved(entry, still);
   }

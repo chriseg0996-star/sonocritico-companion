@@ -5,8 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:pages": "node scripts/generate-lung-media.mjs && node scripts/build-lung-media-manifest.mjs && node scripts/build-pages.mjs",
+    "build:pages": "node scripts/generate-lung-media.mjs && node scripts/build-lung-media-manifest.mjs && node scripts/generate-fast-media.mjs && node scripts/build-fast-media-manifest.mjs && node scripts/generate-cardiac-media.mjs && node scripts/build-cardiac-media-manifest.mjs && node scripts/generate-vexus-media.mjs && node scripts/build-vexus-media-manifest.mjs && node scripts/build-pages.mjs",
     "media:lung": "node scripts/generate-lung-media.mjs && node scripts/build-lung-media-manifest.mjs",
+    "media:fast": "node scripts/generate-fast-media.mjs && node scripts/build-fast-media-manifest.mjs",
+    "media:cardiac": "node scripts/generate-cardiac-media.mjs && node scripts/build-cardiac-media-manifest.mjs",
+    "media:vexus": "node scripts/generate-vexus-media.mjs && node scripts/build-vexus-media-manifest.mjs",
     "start": "next start"
   },
   "dependencies": {
