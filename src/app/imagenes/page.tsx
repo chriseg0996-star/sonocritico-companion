@@ -45,9 +45,9 @@ function ImagenesContent() {
     fontFamily: "'IBM Plex Mono', monospace",
     cursor: "pointer",
     whiteSpace: "nowrap",
-    background: active ? theme.brand.redMuted : "transparent",
-    border: `1px solid ${active ? theme.brand.redBorder : theme.bg.border}`,
-    color: active ? theme.brand.red : theme.text.muted,
+    background: active ? theme.accent.muted : "transparent",
+    border: `1px solid ${active ? theme.accent.border : theme.bg.border}`,
+    color: active ? theme.brand.primary : theme.text.muted,
   });
 
   return (
@@ -155,7 +155,7 @@ function ImagenesContent() {
                 }}
               >
                 <div>
-                  <div style={{ fontSize: 10, color: theme.brand.red, fontFamily: "'IBM Plex Mono', monospace" }}>
+                  <div style={{ fontSize: 10, color: theme.brand.primary, fontFamily: "'IBM Plex Mono', monospace" }}>
                     {selected.window}
                   </div>
                   <div style={{ fontSize: 14, fontWeight: 500, color: theme.text.primary }}>{selected.finding}</div>

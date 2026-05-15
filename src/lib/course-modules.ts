@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import type { CourseModule } from "@/types";
 
-export const COURSE_TAGLINE = "Ultrasonografía en el paciente crítico";
+export const COURSE_TAGLINE = "Visualiza el problema. Actúa con certeza.";
 
 export const courseModules: CourseModule[] = [
   {

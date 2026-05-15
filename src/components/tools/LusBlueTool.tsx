@@ -108,7 +108,7 @@ export function LusBlueTool() {
           ))}
         </ul>
         <p style={{ fontSize: 12, color: theme.text.primary, lineHeight: 1.6 }}>
-          <span style={{ color: theme.brand.red, fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}>
+          <span style={{ color: theme.brand.primary, fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}>
             MANEJO ·{" "}
           </span>
           {result.management}

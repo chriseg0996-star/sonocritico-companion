@@ -29,7 +29,7 @@ export function PageHeader({
           <p
             style={{
               ...type.eyebrow,
-              color: theme.brand.red,
+              color: theme.accent.primary,
               margin: "0 0 6px",
             }}
           >

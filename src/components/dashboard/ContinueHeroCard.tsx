@@ -30,14 +30,14 @@ export function ContinueHeroCard({
       style={{
         padding: 0,
         marginBottom: 28,
-        borderRadius: 14,
+        borderRadius: theme.radius.lg,
         overflow: "hidden",
       }}
     >
       <div
         style={{
-          background: `linear-gradient(135deg, ${theme.brand.redMuted} 0%, transparent 55%)`,
-          padding: "20px 22px 22px",
+          background: `linear-gradient(135deg, ${theme.accent.muted} 0%, transparent 60%)`,
+          padding: "22px 24px 24px",
         }}
       >
         <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
@@ -45,22 +45,22 @@ export function ContinueHeroCard({
             style={{
               width: 52,
               height: 52,
-              borderRadius: 12,
+              borderRadius: theme.radius.md,
               background: theme.bg.elevated,
-              border: `1px solid ${theme.brand.redBorder}`,
+              border: `1px solid ${theme.accent.border}`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               flexShrink: 0,
             }}
           >
-            <Icon size={26} color={theme.brand.red} strokeWidth={1.5} />
+            <Icon size={26} color={theme.accent.primary} strokeWidth={1.5} />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <p
               style={{
                 ...type.eyebrow,
-                color: theme.brand.red,
+                color: theme.accent.primary,
                 margin: "0 0 8px",
                 display: "flex",
                 alignItems: "center",
@@ -68,43 +68,21 @@ export function ContinueHeroCard({
               }}
             >
               <Play size={12} fill="currentColor" />
-              Continuar aprendiendo
+              Reanudar
             </p>
-            <h2
-              style={{
-                ...type.titleSm,
-                color: theme.text.primary,
-                margin: "0 0 4px",
-                fontSize: "1.25rem",
-              }}
-            >
-              Módulo {mod.order}: {mod.title}
+            <h2 style={{ ...type.titleSm, color: theme.text.primary, margin: "0 0 4px", fontSize: "1.2rem" }}>
+              {mod.title}
             </h2>
             <p style={{ ...type.bodySm, color: theme.text.secondary, margin: "0 0 14px" }}>
               {stepTitle ? (
                 <>
-                  Siguiente paso:{" "}
-                  <strong style={{ color: theme.text.primary, fontWeight: 500 }}>{stepTitle}</strong>
+                  Siguiente: <strong style={{ color: theme.text.primary, fontWeight: 500 }}>{stepTitle}</strong>
                 </>
               ) : (
                 mod.subtitle
               )}
             </p>
-            <div style={{ marginBottom: 8 }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginBottom: 6,
-                  ...type.caption,
-                  color: theme.text.muted,
-                }}
-              >
-                <span>Progreso del módulo</span>
-                <span>{modulePercent}%</span>
-              </div>
-              <ProgressBar value={modulePercent} height={6} />
-            </div>
+            <ProgressBar value={modulePercent} height={5} />
             <div
               style={{
                 display: "flex",
@@ -115,23 +93,22 @@ export function ContinueHeroCard({
               }}
             >
               <span style={{ ...type.caption, color: theme.text.muted }}>
-                Curso general: {coursePercent}%
+                Módulo {modulePercent}% · Curso {coursePercent}%
               </span>
               <span
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 6,
-                  padding: "10px 18px",
-                  borderRadius: 8,
-                  fontSize: 13,
-                  fontWeight: 500,
-                  background: theme.brand.redMuted,
-                  border: `1px solid ${theme.brand.redBorder}`,
-                  color: theme.brand.red,
+                  padding: "9px 16px",
+                  borderRadius: theme.radius.sm,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  background: theme.button.primaryBg,
+                  color: theme.button.primaryText,
                 }}
               >
-                Continuar <ChevronRight size={16} />
+                Continuar <ChevronRight size={15} />
               </span>
             </div>
           </div>

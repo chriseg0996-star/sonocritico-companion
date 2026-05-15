@@ -51,15 +51,15 @@ export default function ModulosPage() {
                       width: 36,
                       height: 36,
                       borderRadius: 8,
-                      background: theme.brand.redMuted,
-                      border: `1px solid ${theme.bg.border}`,
+                      background: theme.accent.muted,
+                      border: `1px solid ${theme.accent.borderSubtle}`,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       flexShrink: 0,
                       fontFamily: "'IBM Plex Mono', monospace",
                       fontSize: 12,
-                      color: theme.brand.red,
+                      color: theme.brand.primary,
                     }}
                   >
                     {mod.order}
@@ -89,7 +89,7 @@ export default function ModulosPage() {
                       }}
                     >
                       <span>~{mod.estimatedMinutes} min</span>
-                      <span style={{ display: "flex", alignItems: "center", gap: 4, color: theme.brand.red }}>
+                      <span style={{ display: "flex", alignItems: "center", gap: 4, color: theme.brand.primary }}>
                         Abrir <ChevronRight size={12} />
                       </span>
                     </div>

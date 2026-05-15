@@ -198,13 +198,13 @@ export function ProtocolNodeDrawer({ node, onClose }: { node: FlowNode; onClose:
         {node.clinicalAction && (
           <div
             style={{
-              background: theme.brand.redMuted,
-              border: `1px solid ${theme.brand.redBorder}`,
+              background: theme.accent.muted,
+              border: `1px solid ${theme.accent.border}`,
               borderRadius: 8,
               padding: 12,
             }}
           >
-            <div style={{ fontSize: 10, color: theme.brand.red, fontFamily: "'IBM Plex Mono', monospace", marginBottom: 4 }}>
+            <div style={{ fontSize: 10, color: theme.accent.soft, fontFamily: "'IBM Plex Mono', monospace", marginBottom: 4 }}>
               ACCIÓN CLÍNICA
             </div>
             <div style={{ fontSize: 13, color: theme.text.primary, lineHeight: 1.6 }}>{node.clinicalAction}</div>
@@ -289,12 +289,12 @@ export function ProtocolChecklistPanel({
                 gap: 10,
                 padding: "10px 12px",
                 borderRadius: 8,
-                border: `1px solid ${done ? theme.brand.redBorder : theme.bg.border}`,
-                background: done ? theme.brand.redMuted : "transparent",
+                border: `1px solid ${done ? theme.accent.border : theme.bg.border}`,
+                background: done ? theme.accent.muted : "transparent",
                 cursor: "pointer",
               }}
             >
-              <CheckSquare size={16} color={done ? theme.brand.red : theme.text.muted} style={{ flexShrink: 0, marginTop: 1 }} />
+              <CheckSquare size={16} color={done ? theme.brand.primary : theme.text.muted} style={{ flexShrink: 0, marginTop: 1 }} />
               <div>
                 <div
                   style={{
@@ -320,13 +320,13 @@ export function ProtocolChecklistPanel({
         <div
           style={{
             marginTop: 14,
-            background: theme.brand.redMuted,
-            border: `1px solid ${theme.brand.redBorder}`,
+            background: theme.accent.muted,
+            border: `1px solid ${theme.accent.border}`,
             borderRadius: 8,
             padding: 12,
             textAlign: "center",
             fontSize: 13,
-            color: theme.brand.red,
+            color: theme.brand.primary,
           }}
         >
           Checklist completo
@@ -370,7 +370,7 @@ export function ProtocolQuizPanel({ protocolSlug }: { protocolSlug: string }) {
   if (finished) {
     return (
       <ScanLineCard style={{ padding: 20, textAlign: "center" }}>
-        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 24, color: theme.brand.red }}>Quiz completado</div>
+        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 24, color: theme.brand.primary }}>Quiz completado</div>
         <div style={{ fontSize: 12, color: theme.text.muted, marginTop: 8 }}>Revisa tu progreso en la sección Progreso.</div>
       </ScanLineCard>
     );

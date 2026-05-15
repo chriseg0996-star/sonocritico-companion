@@ -3,7 +3,10 @@ import { useRouter } from "next/navigation";
 import { Activity, ChevronRight, Wind, Waves } from "lucide-react";
 import { useAuth, LoadingScreen } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { ScanLineCard, Badge } from "@/components/ui/base";
+import { PageShell } from "@/components/layout/PageShell";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { ScanLineCard } from "@/components/ui/base";
+import { type } from "@/lib/typography";
 import { theme } from "@/lib/theme";
 
 const tools = [
@@ -15,13 +18,13 @@ const tools = [
   },
   {
     title: "Protocolo BLUE",
-    description: "Disnea aguda: perfil A/B, PLAPS, TEP vs EAP vs neumonía.",
+    description: "Disnea aguda: perfil A/B, PLAPS, orientación diagnóstica.",
     icon: Wind,
     href: "/herramientas/lus",
   },
   {
     title: "RUSH — Tipos de shock",
-    description: "Pump, Tank y Pipes para orientar fluidos y vasopresores.",
+    description: "Pump, Tank y Pipes para fluidos y vasopresores.",
     icon: Activity,
     href: "/herramientas/shock",
   },
@@ -35,24 +38,14 @@ export default function HerramientasPage() {
 
   return (
     <AppLayout user={user}>
-      <div style={{ maxWidth: 800, margin: "0 auto", padding: "16px 16px 24px" }}>
-        <div style={{ marginBottom: 20 }}>
-          <div
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 28,
-              letterSpacing: 1,
-              color: theme.text.primary,
-            }}
-          >
-            Herramientas
-          </div>
-          <p style={{ fontSize: 12, color: theme.text.secondary, marginTop: 4 }}>
-            Calculadoras interactivas del curso — uso en cabecera del paciente
-          </p>
-        </div>
+      <PageShell>
+        <PageHeader
+          eyebrow="Herramientas críticas"
+          title="Calculadoras y protocolos"
+          subtitle="Uso en cabecera del paciente — inputs compactos, resultados destacados."
+        />
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {tools.map((tool) => {
             const Icon = tool.icon;
             return (
@@ -60,38 +53,35 @@ export default function HerramientasPage() {
                 key={tool.href}
                 onClick={() => router.push(tool.href)}
                 glow
-                style={{ padding: 16, cursor: "pointer" }}
+                style={{ padding: 18, cursor: "pointer" }}
               >
-                <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
                   <div
                     style={{
-                      width: 44,
-                      height: 44,
-                      borderRadius: 10,
-                      background: theme.brand.redMuted,
-                      border: `1px solid ${theme.brand.redBorder}`,
+                      width: 48,
+                      height: 48,
+                      borderRadius: theme.radius.md,
+                      background: theme.accent.muted,
+                      border: `1px solid ${theme.accent.border}`,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       flexShrink: 0,
                     }}
                   >
-                    <Icon size={22} color={theme.brand.red} strokeWidth={1.5} />
+                    <Icon size={22} color={theme.accent.primary} strokeWidth={1.5} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "center" }}>
-                      <span style={{ fontSize: 14, fontWeight: 500, color: theme.text.primary }}>{tool.title}</span>
-                      <Badge variant="brand">Interactiva</Badge>
-                    </div>
-                    <p style={{ fontSize: 12, color: theme.text.muted, marginTop: 4, lineHeight: 1.5 }}>{tool.description}</p>
+                    <div style={{ ...type.titleSm, color: theme.text.primary, marginBottom: 4 }}>{tool.title}</div>
+                    <p style={{ ...type.caption, color: theme.text.muted, margin: 0, lineHeight: 1.5 }}>{tool.description}</p>
                   </div>
-                  <ChevronRight size={18} color={theme.brand.red} style={{ flexShrink: 0 }} />
+                  <ChevronRight size={18} color={theme.accent.primary} style={{ flexShrink: 0 }} />
                 </div>
               </ScanLineCard>
             );
           })}
         </div>
-      </div>
+      </PageShell>
     </AppLayout>
   );
 }

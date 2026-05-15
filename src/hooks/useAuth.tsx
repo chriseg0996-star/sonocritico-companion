@@ -40,11 +40,27 @@ export function LoadingScreen() {
         gap: 12,
       }}
     >
-      <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 24, letterSpacing: 2, color: theme.text.primary }}>
-        SONOCRÍTICO <span style={{ color: theme.brand.red }}>MX</span>
-      </div>
-      <div style={{ width: 32, height: 2, background: theme.bg.border, borderRadius: 1, overflow: "hidden" }}>
-        <div style={{ width: "60%", height: "100%", background: theme.brand.red, animation: "slide 1s ease-in-out infinite" }} />
+      <p
+        style={{
+          fontFamily: "'IBM Plex Sans', sans-serif",
+          fontSize: 14,
+          fontWeight: 600,
+          letterSpacing: "0.14em",
+          color: theme.accent.primary,
+          margin: 0,
+        }}
+      >
+        SONOCRÍTICO
+      </p>
+      <div style={{ width: 40, height: 2, background: theme.bg.elevated, borderRadius: 1, overflow: "hidden" }}>
+        <div
+          style={{
+            width: "60%",
+            height: "100%",
+            background: theme.accent.primary,
+            animation: "slide 1s ease-in-out infinite",
+          }}
+        />
       </div>
       <style>{`@keyframes slide { 0%{transform:translateX(-100%)} 100%{transform:translateX(200%)} }`}</style>
     </div>

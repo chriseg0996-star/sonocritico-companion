@@ -109,12 +109,12 @@ export function ShockTableTool() {
       <ScanLineCard
         style={{
           padding: 16,
-          border: `1px solid ${theme.brand.redBorder}`,
-          background: theme.brand.redMuted,
+          border: `1px solid ${theme.accent.border}`,
+          background: theme.accent.muted,
         }}
       >
         <div style={{ fontSize: 28, marginBottom: 4 }}>{result.emoji}</div>
-        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 24, color: theme.brand.red }}>
+        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 24, color: theme.brand.primary }}>
           {result.type}
         </div>
         <ul style={{ margin: "12px 0", paddingLeft: 18, fontSize: 12, color: theme.text.secondary }}>

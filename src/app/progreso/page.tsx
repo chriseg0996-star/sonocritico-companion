@@ -50,7 +50,7 @@ export default function ProgresoPage() {
             style={{
               fontFamily: "'Bebas Neue', sans-serif",
               fontSize: 52,
-              color: theme.brand.red,
+              color: theme.brand.primary,
               lineHeight: 1,
             }}
           >
@@ -93,7 +93,7 @@ export default function ProgresoPage() {
           ))}
         </div>
 
-        <h2 style={{ ...type.eyebrow, color: theme.brand.red, margin: "0 0 8px" }}>
+        <h2 style={{ ...type.eyebrow, color: theme.brand.primary, margin: "0 0 8px" }}>
           Modulos del curso
         </h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
@@ -109,7 +109,7 @@ export default function ProgresoPage() {
                 style={{ padding: "12px 14px", cursor: "pointer" }}
               >
                 <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                  <Icon size={18} color={theme.brand.red} strokeWidth={1.5} style={{ marginTop: 2, flexShrink: 0 }} />
+                  <Icon size={18} color={theme.brand.primary} strokeWidth={1.5} style={{ marginTop: 2, flexShrink: 0 }} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div
                       style={{
@@ -157,7 +157,7 @@ export default function ProgresoPage() {
 
         {progress.quizResults.length > 0 && (
           <>
-            <h2 style={{ ...type.eyebrow, color: theme.brand.red, margin: "0 0 8px" }}>
+            <h2 style={{ ...type.eyebrow, color: theme.brand.primary, margin: "0 0 8px" }}>
               Historial de quizzes · promedio {quizAvg > 0 ? `${quizAvg}%` : "—"}
             </h2>
             <ScanLineCard style={{ padding: 12 }}>

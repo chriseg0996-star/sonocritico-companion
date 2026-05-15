@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SonoCrítico MX",
-  description: "Ultrasonografía en el paciente crítico — companion educativo",
+  title: "SONOCRÍTICO — Companion USG Crítico",
+  description: "Referencia para protocolos, imágenes y calculadoras en ultrasonido crítico (UCI).",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body style={{ background: "#000000", color: "#FFFFFF", minHeight: "100vh" }}>
+      <body style={{ background: "var(--bg-primary)", color: "var(--text-primary)", minHeight: "100vh" }}>
         {children}
       </body>
     </html>

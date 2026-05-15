@@ -368,7 +368,7 @@ export const clinicalCases: ClinicalCase[] = [
 export const mockCourse: Course = {
   id: "course-sonocritico-mx",
   name: "SonoCrítico MX",
-  tagline: "Ultrasonografía en el paciente crítico",
+  tagline: "Visualiza el problema. Actúa con certeza.",
   date: "2024-11-15",
   instructorId: "instructor-01",
   accessCode: "SONO2024",

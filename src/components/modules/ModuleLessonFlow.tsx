@@ -66,7 +66,7 @@ export function ModuleLessonFlow({
           <div
             style={{
               fontSize: 10,
-              color: theme.brand.red,
+              color: theme.brand.primary,
               fontFamily: "'IBM Plex Mono', monospace",
               letterSpacing: 0.5,
             }}

@@ -17,10 +17,10 @@ export function ModuleTabBar({
     <div
       style={{
         display: "flex",
-        gap: 4,
-        marginBottom: 16,
+        gap: 5,
+        marginBottom: 20,
         overflowX: "auto",
-        paddingBottom: 4,
+        paddingBottom: 2,
         WebkitOverflowScrolling: "touch",
       }}
     >
@@ -35,19 +35,21 @@ export function ModuleTabBar({
               display: "flex",
               alignItems: "center",
               gap: 6,
-              padding: "8px 12px",
-              borderRadius: 8,
-              border: `1px solid ${isActive ? theme.brand.redBorder : theme.bg.border}`,
-              background: isActive ? theme.brand.redMuted : theme.bg.card,
-              color: isActive ? theme.brand.red : theme.text.secondary,
+              padding: "7px 11px",
+              borderRadius: 6,
+              border: "none",
+              background: isActive ? theme.accent.muted : theme.surface.glass,
+              color: isActive ? theme.accent.soft : theme.text.muted,
               fontSize: 11,
+              fontWeight: 500,
               fontFamily: "'IBM Plex Sans', sans-serif",
               whiteSpace: "nowrap",
               cursor: "pointer",
               flexShrink: 0,
+              transition: `background ${theme.motion.fast}, color ${theme.motion.fast}`,
             }}
           >
-            <Icon size={14} strokeWidth={1.5} />
+            <Icon size={13} strokeWidth={1.5} />
             {label}
           </button>
         );

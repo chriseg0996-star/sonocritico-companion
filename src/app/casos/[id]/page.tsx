@@ -93,8 +93,8 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
         <div style={{ display: "flex", gap: 4, marginBottom: 20 }}>
           {(["presentation", "images", "questions", "summary"] as CaseStep[]).map((s, i) => (
             <div key={s} style={{ flex: 1 }}>
-              <div style={{ height: 3, borderRadius: 2, background: step === s ? theme.brand.red : (["presentation", "images", "questions", "summary"].indexOf(step) > i) ? theme.text.primary : theme.bg.border, marginBottom: 4 }} />
-              <div style={{ fontSize: 9, color: step === s ? theme.brand.red : theme.text.muted, fontFamily: "'IBM Plex Mono', monospace", textAlign: "center" }}>
+              <div style={{ height: 3, borderRadius: 2, background: step === s ? theme.brand.primary : (["presentation", "images", "questions", "summary"].indexOf(step) > i) ? theme.text.secondary : theme.bg.border, marginBottom: 4 }} />
+              <div style={{ fontSize: 9, color: step === s ? theme.brand.primary : theme.text.muted, fontFamily: "'IBM Plex Mono', monospace", textAlign: "center" }}>
                 {stepTitles[s]}
               </div>
             </div>
@@ -249,7 +249,7 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
                   let bg: string = "transparent";
                   let color: string = theme.text.secondary;
                   if (answered) {
-                    if (i === q.correctIndex) { border = theme.text.primary; bg = theme.brand.redMuted; color = theme.text.primary; }
+                    if (i === q.correctIndex) { border = theme.accent.border; bg = theme.accent.muted; color = theme.text.primary; }
                     else if (i === selected) { border = theme.brand.red; bg = theme.brand.redMuted; color = theme.brand.red; }
                   } else if (selected === i) { border = theme.brand.red; bg = theme.brand.redMuted; color = theme.brand.red; }
 
@@ -279,8 +279,8 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
 
               {answered && (
                 <div>
-                  <div style={{ background: theme.brand.redMuted, border: `1px solid ${theme.brand.redBorder}`, borderRadius: 8, padding: 12, marginTop: 14, fontSize: 12, color: theme.text.secondary, lineHeight: 1.7 }}>
-                    <div style={{ fontSize: 10, color: theme.brand.red, fontFamily: "'IBM Plex Mono', monospace", marginBottom: 4 }}>EXPLICACIÓN</div>
+                  <div style={{ background: theme.accent.muted, border: `1px solid ${theme.accent.border}`, borderRadius: 8, padding: 12, marginTop: 14, fontSize: 12, color: theme.text.secondary, lineHeight: 1.7 }}>
+                    <div style={{ fontSize: 10, color: theme.accent.soft, fontFamily: "'IBM Plex Mono', monospace", marginBottom: 4 }}>EXPLICACIÓN</div>
                     {q.explanation}
                   </div>
                   {selected !== q.correctIndex && (

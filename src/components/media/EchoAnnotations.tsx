@@ -14,7 +14,7 @@ export function EchoAnnotations({ annotations }: { annotations: Annotation[] }) 
             left: `${ann.x}%`,
             top: `${ann.y}%`,
             transform: "translate(-50%, -50%)",
-            background: theme.brand.red,
+            background: theme.accent.primary,
             color: theme.text.primary,
             fontSize: 9,
             padding: "2px 5px",

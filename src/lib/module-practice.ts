@@ -315,7 +315,7 @@ export function getModulePracticeProtocol(slug: string): Protocol | null {
     indication: mod.subtitle,
     icon: mod.icon,
     category: "procedimiento",
-    color: "#DC2626",
+    color: "#8FA7C4",
     estimatedMinutes: mod.estimatedMinutes,
     difficulty: 2,
     imageIds: [],

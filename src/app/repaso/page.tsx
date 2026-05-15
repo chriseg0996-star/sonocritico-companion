@@ -69,9 +69,9 @@ function RepasoContent() {
     fontFamily: "'IBM Plex Mono', monospace",
     cursor: "pointer",
     whiteSpace: "nowrap",
-    background: active ? theme.brand.redMuted : "transparent",
-    border: `1px solid ${active ? theme.brand.redBorder : theme.bg.border}`,
-    color: active ? theme.brand.red : theme.text.muted,
+    background: active ? theme.accent.muted : "transparent",
+    border: `1px solid ${active ? theme.accent.border : theme.bg.border}`,
+    color: active ? theme.brand.primary : theme.text.muted,
   });
 
   return (

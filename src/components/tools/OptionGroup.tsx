@@ -17,7 +17,7 @@ export function OptionGroup<T extends string>({
       <div
         style={{
           fontSize: 10,
-          color: theme.brand.red,
+          color: theme.brand.primary,
           fontFamily: "'IBM Plex Mono', monospace",
           letterSpacing: 0.5,
           marginBottom: 8,
@@ -37,8 +37,8 @@ export function OptionGroup<T extends string>({
                 textAlign: "left",
                 padding: "10px 12px",
                 borderRadius: 8,
-                border: `1px solid ${active ? theme.brand.redBorder : theme.bg.border}`,
-                background: active ? theme.brand.redMuted : theme.bg.card,
+                border: `1px solid ${active ? theme.accent.border : theme.bg.border}`,
+                background: active ? theme.accent.muted : theme.bg.card,
                 color: active ? theme.text.primary : theme.text.secondary,
                 cursor: "pointer",
                 fontSize: 12,

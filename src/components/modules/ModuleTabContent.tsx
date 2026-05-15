@@ -18,19 +18,7 @@ import type { LocalProgress } from "@/lib/auth";
 import { theme } from "@/lib/theme";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <div
-      style={{
-        fontSize: 10,
-        color: theme.brand.red,
-        fontFamily: "'IBM Plex Mono', monospace",
-        letterSpacing: 1,
-        marginBottom: 8,
-      }}
-    >
-      {children}
-    </div>
-  );
+  return <p className="clinical-section-title">{children}</p>;
 }
 
 export function ModuleTabContent({
@@ -268,7 +256,7 @@ export function ModuleTabContent({
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontSize: 11,
-                  color: theme.brand.red,
+                  color: theme.brand.primary,
                   flexShrink: 0,
                 }}
               >

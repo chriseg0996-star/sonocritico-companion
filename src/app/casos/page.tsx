@@ -54,8 +54,8 @@ export default function CasosPage() {
                         width: 44,
                         height: 44,
                         borderRadius: 10,
-                        background: done ? theme.brand.redMuted : theme.bg.elevated,
-                        border: `1px solid ${done ? theme.brand.redBorder : theme.bg.border}`,
+                        background: done ? theme.accent.muted : theme.bg.elevated,
+                        border: `1px solid ${done ? theme.accent.border : theme.bg.border}`,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -63,7 +63,7 @@ export default function CasosPage() {
                       }}
                     >
                       {done ? (
-                        <CheckCircle2 size={20} strokeWidth={1.5} color={theme.brand.red} />
+                        <CheckCircle2 size={20} strokeWidth={1.5} color={theme.brand.primary} />
                       ) : (
                         <Activity size={20} strokeWidth={1.5} color={theme.text.secondary} />
                       )}
@@ -108,7 +108,7 @@ export default function CasosPage() {
                             alignItems: "center",
                             gap: 3,
                             fontSize: 10,
-                            color: theme.brand.red,
+                            color: theme.brand.primary,
                           }}
                         >
                           <div
@@ -116,7 +116,7 @@ export default function CasosPage() {
                               width: 6,
                               height: 6,
                               borderRadius: "50%",
-                              background: theme.brand.red,
+                              background: theme.brand.primary,
                             }}
                           />
                           {difficultyLabels[c.difficulty]}

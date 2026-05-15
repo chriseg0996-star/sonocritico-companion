@@ -19,14 +19,14 @@ type NavItem = { href: string; icon: React.ElementType; label: string };
 
 const navSections: { label: string; items: NavItem[] }[] = [
   {
-    label: "Aprender",
+    label: "Consulta",
     items: [
       { href: "/dashboard", icon: LayoutDashboard, label: "Inicio" },
       { href: "/modulos", icon: BookOpen, label: "Módulos" },
     ],
   },
   {
-    label: "Practicar",
+    label: "Entrenamiento",
     items: [
       { href: "/casos", icon: Activity, label: "Casos" },
       { href: "/repaso", icon: Brain, label: "Repaso" },
@@ -34,7 +34,7 @@ const navSections: { label: string; items: NavItem[] }[] = [
     ],
   },
   {
-    label: "Herramientas",
+    label: "Herramientas críticas",
     items: [{ href: "/herramientas", icon: Wrench, label: "Calculadoras" }],
   },
   {
@@ -58,18 +58,7 @@ function NavLink({
   onClick,
 }: NavItem & { active: boolean; onClick: () => void }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`nav-link${active ? " nav-link--active" : ""}`}
-      style={{
-        width: "100%",
-        textAlign: "left",
-        background: active ? theme.brand.redMuted : "transparent",
-        border: active ? `1px solid ${theme.brand.redBorder}` : "1px solid transparent",
-        color: active ? theme.brand.red : theme.text.secondary,
-      }}
-    >
+    <button type="button" onClick={onClick} className={`nav-link${active ? " nav-link--active" : ""}`} style={{ width: "100%", textAlign: "left" }}>
       <Icon size={16} strokeWidth={1.5} />
       {label}
     </button>
@@ -92,34 +81,14 @@ export function AppLayout({ children, user }: { children: React.ReactNode; user:
   return (
     <div style={{ minHeight: "100vh", display: "flex" }}>
       <aside className="app-sidebar">
-        <div style={{ padding: "20px 16px 16px", borderBottom: `1px solid ${theme.bg.border}` }}>
-          <div
-            style={{
-              fontFamily: fonts.display,
-              fontSize: 22,
-              letterSpacing: 2,
-              color: theme.text.primary,
-            }}
-          >
-            SONOCRÍTICO
-          </div>
-          <div
-            style={{
-              fontFamily: fonts.display,
-              fontSize: 11,
-              letterSpacing: 3,
-              color: theme.brand.red,
-              marginTop: -4,
-            }}
-          >
-            MX
-          </div>
+        <div style={{ padding: "24px 18px 20px" }}>
+          <p className="brand-wordmark">SONOCRÍTICO</p>
+          <p className="brand-tagline">Visualiza el problema. Actúa con certeza.</p>
         </div>
 
         <div
           style={{
-            padding: "12px 16px",
-            borderBottom: `1px solid ${theme.bg.border}`,
+            padding: "14px 16px",
             display: "flex",
             alignItems: "center",
             gap: 10,
@@ -130,13 +99,13 @@ export function AppLayout({ children, user }: { children: React.ReactNode; user:
               width: 36,
               height: 36,
               borderRadius: "50%",
-              background: theme.brand.redMuted,
-              border: `1px solid ${theme.brand.redBorder}`,
+              background: theme.surface.glass,
+              border: "none",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontSize: 12,
-              color: theme.brand.red,
+              color: theme.accent.primary,
               fontWeight: 600,
               flexShrink: 0,
               fontFamily: fonts.sans,
@@ -162,34 +131,19 @@ export function AppLayout({ children, user }: { children: React.ReactNode; user:
           </div>
         </div>
 
-        <nav style={{ flex: 1, padding: "8px 8px 12px", overflowY: "auto" }}>
+        <nav style={{ flex: 1, padding: "8px 10px 12px", overflowY: "auto" }}>
           {navSections.map((section) => (
             <div key={section.label}>
               <p className="nav-section-label">{section.label}</p>
               {section.items.map((item) => (
-                <NavLink
-                  key={item.href}
-                  {...item}
-                  active={isActive(item.href)}
-                  onClick={() => router.push(item.href)}
-                />
+                <NavLink key={item.href} {...item} active={isActive(item.href)} onClick={() => router.push(item.href)} />
               ))}
             </div>
           ))}
         </nav>
 
-        <div style={{ padding: "12px 8px", borderTop: `1px solid ${theme.bg.border}` }}>
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="nav-link"
-            style={{
-              width: "100%",
-              color: theme.text.muted,
-              background: "transparent",
-              border: "1px solid transparent",
-            }}
-          >
+        <div style={{ padding: "12px 10px", borderTop: `1px solid ${theme.bg.border}` }}>
+          <button type="button" onClick={handleLogout} className="nav-link" style={{ width: "100%", color: theme.text.muted }}>
             <LogOut size={16} strokeWidth={1.5} />
             Cerrar sesión
           </button>
@@ -216,7 +170,7 @@ export function AppLayout({ children, user }: { children: React.ReactNode; user:
                 background: "transparent",
                 border: "none",
                 cursor: "pointer",
-                color: active ? theme.brand.red : theme.text.muted,
+                color: active ? theme.accent.primary : theme.text.muted,
                 fontSize: 10,
                 fontWeight: active ? 600 : 400,
                 fontFamily: fonts.sans,
@@ -231,4 +185,3 @@ export function AppLayout({ children, user }: { children: React.ReactNode; user:
     </div>
   );
 }
-

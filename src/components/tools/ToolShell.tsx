@@ -2,6 +2,8 @@
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { PageShell } from "@/components/layout/PageShell";
+import { PageHeader } from "@/components/layout/PageHeader";
 import type { User } from "@/types";
 import { theme } from "@/lib/theme";
 
@@ -22,8 +24,9 @@ export function ToolShell({
 
   return (
     <AppLayout user={user}>
-      <div style={{ maxWidth: 720, margin: "0 auto", padding: "16px 16px 32px" }}>
-        <div
+      <PageShell narrow>
+        <button
+          type="button"
           onClick={() => router.push("/herramientas")}
           style={{
             display: "flex",
@@ -33,42 +36,41 @@ export function ToolShell({
             color: theme.text.muted,
             marginBottom: 16,
             fontSize: 12,
+            background: "none",
+            border: "none",
+            padding: 0,
+            fontFamily: "'IBM Plex Sans', sans-serif",
           }}
         >
-          <ArrowLeft size={14} /> Herramientas
-        </div>
-        <div style={{ marginBottom: 20 }}>
-          <div
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 28,
-              letterSpacing: 1,
-              color: theme.text.primary,
-            }}
-          >
-            {title}
-          </div>
-          <p style={{ fontSize: 12, color: theme.text.secondary, marginTop: 4 }}>{subtitle}</p>
-          {moduleHref && (
-            <button
-              type="button"
-              onClick={() => router.push(moduleHref)}
-              style={{
-                marginTop: 8,
-                background: "none",
-                border: "none",
-                color: theme.brand.red,
-                fontSize: 11,
-                cursor: "pointer",
-                fontFamily: "'IBM Plex Mono', monospace",
-              }}
-            >
-              Ver módulo del curso →
-            </button>
-          )}
-        </div>
+          <ArrowLeft size={14} /> Herramientas críticas
+        </button>
+        <PageHeader
+          eyebrow="Calculadora"
+          title={title}
+          subtitle={subtitle}
+          action={
+            moduleHref ? (
+              <button
+                type="button"
+                onClick={() => router.push(moduleHref)}
+                style={{
+                  background: "none",
+                  border: `1px solid ${theme.accent.border}`,
+                  borderRadius: theme.radius.sm,
+                  color: theme.navy.light,
+                  fontSize: 11,
+                  cursor: "pointer",
+                  padding: "6px 12px",
+                  fontFamily: "'IBM Plex Sans', sans-serif",
+                }}
+              >
+                Ver módulo →
+              </button>
+            ) : undefined
+          }
+        />
         {children}
-      </div>
+      </PageShell>
     </AppLayout>
   );
 }

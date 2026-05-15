@@ -1,36 +1,29 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BookOpen, Brain, Image } from "lucide-react";
+import { BookOpen, ChevronRight } from "lucide-react";
 import { useAuth, LoadingScreen } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { PageShell } from "@/components/layout/PageShell";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { ContinueHeroCard } from "@/components/dashboard/ContinueHeroCard";
-import { ScanLineCard, Badge, ProgressBar, StatCard } from "@/components/ui/base";
-import { clinicalCases, mockCourse } from "@/lib/mock-data";
+import { CompanionHero } from "@/components/dashboard/CompanionHero";
+import { QuickAccessRow } from "@/components/dashboard/QuickAccessRow";
+import { ConsultQuickCard } from "@/components/dashboard/ConsultQuickCard";
+import { ContinueCompactCard } from "@/components/dashboard/ContinueCompactCard";
+import { ScanLineCard } from "@/components/ui/base";
+import { clinicalCases } from "@/lib/mock-data";
 import { getProgress } from "@/lib/auth";
 import { calcQuizAvg } from "@/lib/mock-data";
 import { courseModules, getModuleIcon } from "@/lib/course-modules";
-import {
-  getCoursePercent,
-  getModulePercent,
-  getModuleStatus,
-} from "@/lib/module-progress";
+import { consultTiles } from "@/lib/dashboard-modules";
+import { getCoursePercent, getModulePercent, getModuleStatus } from "@/lib/module-progress";
 import { findResumeTarget } from "@/lib/module-steps";
 import { type } from "@/lib/typography";
 import { theme } from "@/lib/theme";
 import type { LocalProgress } from "@/lib/auth";
 
-const statusLabel = {
-  "not-started": "Pendiente",
-  "in-progress": "En curso",
-  complete: "Completado",
-};
-
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 style={{ ...type.eyebrow, color: theme.text.muted, margin: "0 0 12px" }}>{children}</h2>
+    <h2 style={{ ...type.eyebrow, color: theme.accent.primary, margin: "0 0 14px" }}>{children}</h2>
   );
 }
 
@@ -62,169 +55,97 @@ export default function DashboardPage() {
   return (
     <AppLayout user={user}>
       <PageShell>
-        <PageHeader
-          eyebrow={mockCourse.name}
-          title={`Hola, ${user.name.split(" ")[0]}`}
-          subtitle={mockCourse.tagline}
-          action={<Badge variant="brand">{mockCourse.accessCode}</Badge>}
-        />
+        {/* A. Hero */}
+        <CompanionHero />
 
-        {resumeModule && (
-          <ContinueHeroCard
-            module={resumeModule}
-            stepTitle={resume?.stepTitle}
-            modulePercent={getModulePercent(resumeModule.slug, progress)}
-            coursePercent={coursePct}
-            icon={ResumeIcon}
-            onContinue={() => router.push(resumeHref)}
-          />
-        )}
+        {/* B. Accesos rápidos */}
+        <SectionTitle>Accesos rápidos</SectionTitle>
+        <QuickAccessRow />
 
+        {/* C. Consulta rápida */}
+        <SectionTitle>Consulta rápida</SectionTitle>
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
             gap: 12,
             marginBottom: 32,
           }}
         >
-          <StatCard
-            value={`${coursePct}%`}
-            label="Progreso del curso"
-            sub={`${completedCount} de ${courseModules.length} modulos`}
-            color={theme.brand.red}
-          />
-          <StatCard
-            value={progress.completedCases.length}
-            label="Casos completados"
-            sub={`de ${clinicalCases.length} disponibles`}
-            color={theme.text.primary}
-          />
-          <StatCard
-            value={quizAvg > 0 ? `${quizAvg}%` : "-"}
-            label="Promedio en quizzes"
-            sub={`${progress.quizResults.length} evaluaciones`}
-            color={theme.text.secondary}
-          />
+          {consultTiles.map((tile) => (
+            <ConsultQuickCard key={tile.label} tile={tile} />
+          ))}
         </div>
 
-        <SectionTitle>Currículo del curso</SectionTitle>
-        <ScanLineCard style={{ padding: 10, marginBottom: 32 }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {courseModules.map((mod) => {
-              const status = getModuleStatus(mod.slug, progress);
-              const pct = getModulePercent(mod.slug, progress);
-              const Icon = getModuleIcon(mod.icon);
-              const barColor =
-                status === "complete"
-                  ? theme.text.primary
-                  : status === "in-progress"
-                    ? theme.brand.red
-                    : theme.bg.border;
+        {/* D. Reanudar curso */}
+        {resumeModule && (
+          <>
+            <ContinueCompactCard
+              module={resumeModule}
+              stepTitle={resume?.stepTitle}
+              icon={ResumeIcon}
+              onContinue={() => router.push(resumeHref)}
+            />
+          </>
+        )}
 
-              return (
-                <div
-                  key={mod.slug}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => router.push(`/modulos/${mod.slug}?step=0`)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") router.push(`/modulos/${mod.slug}?step=0`);
-                  }}
-                  className="module-row"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                    padding: "12px 10px",
-                    cursor: "pointer",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: 8,
-                      background: theme.brand.redMuted,
-                      border: `1px solid ${theme.bg.border}`,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexShrink: 0,
-                      fontSize: 12,
-                      fontWeight: 600,
-                      color: theme.brand.red,
-                      fontFamily: type.body.fontFamily,
-                    }}
-                  >
-                    {mod.order}
-                  </div>
-                  <Icon size={18} strokeWidth={1.5} color={theme.text.secondary} style={{ flexShrink: 0 }} />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        gap: 8,
-                        marginBottom: 6,
-                        alignItems: "baseline",
-                      }}
-                    >
-                      <span style={{ ...type.bodySm, color: theme.text.primary, fontWeight: 500 }}>
-                        {mod.title}
-                      </span>
-                      <Badge
-                        variant={
-                          status === "complete" ? "white" : status === "in-progress" ? "brand" : "gray"
-                        }
-                      >
-                        {statusLabel[status]}
-                      </Badge>
-                    </div>
-                    <ProgressBar value={pct} color={barColor} height={4} />
-                  </div>
-                  <span
-                    style={{
-                      ...type.caption,
-                      color: theme.text.muted,
-                      width: 36,
-                      textAlign: "right",
-                      flexShrink: 0,
-                      fontWeight: 500,
-                    }}
-                  >
-                    {pct}%
-                  </span>
-                </div>
-              );
-            })}
+        {/* E. Progreso resumido */}
+        <SectionTitle>Progreso del curso</SectionTitle>
+        <ScanLineCard style={{ padding: "14px 18px" }}>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 12,
+            }}
+          >
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "16px 24px" }}>
+              <span style={{ ...type.caption, color: theme.text.secondary }}>
+                <strong style={{ color: theme.text.primary, fontWeight: 600 }}>{coursePct}%</strong> curso ·{" "}
+                {completedCount}/{courseModules.length} módulos
+              </span>
+              <span style={{ ...type.caption, color: theme.text.secondary }}>
+                <strong style={{ color: theme.text.primary, fontWeight: 600 }}>
+                  {progress.completedCases.length}
+                </strong>
+                /{clinicalCases.length} casos
+              </span>
+              <span style={{ ...type.caption, color: theme.text.secondary }}>
+                Quizzes{" "}
+                <strong style={{ color: theme.text.primary, fontWeight: 600 }}>
+                  {quizAvg > 0 ? `${quizAvg}%` : "—"}
+                </strong>
+                {progress.quizResults.length > 0 && ` · ${progress.quizResults.length} eval.`}
+              </span>
+              {resumeModule && (
+                <span style={{ ...type.caption, color: theme.text.muted }}>
+                  Módulo activo: {getModulePercent(resumeModule.slug, progress)}%
+                </span>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => router.push("/progreso")}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 4,
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+                fontSize: 12,
+                fontWeight: 600,
+                color: theme.accent.primary,
+                fontFamily: "'IBM Plex Sans', sans-serif",
+              }}
+            >
+              Ver detalle <ChevronRight size={14} />
+            </button>
           </div>
         </ScanLineCard>
-
-        <SectionTitle>Acceso rápido</SectionTitle>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-            gap: 12,
-          }}
-        >
-          <ScanLineCard onClick={() => router.push("/modulos")} style={{ padding: "16px 18px" }}>
-            <BookOpen size={20} color={theme.brand.red} style={{ marginBottom: 10 }} />
-            <div style={{ ...type.titleSm, color: theme.text.primary, marginBottom: 4 }}>Todos los modulos</div>
-            <p style={{ ...type.caption, color: theme.text.muted, margin: 0 }}>Curriculo completo en orden</p>
-          </ScanLineCard>
-          <ScanLineCard onClick={() => router.push("/repaso")} style={{ padding: "16px 18px" }}>
-            <Brain size={20} color={theme.brand.red} style={{ marginBottom: 10 }} />
-            <div style={{ ...type.titleSm, color: theme.text.primary, marginBottom: 4 }}>Repaso flashcards</div>
-            <p style={{ ...type.caption, color: theme.text.muted, margin: 0 }}>Tarjetas por protocolo</p>
-          </ScanLineCard>
-          <ScanLineCard onClick={() => router.push("/imagenes")} style={{ padding: "16px 18px" }}>
-            <Image size={20} color={theme.brand.red} style={{ marginBottom: 10 }} />
-            <div style={{ ...type.titleSm, color: theme.text.primary, marginBottom: 4 }}>Biblioteca</div>
-            <p style={{ ...type.caption, color: theme.text.muted, margin: 0 }}>Imágenes anotadas</p>
-          </ScanLineCard>
-        </div>
       </PageShell>
     </AppLayout>
   );

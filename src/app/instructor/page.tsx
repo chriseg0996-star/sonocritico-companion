@@ -33,7 +33,7 @@ export default function InstructorPage() {
       <div style={{ background: theme.bg.card, borderBottom: `1px solid ${theme.bg.border}`, padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
           <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 22, letterSpacing: 2, color: theme.text.primary }}>
-            SONOCRÍTICO <span style={{ color: theme.brand.red }}>MX</span>
+            SONOCRÍTICO <span style={{ color: theme.brand.primary }}>MX</span>
           </div>
           <div style={{ fontSize: 10, color: theme.text.muted, fontFamily: "'IBM Plex Mono', monospace" }}>Panel Instructor · {mockCourse.name}</div>
         </div>
@@ -50,7 +50,7 @@ export default function InstructorPage() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8, marginBottom: 20 }}>
           {[
             { icon: Users, value: mockStudents.length, label: "Alumnos activos", color: theme.text.primary },
-            { icon: BookOpen, value: avgModules, label: "Mód. promedio", color: theme.brand.red },
+            { icon: BookOpen, value: avgModules, label: "Mód. promedio", color: theme.brand.primary },
             { icon: Activity, value: avgCases, label: "Casos promedio", color: theme.text.secondary },
           ].map(({ icon: Icon, value, label, color }) => (
             <ScanLineCard key={label} style={{ padding: "12px 14px", textAlign: "center" }}>
@@ -70,7 +70,7 @@ export default function InstructorPage() {
             return (
               <ScanLineCard key={st.id} style={{ padding: "12px 14px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: theme.brand.redMuted, border: `1px solid ${theme.brand.redBorder}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: theme.brand.red, fontWeight: 500, flexShrink: 0 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: theme.accent.muted, border: `1px solid ${theme.accent.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: theme.brand.primary, fontWeight: 500, flexShrink: 0 }}>
                     {st.initials}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -85,7 +85,7 @@ export default function InstructorPage() {
                       </div>
                     </div>
                     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                      <div style={{ flex: 1 }}><ProgressBar value={protoPct} color={protoPct === 100 ? theme.text.primary : theme.brand.red} height={3} /></div>
+                      <div style={{ flex: 1 }}><ProgressBar value={protoPct} color={protoPct === 100 ? theme.text.primary : theme.brand.primary} height={3} /></div>
                       <span style={{ fontSize: 9, color: theme.text.muted, fontFamily: "'IBM Plex Mono', monospace", width: 28, textAlign: "right" }}>{protoPct}%</span>
                     </div>
                   </div>

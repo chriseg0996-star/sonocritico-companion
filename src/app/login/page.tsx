@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2, Lock, Mail, Shield } from "lucide-react";
 import { login } from "@/lib/auth";
+import { Btn } from "@/components/ui/base";
+import { theme } from "@/lib/theme";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -33,41 +35,44 @@ export default function LoginPage() {
 
   const inputStyle: React.CSSProperties = {
     width: "100%",
-    background: "#000000",
-    border: "1px solid #2A2A2A",
-    borderRadius: 8,
+    background: theme.bg.primary,
+    border: `1px solid ${theme.bg.border}`,
+    borderRadius: theme.radius.sm,
     padding: "11px 12px 11px 40px",
     fontSize: 13,
-    color: "#FFFFFF",
+    color: theme.text.primary,
     fontFamily: "'IBM Plex Sans', sans-serif",
     outline: "none",
     transition: "border-color 200ms ease-out",
   };
 
+  const focusBorder = theme.accent.borderStrong;
+  const blurBorder = theme.bg.border;
+
   return (
-    <div
+    <main
       style={{
         minHeight: "100vh",
-        background: "#000000",
+        background: theme.bg.primary,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         padding: "24px 16px",
       }}
     >
-      {/* Scanline bg */}
       <div
+        aria-hidden
         style={{
           position: "fixed",
           inset: 0,
-          background: "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(220,38,38,0.008) 3px, rgba(220,38,38,0.008) 4px)",
+          background:
+            "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.006) 3px, rgba(255,255,255,0.006) 4px)",
           pointerEvents: "none",
         }}
       />
 
-      <div style={{ width: "100%", maxWidth: 400, position: "relative" }}>
-        {/* Logo */}
-        <div style={{ textAlign: "center", marginBottom: 32 }}>
+      <div style={{ width: "100%", maxWidth: 420, position: "relative" }}>
+        <header style={{ textAlign: "center", marginBottom: 32 }}>
           <div
             style={{
               display: "inline-flex",
@@ -75,49 +80,49 @@ export default function LoginPage() {
               justifyContent: "center",
               width: 56,
               height: 56,
-              borderRadius: 14,
-              background: "rgba(220,38,38,0.1)",
-              border: "1px solid rgba(220,38,38,0.25)",
-              marginBottom: 16,
+              borderRadius: theme.radius.md,
+              background: theme.accent.muted,
+              border: `1px solid ${theme.accent.border}`,
+              marginBottom: 18,
             }}
           >
-            <Shield size={26} color="#DC2626" strokeWidth={1.5} />
+            <Shield size={26} color={theme.accent.primary} strokeWidth={1.5} />
           </div>
-          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 36, letterSpacing: 3, color: "#DC2626", lineHeight: 1 }}>
+          <p className="brand-wordmark" style={{ fontSize: 14, marginBottom: 8 }}>
             SONOCRÍTICO
-          </div>
-          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 14, letterSpacing: 5, color: "#525252", marginTop: -2 }}>
-            MX
-          </div>
-          <div style={{ fontSize: 12, color: "#525252", marginTop: 8, fontStyle: "italic" }}>
-            "Visualiza el problema. Actúa con certeza."
-          </div>
-        </div>
+          </p>
+          <p className="brand-tagline" style={{ margin: 0, textAlign: "center" }}>
+            Visualiza el problema. Actúa con certeza.
+          </p>
+        </header>
 
-        {/* Card */}
         <div
           className="scan-line"
           style={{
-            background: "#0F0F0F",
-            border: "1px solid #2A2A2A",
-            borderRadius: 12,
-            padding: 24,
+            background: theme.bg.card,
+            border: `1px solid ${theme.bg.border}`,
+            borderRadius: theme.radius.lg,
+            padding: 28,
+            boxShadow: theme.shadow.card,
           }}
         >
-          <div style={{ fontSize: 16, fontWeight: 500, color: "#FFFFFF", marginBottom: 4 }}>
+          <h1 style={{ fontSize: 16, fontWeight: 600, color: theme.text.primary, margin: "0 0 4px" }}>
             Acceso al curso
-          </div>
-          <div style={{ fontSize: 12, color: "#525252", marginBottom: 20 }}>
-            Ingresa con tus credenciales y código de curso
-          </div>
+          </h1>
+          <p style={{ fontSize: 12, color: theme.text.muted, margin: "0 0 22px" }}>
+            Credenciales y código de curso
+          </p>
 
-          {/* Email */}
-          <div style={{ marginBottom: 12 }}>
-            <div style={{ fontSize: 11, color: "#A3A3A3", marginBottom: 6, fontFamily: "'IBM Plex Mono', monospace" }}>
+          <label style={{ display: "block", marginBottom: 12 }}>
+            <span style={{ fontSize: 10, color: theme.text.secondary, letterSpacing: "0.06em", fontWeight: 600 }}>
               EMAIL
-            </div>
-            <div style={{ position: "relative" }}>
-              <Mail size={15} strokeWidth={1.5} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#525252" }} />
+            </span>
+            <div style={{ position: "relative", marginTop: 6 }}>
+              <Mail
+                size={15}
+                strokeWidth={1.5}
+                style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: theme.text.muted }}
+              />
               <input
                 type="email"
                 placeholder="tu@email.com"
@@ -125,22 +130,25 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                 style={inputStyle}
-                onFocus={(e) => (e.target.style.borderColor = "rgba(220,38,38,0.4)")}
-                onBlur={(e) => (e.target.style.borderColor = "#2A2A2A")}
+                onFocus={(e) => (e.target.style.borderColor = focusBorder)}
+                onBlur={(e) => (e.target.style.borderColor = blurBorder)}
               />
             </div>
-            <div style={{ fontSize: 10, color: "#525252", marginTop: 4 }}>
-              Tip: usa &ldquo;instructor@...&rdquo; para acceso como instructor
-            </div>
-          </div>
+            <span style={{ fontSize: 10, color: theme.text.muted, marginTop: 4, display: "block" }}>
+              instructor@... para rol instructor
+            </span>
+          </label>
 
-          {/* Password */}
-          <div style={{ marginBottom: 12 }}>
-            <div style={{ fontSize: 11, color: "#A3A3A3", marginBottom: 6, fontFamily: "'IBM Plex Mono', monospace" }}>
+          <label style={{ display: "block", marginBottom: 12 }}>
+            <span style={{ fontSize: 10, color: theme.text.secondary, letterSpacing: "0.06em", fontWeight: 600 }}>
               CONTRASEÑA
-            </div>
-            <div style={{ position: "relative" }}>
-              <Lock size={15} strokeWidth={1.5} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#525252" }} />
+            </span>
+            <div style={{ position: "relative", marginTop: 6 }}>
+              <Lock
+                size={15}
+                strokeWidth={1.5}
+                style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: theme.text.muted }}
+              />
               <input
                 type={showPwd ? "text" : "password"}
                 placeholder="········"
@@ -148,25 +156,39 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                 style={{ ...inputStyle, paddingRight: 40 }}
-                onFocus={(e) => (e.target.style.borderColor = "rgba(220,38,38,0.4)")}
-                onBlur={(e) => (e.target.style.borderColor = "#2A2A2A")}
+                onFocus={(e) => (e.target.style.borderColor = focusBorder)}
+                onBlur={(e) => (e.target.style.borderColor = blurBorder)}
               />
-              <div
+              <button
+                type="button"
                 onClick={() => setShowPwd(!showPwd)}
-                style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", cursor: "pointer", color: "#525252" }}
+                style={{
+                  position: "absolute",
+                  right: 12,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                  color: theme.text.muted,
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                }}
               >
                 {showPwd ? <EyeOff size={15} strokeWidth={1.5} /> : <Eye size={15} strokeWidth={1.5} />}
-              </div>
+              </button>
             </div>
-          </div>
+          </label>
 
-          {/* Course code */}
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: 11, color: "#A3A3A3", marginBottom: 6, fontFamily: "'IBM Plex Mono', monospace" }}>
+          <label style={{ display: "block", marginBottom: 20 }}>
+            <span style={{ fontSize: 10, color: theme.text.secondary, letterSpacing: "0.06em", fontWeight: 600 }}>
               CÓDIGO DE CURSO
-            </div>
-            <div style={{ position: "relative" }}>
-              <Shield size={15} strokeWidth={1.5} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#525252" }} />
+            </span>
+            <div style={{ position: "relative", marginTop: 6 }}>
+              <Shield
+                size={15}
+                strokeWidth={1.5}
+                style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: theme.text.muted }}
+              />
               <input
                 type="text"
                 placeholder="SONO2024"
@@ -174,22 +196,21 @@ export default function LoginPage() {
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
                 onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                 style={{ ...inputStyle, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: 2 }}
-                onFocus={(e) => (e.target.style.borderColor = "rgba(220,38,38,0.4)")}
-                onBlur={(e) => (e.target.style.borderColor = "#2A2A2A")}
+                onFocus={(e) => (e.target.style.borderColor = focusBorder)}
+                onBlur={(e) => (e.target.style.borderColor = blurBorder)}
               />
             </div>
-          </div>
+          </label>
 
-          {/* Error */}
           {error && (
             <div
               style={{
-                background: "rgba(239,68,68,0.08)",
-                border: "1px solid rgba(239,68,68,0.25)",
-                borderRadius: 8,
+                background: theme.state.errorMuted,
+                border: `1px solid ${theme.state.errorBorder}`,
+                borderRadius: theme.radius.sm,
                 padding: "8px 12px",
                 fontSize: 12,
-                color: "#EF4444",
+                color: theme.state.error,
                 marginBottom: 16,
               }}
             >
@@ -197,28 +218,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Submit */}
-          <div
-            onClick={handleLogin}
-            style={{
-              width: "100%",
-              padding: "12px",
-              borderRadius: 8,
-              background: loading ? "rgba(220,38,38,0.05)" : "rgba(220,38,38,0.12)",
-              border: "1px solid rgba(220,38,38,0.3)",
-              color: "#DC2626",
-              fontSize: 13,
-              fontWeight: 500,
-              fontFamily: "'IBM Plex Sans', sans-serif",
-              cursor: loading ? "not-allowed" : "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              transition: "all 200ms ease-out",
-              userSelect: "none",
-            }}
-          >
+          <Btn variant="primary" fullWidth onClick={handleLogin} disabled={loading}>
             {loading ? (
               <>
                 <Loader2 size={15} strokeWidth={1.5} style={{ animation: "spin 1s linear infinite" }} />
@@ -227,16 +227,15 @@ export default function LoginPage() {
             ) : (
               "Ingresar al curso"
             )}
-          </div>
+          </Btn>
         </div>
 
-        {/* Footer */}
-        <div style={{ textAlign: "center", marginTop: 20, fontSize: 10, color: "#2A2A2A" }}>
-          SonoCrítico MX · Ultrasonografía Crítica
-        </div>
+        <p style={{ textAlign: "center", marginTop: 20, fontSize: 10, color: theme.text.muted }}>
+          Companion USG · UCI
+        </p>
       </div>
 
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-    </div>
+    </main>
   );
 }
