@@ -18,8 +18,8 @@ export const HERO_QUESTIONS = [
   "¿Qué necesitas decidir?",
 ];
 
-/** Pregunta fija por carga de página (no persiste en sessionStorage — nuevo al recargar). */
-let sessionHeroQuestion: string | null = null;
+const STORAGE_KEY = "heroQuestion";
+const LOAD_KEY = "heroQuestionLoad";
 
 function pickRandomQuestion(): string {
   if (HERO_QUESTIONS.length === 0) return HERO_QUESTION_FALLBACK;
@@ -27,9 +27,27 @@ function pickRandomQuestion(): string {
   return HERO_QUESTIONS[index] ?? HERO_QUESTION_FALLBACK;
 }
 
-/** Una pregunta por sesión de página; estable entre re-renders y navegación cliente. */
+/**
+ * Pregunta del hero — solo client-side (sessionStorage).
+ * Misma frase al navegar en SPA; nueva en F5 o pestaña nueva.
+ */
 export function getSessionHeroQuestion(): string {
-  if (sessionHeroQuestion) return sessionHeroQuestion;
-  sessionHeroQuestion = pickRandomQuestion();
-  return sessionHeroQuestion;
+  if (typeof window === "undefined") return HERO_QUESTION_FALLBACK;
+
+  try {
+    const currentLoad = String(performance.timeOrigin);
+    const storedLoad = sessionStorage.getItem(LOAD_KEY);
+    const storedQuestion = sessionStorage.getItem(STORAGE_KEY);
+
+    if (storedLoad === currentLoad && storedQuestion) {
+      return storedQuestion;
+    }
+
+    const question = pickRandomQuestion();
+    sessionStorage.setItem(LOAD_KEY, currentLoad);
+    sessionStorage.setItem(STORAGE_KEY, question);
+    return question;
+  } catch {
+    return pickRandomQuestion();
+  }
 }

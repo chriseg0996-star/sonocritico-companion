@@ -318,6 +318,25 @@ button.module-tile {
   opacity: 1;
 }
 
+.companion-hero__title-skeleton {
+  display: block;
+  min-height: 1.4375rem;
+  max-width: 18ch;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  animation: hero-title-skeleton 1.1s ease-in-out infinite;
+}
+
+@keyframes hero-title-skeleton {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
 .companion-hero__tagline {
   font-size: 0.625rem;
   font-weight: 500;

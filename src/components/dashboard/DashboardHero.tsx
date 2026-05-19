@@ -12,10 +12,13 @@ import { theme } from "@/lib/theme";
 export function DashboardHero() {
   const router = useRouter();
   const [query, setQuery] = useState("");
-  const [heroQuestion] = useState(() => getSessionHeroQuestion());
+  const [heroQuestion, setHeroQuestion] = useState<string | null>(null);
   const [titleVisible, setTitleVisible] = useState(false);
 
   useEffect(() => {
+    const selectedQuestion = getSessionHeroQuestion();
+    console.log("[hero]", selectedQuestion);
+    setHeroQuestion(selectedQuestion);
     const id = requestAnimationFrame(() => setTitleVisible(true));
     return () => cancelAnimationFrame(id);
   }, []);
@@ -29,9 +32,9 @@ export function DashboardHero() {
     <section className="companion-hero">
       <p className="companion-hero__tagline">SONOCRÍTICO · Companion USG</p>
       <h1
-        className={`companion-hero__title companion-hero__title--fade${titleVisible ? " companion-hero__title--visible" : ""}`}
+        className={`companion-hero__title companion-hero__title--fade${titleVisible && heroQuestion ? " companion-hero__title--visible" : ""}`}
       >
-        {heroQuestion}
+        {heroQuestion ?? <span className="companion-hero__title-skeleton" aria-hidden />}
       </h1>
       <p className="companion-hero__desc">
         Protocolos, atlas de hallazgos, videos, bibliografía y calculadoras para consulta rápida durante el curso.
