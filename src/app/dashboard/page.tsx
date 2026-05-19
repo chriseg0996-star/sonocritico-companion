@@ -5,6 +5,7 @@ import { BookOpen, ChevronRight } from "lucide-react";
 import { useAuth, LoadingScreen } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { PageShell } from "@/components/layout/PageShell";
+import { GlobalReleaseFooter } from "@/components/layout/GlobalReleaseFooter";
 import { CompanionHero } from "@/components/dashboard/CompanionHero";
 import { QuickAccessRow } from "@/components/dashboard/QuickAccessRow";
 import { ConsultQuickCard } from "@/components/dashboard/ConsultQuickCard";
@@ -146,6 +147,8 @@ export default function DashboardPage() {
             </button>
           </div>
         </ScanLineCard>
+
+        <GlobalReleaseFooter />
       </PageShell>
     </AppLayout>
   );
