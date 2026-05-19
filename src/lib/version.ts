@@ -1,6 +1,6 @@
 /** Versión de release — incrementar por sprint (ver VISUAL_AUDIT / PROJECT docs). */
-export const APP_VERSION = "0.4.5.1";
-export const APP_PHASE = "F4.1";
+export const APP_VERSION = "0.5.1";
+export const APP_PHASE = "F4.2";
 
 export const APP_AUTHOR = "Christopher Godínez";
 

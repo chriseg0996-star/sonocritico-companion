@@ -4,6 +4,8 @@ export {
   markCaseStarted,
   markCaseCompleted,
   getCaseProgress,
+  saveCaseRoute,
+  loadCaseRoute,
   type CasesProgressStore,
   type CaseAttemptRecord,
 } from "@/lib/cases/case-storage";

@@ -1,9 +1,12 @@
+import type { CaseRouteEntry } from "@/lib/cases/types";
+
 const STORAGE_KEY = "sonocritico-cases-progress";
 
 export type CaseAttemptRecord = {
   startedAt: string;
   completedAt?: string;
   score?: number;
+  route?: CaseRouteEntry[];
 };
 
 export type CasesProgressStore = {
@@ -40,18 +43,36 @@ function save(store: CasesProgressStore): void {
 export function markCaseStarted(caseId: string): void {
   const store = loadCasesProgress();
   if (store.started[caseId]) return;
-  store.started[caseId] = { startedAt: new Date().toISOString() };
+  store.started[caseId] = { startedAt: new Date().toISOString(), route: [] };
   save(store);
 }
 
-export function markCaseCompleted(caseId: string, score: number): void {
+export function saveCaseRoute(caseId: string, route: CaseRouteEntry[]): void {
+  const store = loadCasesProgress();
+  const existing = store.started[caseId] ?? store.completed[caseId];
+  const record: CaseAttemptRecord = {
+    ...existing,
+    startedAt: existing?.startedAt ?? new Date().toISOString(),
+    route,
+  };
+  store.started[caseId] = record;
+  save(store);
+}
+
+export function loadCaseRoute(caseId: string): CaseRouteEntry[] {
+  const store = loadCasesProgress();
+  return store.started[caseId]?.route ?? store.completed[caseId]?.route ?? [];
+}
+
+export function markCaseCompleted(caseId: string, score: number, route?: CaseRouteEntry[]): void {
   const store = loadCasesProgress();
   const now = new Date().toISOString();
-  store.started[caseId] = store.started[caseId] ?? { startedAt: now };
+  const started = store.started[caseId];
   store.completed[caseId] = {
-    startedAt: store.started[caseId].startedAt,
+    startedAt: started?.startedAt ?? now,
     completedAt: now,
     score,
+    route: route ?? started?.route,
   };
   save(store);
 }

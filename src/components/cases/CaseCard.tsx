@@ -29,7 +29,10 @@ export function CaseCard({ caseDef, onOpen }: Props) {
         {progress.started && !progress.completed && (
           <span className={styles.badge}>En curso</span>
         )}
-        {!progress.started && <span className={styles.badge}>Nuevo · interactivo</span>}
+        <span className={styles.badge}>
+          {caseDef.difficulty === "intermedio" ? "Intermedio" : "Básico"}
+        </span>
+        {!progress.started && <span className={styles.badge}>Nuevo</span>}
         <ChevronRight size={16} strokeWidth={1.5} color="#5c6573" aria-hidden />
       </div>
     </button>

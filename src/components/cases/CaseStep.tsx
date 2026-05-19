@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import type { CaseFlowStep, CaseChoice, InteractiveClinicalCase } from "@/lib/cases/types";
+import type {
+  CaseFlowStep,
+  CaseChoice,
+  CaseDifficulty,
+  InteractiveClinicalCase,
+} from "@/lib/cases/types";
 import { atlasHref, protocolHref, viewerHref } from "@/lib/cases/case-links";
 import styles from "@/components/cases/cases.module.css";
 
@@ -11,6 +16,12 @@ type Props = {
   selectedId: string | null;
   showFeedback: boolean;
   onSelect: (choiceId: string) => void;
+  difficulty?: CaseDifficulty;
+};
+
+const DIFFICULTY_LABEL: Record<CaseDifficulty, string> = {
+  basico: "Básico",
+  intermedio: "Intermedio",
 };
 
 function ResourceLinks({ choice }: { choice: CaseChoice }) {
@@ -46,14 +57,20 @@ export function CaseStep({
   selectedId,
   showFeedback,
   onSelect,
+  difficulty,
 }: Props) {
   const selected = step.choices.find((c) => c.id === selectedId);
 
   return (
     <article className={styles.stepCard}>
-      <p className={styles.stepEyebrow}>
-        {step.kind === "presentation" ? "Presentación" : step.title}
-      </p>
+      <div className={styles.stepHeader}>
+        <p className={styles.stepEyebrow}>
+          {step.kind === "presentation" ? "Presentación" : step.title}
+        </p>
+        {difficulty && step.kind !== "presentation" && (
+          <span className={styles.difficultyBadge}>{DIFFICULTY_LABEL[difficulty]}</span>
+        )}
+      </div>
       <h2 className={styles.stepTitle}>
         {step.kind === "presentation" ? caseDef.title : step.title}
       </h2>
