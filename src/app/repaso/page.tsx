@@ -10,6 +10,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { ScanLineCard, Badge, Btn } from "@/components/ui/base";
 import { EchoMedia } from "@/components/media/EchoMedia";
 import { echoImages, protocols } from "@/lib/mock-data";
+import { recordRepasoCard } from "@/lib/learning/events";
 import { theme } from "@/lib/theme";
 
 function shuffle<T>(arr: T[]): T[] {
@@ -135,6 +136,7 @@ function RepasoContent() {
             variant="primary"
             style={{ flex: 1 }}
             onClick={() => {
+              recordRepasoCard();
               setFlipped(false);
               setIndex((i) => (i + 1 < deck.length ? i + 1 : 0));
             }}

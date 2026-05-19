@@ -1,4 +1,5 @@
 import type { AtlasFilterModule } from "@/lib/media/atlas-filters";
+import { recordFindingSaved } from "@/lib/learning/events";
 
 const SESSION_KEY = "sonocritico-viewer-session";
 const SAVED_KEY = "sonocritico-saved-findings";
@@ -86,7 +87,8 @@ export function isFindingSaved(mediaId: string): boolean {
 
 export function toggleSavedFinding(mediaId: string): boolean {
   const set = new Set(loadSavedFindings());
-  if (set.has(mediaId)) set.delete(mediaId);
+  const wasSaved = set.has(mediaId);
+  if (wasSaved) set.delete(mediaId);
   else set.add(mediaId);
   const next = [...set];
   if (typeof window !== "undefined") {
@@ -96,5 +98,7 @@ export function toggleSavedFinding(mediaId: string): boolean {
       /* quota */
     }
   }
-  return set.has(mediaId);
+  const nowSaved = set.has(mediaId);
+  if (nowSaved && !wasSaved) recordFindingSaved();
+  return nowSaved;
 }

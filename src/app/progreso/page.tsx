@@ -18,17 +18,23 @@ import {
 import { type } from "@/lib/typography";
 import { theme } from "@/lib/theme";
 import type { LocalProgress } from "@/lib/auth";
+import { LearningScorePanel } from "@/components/learning/LearningScorePanel";
+import { computeLearningScore, touchLearningActivity } from "@/lib/learning";
+import type { LearningScoreSnapshot } from "@/lib/learning";
 
 export default function ProgresoPage() {
   const { user, loading } = useAuth("student");
   const router = useRouter();
   const [progress, setProgress] = useState<LocalProgress | null>(null);
+  const [learningScore, setLearningScore] = useState<LearningScoreSnapshot | null>(null);
 
   useEffect(() => {
+    touchLearningActivity();
     setProgress(getProgress());
+    setLearningScore(computeLearningScore());
   }, []);
 
-  if (loading || !user || !progress) return <LoadingScreen />;
+  if (loading || !user || !progress || !learningScore) return <LoadingScreen />;
 
   const coursePct = getCoursePercent(progress);
   const quizAvg = calcQuizAvg(progress.quizResults);
@@ -42,8 +48,10 @@ export default function ProgresoPage() {
       <PageShell>
         <PageHeader
           title="Mi progreso"
-          subtitle="Avance por modulos del curso SonoCritico MX"
+          subtitle="Sonocritic Score y avance del curso"
         />
+
+        <LearningScorePanel snapshot={learningScore} />
 
         <ScanLineCard style={{ padding: 20, marginBottom: 16, textAlign: "center" }}>
           <div

@@ -1,5 +1,6 @@
 import type { User } from "@/types";
 import { PROTOCOL_TO_MODULES } from "@/lib/course-modules";
+import { recordCaseCompleted, recordQuizCompleted } from "@/lib/learning/events";
 import { migrateProgress } from "@/lib/module-progress";
 import { mockCourse } from "./mock-data";
 
@@ -150,15 +151,25 @@ export function toggleChecklistItem(protocolSlug: string, itemId: string, value:
 export function saveQuizResult(result: LocalProgress["quizResults"][0]) {
   const p = getProgress();
   const existing = p.quizResults.findIndex((r) => r.quizId === result.quizId);
+  const prevScore = existing >= 0 ? p.quizResults[existing]!.score : 0;
+  const isNew = existing < 0;
   if (existing >= 0) p.quizResults[existing] = result;
   else p.quizResults.push(result);
   saveProgress(p);
+  if (isNew || result.score > prevScore) {
+    recordQuizCompleted(result.score);
+  }
 }
 
 export function completeCase(caseId: string) {
   const p = getProgress();
-  if (!p.completedCases.includes(caseId)) p.completedCases.push(caseId);
-  saveProgress(p);
+  if (!p.completedCases.includes(caseId)) {
+    p.completedCases.push(caseId);
+    saveProgress(p);
+    recordCaseCompleted(caseId, 70, 0, 0);
+  } else {
+    saveProgress(p);
+  }
 }
 
 export function completeModule(moduleSlug: string) {

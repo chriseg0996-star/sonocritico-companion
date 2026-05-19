@@ -1,4 +1,5 @@
 import type { CaseRouteEntry } from "@/lib/cases/types";
+import { recordCaseCompleted } from "@/lib/learning/events";
 
 const STORAGE_KEY = "sonocritico-cases-progress";
 
@@ -68,13 +69,17 @@ export function markCaseCompleted(caseId: string, score: number, route?: CaseRou
   const store = loadCasesProgress();
   const now = new Date().toISOString();
   const started = store.started[caseId];
+  const finalRoute = route ?? started?.route;
   store.completed[caseId] = {
     startedAt: started?.startedAt ?? now,
     completedAt: now,
     score,
-    route: route ?? started?.route,
+    route: finalRoute,
   };
   save(store);
+  const optimal = finalRoute?.filter((e) => e.isOptimal).length ?? 0;
+  const total = finalRoute?.length ?? 0;
+  recordCaseCompleted(caseId, score, optimal, total);
 }
 
 export function getCaseProgress(caseId: string): {
