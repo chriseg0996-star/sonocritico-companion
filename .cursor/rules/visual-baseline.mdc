@@ -1,0 +1,51 @@
+---
+description: Baseline visual congelado (commit ea27bc6) — HUD estable; features clínicas en componentes aislados
+alwaysApply: true
+---
+
+# Visual baseline — NO tocar shell/HUD
+
+**Ancla:** `ea27bc6` — *búsqueda clínica global y módulos gold FAST, Eco y VExUS*
+
+El dashboard actual es el **baseline estable**. Avanzar solo en **funcionalidad clínica** dentro de componentes aislados.
+
+## Prohibido modificar (visual / layout / tokens)
+
+| Área | Archivos / bloques |
+|------|-------------------|
+| App shell | `src/components/layout/AppLayout.tsx` |
+| Sidebar / bottom nav | Estilos `.app-sidebar`, `.app-bottom-nav*` en `globals.css` |
+| Hero dashboard | `src/components/dashboard/CompanionHero.tsx`, `.companion-hero*` en `globals.css` |
+| Tokens globales | Bloque `:root` en `src/app/globals.css` |
+| Theme JS | `src/lib/theme.ts`, `src/lib/typography.ts` (valores de color/tipo del HUD) |
+| Dashboard HUD | `src/app/dashboard/page.tsx` (estructura secciones A–E), `QuickAccessRow.tsx`, `ConsultQuickCard.tsx`, `ContinueCompactCard.tsx` |
+| Spacing HUD | Márgenes/gaps inline del dashboard y `PageShell` usado en `/dashboard` |
+
+**No** reintroducir sprints de footer institucional, surface-hierarchy masivo, ni redesign del sidebar/hero sin sprint explícito del PO.
+
+## Permitido
+
+- Lógica clínica: `src/lib/modules/`, `src/lib/search/`, `src/lib/tools/`, datos, índices
+- Rutas y páginas **nuevas** (módulos, herramientas, atlas, casos)
+- Componentes **nuevos** en carpetas dedicadas, p. ej. `src/components/clinical/`, `src/features/<nombre>/`
+- Estilos **scoped**: CSS Modules (`*.module.css`), o clases con prefijo `feature-` / `clinical-` importadas solo en esa ruta
+- Cambios en `AppLayout` **solo** si el sprint PO lo autoriza por escrito (wiring mínimo, sin cambiar look)
+
+## Patrón para nuevas features
+
+```
+src/features/<feature>/
+  <FeaturePanel>.tsx      # UI aislada
+  <feature>.module.css    # estilos propios
+  index.ts
+```
+
+Integrar en dashboard **solo** añadiendo un import + slot al final del `PageShell`, sin alterar Hero ni filas existentes — y solo con sprint que lo pida.
+
+## Checklist antes de cerrar PR
+
+- [ ] ¿Cero diff en archivos de la tabla “Prohibido”?
+- [ ] ¿Estilos nuevos scoped (no edits masivos en `globals.css`)?
+- [ ] ¿Mobile-first 390px en el componente nuevo?
+
+Ver detalle: `BASELINE-UI.md`
