@@ -1,16 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { Btn } from "@/components/ui";
 import { getNavRoute } from "@/config/navigation";
+import { getSessionHeroQuestion } from "@/lib/dashboard/heroQuestions";
 import { theme } from "@/lib/theme";
 
 /** Bloque A — hero de consulta (HUD congelado: clases companion-hero). */
 export function DashboardHero() {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [heroQuestion] = useState(() => getSessionHeroQuestion());
+  const [titleVisible, setTitleVisible] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setTitleVisible(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -20,7 +28,11 @@ export function DashboardHero() {
   return (
     <section className="companion-hero">
       <p className="companion-hero__tagline">SONOCRÍTICO · Companion USG</p>
-      <h1 className="companion-hero__title">¿Qué necesitas consultar ahorita?</h1>
+      <h1
+        className={`companion-hero__title companion-hero__title--fade${titleVisible ? " companion-hero__title--visible" : ""}`}
+      >
+        {heroQuestion}
+      </h1>
       <p className="companion-hero__desc">
         Protocolos, atlas de hallazgos, videos, bibliografía y calculadoras para consulta rápida durante el curso.
       </p>

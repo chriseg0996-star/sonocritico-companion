@@ -1,4 +1,10 @@
 export { ClinicalViewer, type ClinicalViewerProps } from "./ClinicalViewer";
+export { ClinicalViewerRoute } from "./ClinicalViewerRoute";
+export { ViewerBreadcrumb } from "./ViewerBreadcrumb";
+export { ViewerQuickActions } from "./ViewerQuickActions";
+export { ViewerNavFooter } from "./ViewerNavFooter";
+export { ViewerErrorTrainerSheet } from "./ViewerErrorTrainerSheet";
+export { ViewerShellProvider, useViewerShell } from "./ViewerShellContext";
 export { ViewerToolbar } from "./ViewerToolbar";
 export { ViewerMetadata } from "./ViewerMetadata";
 export { ViewerClinicalTeaching } from "./ViewerClinicalTeaching";

@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   item: MediaItem;
-  onOpen?: (item: MediaItem) => void;
+  onOpen?: (item: MediaItem, options?: { autoplay?: boolean }) => void;
 };
 
 function PreviewFallback({ label }: { label: string }) {
@@ -52,6 +52,19 @@ export function AtlasCard({ item, onOpen }: Props) {
     <>
       <div className={styles.preview}>
         <MediaPreview item={item} />
+        {item.clip && onOpen && (
+          <button
+            type="button"
+            className={styles.clipChip}
+            aria-label={`Abrir clip — ${item.title}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpen(item, { autoplay: true });
+            }}
+          >
+            CLIP
+          </button>
+        )}
       </div>
       <div className={styles.body}>
         <div className={styles.metaRow}>
@@ -69,7 +82,7 @@ export function AtlasCard({ item, onOpen }: Props) {
         type="button"
         className={cn(styles.card, styles.cardInteractive)}
         aria-label={`Abrir ${item.title}`}
-        onClick={() => onOpen(item)}
+        onClick={() => onOpen(item, { autoplay: false })}
       >
         {content}
       </button>

@@ -309,6 +309,15 @@ button.module-tile {
   position: relative;
 }
 
+.companion-hero__title--fade {
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.companion-hero__title--fade.companion-hero__title--visible {
+  opacity: 1;
+}
+
 .companion-hero__tagline {
   font-size: 0.625rem;
   font-weight: 500;

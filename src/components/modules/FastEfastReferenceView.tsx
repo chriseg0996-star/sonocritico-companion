@@ -9,6 +9,7 @@ import { BibliographyBlock } from "@/components/modules/reference/BibliographyBl
 import { ErrorsCompactCard } from "@/components/modules/reference/ErrorsCompactCard";
 import { FastAtlasPanel, FastCompareSection } from "@/components/atlas/FastAtlasPanel";
 import { MediaViewerModal } from "@/components/atlas/MediaViewerModal";
+import { useOpenViewer } from "@/lib/viewer/use-open-viewer";
 import { fastAtlasEntries } from "@/lib/modules/fast-atlas";
 import type { AtlasComparisonPair, AtlasEntry } from "@/lib/atlas/types";
 import {
@@ -33,6 +34,7 @@ type Props = {
 };
 
 export function FastEfastReferenceView({ onOpenSecondary }: Props) {
+  const { openAtlasEntry } = useOpenViewer();
   const [viewerEntry, setViewerEntry] = useState<AtlasEntry | null>(null);
   const [viewerCompare, setViewerCompare] = useState<AtlasComparisonPair | null>(null);
   const [viewerNav, setViewerNav] = useState<AtlasEntry[]>(fastAtlasEntries);
@@ -41,10 +43,15 @@ export function FastEfastReferenceView({ onOpenSecondary }: Props) {
     setViewerNav(entries.length > 0 ? entries : fastAtlasEntries);
   }, []);
 
-  const openEntry = useCallback((entry: AtlasEntry) => {
-    setViewerCompare(null);
-    setViewerEntry(entry);
-  }, []);
+  const openEntry = useCallback(
+    (entry: AtlasEntry) => {
+      setViewerCompare(null);
+      if (!openAtlasEntry(entry)) {
+        setViewerEntry(entry);
+      }
+    },
+    [openAtlasEntry],
+  );
 
   const openCompare = useCallback((pair: AtlasComparisonPair) => {
     setViewerEntry(null);

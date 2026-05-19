@@ -1,71 +1,108 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AtlasFilters } from "@/components/atlas/AtlasFilters";
 import { AtlasGrid } from "@/components/atlas/AtlasGrid";
 import { AtlasHeader } from "@/components/atlas/AtlasHeader";
-import { ClinicalViewer } from "@/components/viewer";
-import { findMediaItemById } from "@/lib/media/manifests";
+import { AtlasViewTabs, type AtlasLibraryView } from "@/components/atlas/AtlasViewTabs";
+import { AtlasErrorsPanel } from "@/components/atlas/AtlasErrorsPanel";
 import { useMedia } from "@/lib/media/useMedia";
 import type { AtlasFilterModule } from "@/lib/media/atlas-filters";
-import type { MediaItem, MediaModuleId } from "@/lib/media/types";
+import type { MediaItem } from "@/lib/media/types";
+import { useOpenViewer } from "@/lib/viewer/use-open-viewer";
 import styles from "@/components/atlas/atlas-library.module.css";
 
-function isAtlasFilterModule(m: MediaModuleId): m is AtlasFilterModule {
+function isAtlasFilterModule(m: string): m is AtlasFilterModule {
   return m === "lung" || m === "fast" || m === "cardiac" || m === "vexus";
 }
 
-type Props = {
-  /** Abre visor desde búsqueda (`/biblioteca?media=id`). */
-  initialMediaId?: string | null;
-};
+function parseView(v: string | null): AtlasLibraryView {
+  return v === "errors" ? "errors" : "findings";
+}
 
-/** Vista atlas biblioteca — grid + filtros + visor clínico. */
-export function AtlasPage({ initialMediaId = null }: Props) {
-  const [module, setModule] = useState<AtlasFilterModule>("lung");
+/** Vista atlas biblioteca — grid + filtros; visor en `/viewer/[mediaId]`. */
+export function AtlasPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const moduleParam = searchParams.get("module");
+  const viewParam = searchParams.get("view");
+  const initialModule: AtlasFilterModule =
+    moduleParam && isAtlasFilterModule(moduleParam) ? moduleParam : "lung";
+
+  const [module, setModule] = useState<AtlasFilterModule>(initialModule);
+  const [view, setView] = useState<AtlasLibraryView>(() => parseView(viewParam));
   const { items, loading } = useMedia(module);
-  const [viewerIndex, setViewerIndex] = useState<number | null>(null);
+  const { openMedia } = useOpenViewer();
 
   useEffect(() => {
-    if (!initialMediaId) return;
-    const found = findMediaItemById(initialMediaId);
-    if (found && isAtlasFilterModule(found.module) && found.module !== module) {
-      setModule(found.module);
+    if (moduleParam && isAtlasFilterModule(moduleParam) && moduleParam !== module) {
+      setModule(moduleParam);
     }
-  }, [initialMediaId, module]);
+  }, [moduleParam, module]);
 
   useEffect(() => {
-    if (!initialMediaId) return;
-    const index = items.findIndex((entry) => entry.id === initialMediaId);
-    if (index >= 0) setViewerIndex(index);
-  }, [initialMediaId, items]);
+    setView(parseView(viewParam));
+  }, [viewParam]);
 
-  const handleSelect = useCallback((item: MediaItem) => {
-    const index = items.findIndex((entry) => entry.id === item.id);
-    if (index >= 0) setViewerIndex(index);
-  }, [items]);
+  useEffect(() => {
+    const scroll = searchParams.get("scroll");
+    if (!scroll) return;
+    const y = Number.parseInt(scroll, 10);
+    if (Number.isFinite(y) && y > 0) {
+      requestAnimationFrame(() => window.scrollTo({ top: y, behavior: "instant" }));
+    }
+  }, [searchParams]);
 
-  const handleModuleChange = useCallback((next: AtlasFilterModule) => {
-    setModule(next);
-    setViewerIndex(null);
-  }, []);
+  const syncUrl = useCallback(
+    (nextModule: AtlasFilterModule, nextView: AtlasLibraryView) => {
+      const params = new URLSearchParams();
+      params.set("module", nextModule);
+      if (nextView === "errors") params.set("view", "errors");
+      router.replace(`/biblioteca?${params.toString()}`, { scroll: false });
+    },
+    [router],
+  );
+
+  const handleSelect = useCallback(
+    (item: MediaItem, options?: { autoplay?: boolean }) => {
+      openMedia(item, { module, autoplay: options?.autoplay });
+    },
+    [openMedia, module],
+  );
+
+  const handleModuleChange = useCallback(
+    (next: AtlasFilterModule) => {
+      setModule(next);
+      syncUrl(next, view);
+    },
+    [syncUrl, view],
+  );
+
+  const handleViewChange = useCallback(
+    (next: AtlasLibraryView) => {
+      setView(next);
+      syncUrl(module, next);
+    },
+    [syncUrl, module],
+  );
 
   return (
     <section aria-label="Atlas POCUS">
       <AtlasHeader />
       <AtlasFilters active={module} onChange={handleModuleChange} />
-      <p className={styles.count}>
-        {loading ? "…" : items.length} hallazgo{items.length === 1 ? "" : "s"}
-      </p>
-      <AtlasGrid items={items} loading={loading} onSelect={handleSelect} />
-
-      {viewerIndex !== null && items.length > 0 && (
-        <ClinicalViewer
-          items={items}
-          index={viewerIndex}
-          onClose={() => setViewerIndex(null)}
-          onIndexChange={setViewerIndex}
-        />
+      <AtlasViewTabs active={view} onChange={handleViewChange} />
+      {view === "findings" ? (
+        <>
+          <p className={styles.count}>
+            {loading ? "…" : items.length} hallazgo{items.length === 1 ? "" : "s"}
+          </p>
+          <AtlasGrid items={items} loading={loading} onSelect={handleSelect} />
+        </>
+      ) : (
+        <div className={styles.errorsPanelWrap}>
+          <AtlasErrorsPanel module={module} />
+        </div>
       )}
     </section>
   );

@@ -1,0 +1,147 @@
+.section {
+  margin-top: 12px;
+}
+
+.sectionTitle {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #8fa7c4;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+
+.itemSeen .toggle {
+  opacity: 0.92;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  color: #f5f7fa;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.toggle:active {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.toggleLabel {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.badge {
+  flex-shrink: 0;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(143, 167, 196, 0.12);
+  color: #8fa7c4;
+}
+
+.badgeNew {
+  background: rgba(200, 120, 100, 0.15);
+  color: #d4a090;
+}
+
+.chevron {
+  flex-shrink: 0;
+  color: #5c6573;
+  transition: transform 140ms ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.body {
+  padding: 0 12px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.block {
+  margin-top: 10px;
+}
+
+.blockTitle {
+  margin: 0 0 6px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #5c6573;
+}
+
+.bullets {
+  margin: 0;
+  padding-left: 14px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #b7c0cc;
+}
+
+.bullets li + li {
+  margin-top: 4px;
+}
+
+.visual {
+  margin-top: 10px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: #171c24;
+}
+
+.visualImg {
+  width: 100%;
+  max-height: 140px;
+  object-fit: contain;
+  display: block;
+}
+
+.visualCaption {
+  margin: 0;
+  padding: 6px 8px;
+  font-size: 10px;
+  color: #7e8897;
+  background: #11151b;
+}
+
+.empty {
+  margin: 0;
+  font-size: 12px;
+  color: #7e8897;
+  line-height: 1.45;
+}

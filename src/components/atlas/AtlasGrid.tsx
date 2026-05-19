@@ -8,7 +8,7 @@ type Props = {
   items: MediaItem[];
   loading?: boolean;
   emptyMessage?: string;
-  onSelect?: (item: MediaItem) => void;
+  onSelect?: (item: MediaItem, options?: { autoplay?: boolean }) => void;
 };
 
 /** Grid de media desde manifests (biblioteca). */

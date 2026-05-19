@@ -6,8 +6,12 @@ import type { MediaItem } from "@/lib/media/types";
 import { MediaOfflineNotice } from "@/components/offline/MediaOfflineNotice";
 import { isClipCached, prefetchClip } from "@/lib/offline/prefetch-clip";
 import { useNetworkOnline } from "@/lib/offline/use-network-online";
+import { ViewerBreadcrumb } from "@/components/viewer/ViewerBreadcrumb";
 import { ViewerMetadata } from "@/components/viewer/ViewerMetadata";
+import { ViewerNavFooter } from "@/components/viewer/ViewerNavFooter";
+import { ViewerQuickActions } from "@/components/viewer/ViewerQuickActions";
 import { ViewerToolbar } from "@/components/viewer/ViewerToolbar";
+import type { ViewerBreadcrumbItem } from "@/lib/viewer/breadcrumb";
 import { withBasePath } from "@/lib/paths";
 import styles from "@/components/viewer/clinical-viewer.module.css";
 
@@ -16,13 +20,19 @@ export type ClinicalViewerProps = {
   index: number;
   onClose: () => void;
   onIndexChange: (index: number) => void;
+  fromProtocol?: string | null;
+  fromStep?: string | null;
+  mode?: "overlay" | "page";
+  breadcrumbItems?: ViewerBreadcrumbItem[];
+  onBack?: () => void;
+  autoplayClip?: boolean;
 };
 
 function isVideoSrc(src: string) {
   return /\.(webm|mp4)(\?|$)/i.test(src);
 }
 
-function MediaStage({ item }: { item: MediaItem }) {
+function MediaStage({ item, autoplayClip = false }: { item: MediaItem; autoplayClip?: boolean }) {
   const online = useNetworkOnline();
   const [clipReady, setClipReady] = useState<boolean | null>(null);
   const stillSrc = item.still ? withBasePath(item.still) : undefined;
@@ -53,7 +63,7 @@ function MediaStage({ item }: { item: MediaItem }) {
   }, [item.clip, item.id, online]);
 
   return (
-    <div className={styles.viewport}>
+    <div className={styles.viewport} data-clinical-viewport>
       <div className={styles.stillWrap}>
         {stillSrc ? (
           <img src={stillSrc} alt={item.title} className={styles.stillImg} decoding="async" />
@@ -78,7 +88,11 @@ function MediaStage({ item }: { item: MediaItem }) {
               playsInline
               muted
               loop
-              preload="metadata"
+              autoPlay={autoplayClip}
+              preload={autoplayClip ? "auto" : "metadata"}
+              ref={(el) => {
+                if (autoplayClip && el) void el.play().catch(() => undefined);
+              }}
             />
           ) : (
             <div className={styles.stillWrap}>
@@ -94,7 +108,18 @@ function MediaStage({ item }: { item: MediaItem }) {
 const SWIPE_THRESHOLD = 48;
 
 /** Visor clínico fullscreen — PACS ligero para biblioteca atlas. */
-export function ClinicalViewer({ items, index, onClose, onIndexChange }: ClinicalViewerProps) {
+export function ClinicalViewer({
+  items,
+  index,
+  onClose,
+  onIndexChange,
+  fromProtocol,
+  fromStep,
+  mode = "overlay",
+  breadcrumbItems = [],
+  onBack,
+  autoplayClip = false,
+}: ClinicalViewerProps) {
   const item = items[index];
   const touchStartX = useRef<number | null>(null);
   const canPrev = index > 0;
@@ -131,11 +156,14 @@ export function ClinicalViewer({ items, index, onClose, onIndexChange }: Clinica
 
   if (!item) return null;
 
+  const isPage = mode === "page";
+  const shellClass = isPage ? styles.pageShell : styles.overlay;
+
   return (
     <div
-      className={styles.overlay}
-      role="dialog"
-      aria-modal="true"
+      className={shellClass}
+      role={isPage ? "main" : "dialog"}
+      aria-modal={isPage ? undefined : true}
       aria-label={`Visor clínico — ${item.title}`}
       onTouchStart={(e) => {
         touchStartX.current = e.touches[0]?.clientX ?? null;
@@ -150,20 +178,39 @@ export function ClinicalViewer({ items, index, onClose, onIndexChange }: Clinica
         else goPrev();
       }}
     >
-      <ViewerToolbar
-        index={index}
-        total={items.length}
-        onClose={onClose}
-        onPrev={goPrev}
-        onNext={goNext}
-        canPrev={canPrev}
-        canNext={canNext}
-      />
+      {isPage ? (
+        <header className={styles.pageHeader}>
+          <div className={styles.pageHeaderMain}>
+            <ViewerBreadcrumb items={breadcrumbItems} />
+          </div>
+          <ViewerQuickActions item={item} />
+        </header>
+      ) : (
+        <ViewerToolbar
+          index={index}
+          total={items.length}
+          onClose={onClose}
+          onPrev={goPrev}
+          onNext={goNext}
+          canPrev={canPrev}
+          canNext={canNext}
+        />
+      )}
 
       <div className={styles.body}>
-        <MediaStage item={item} />
-        <ViewerMetadata item={item} />
+        <MediaStage item={item} autoplayClip={autoplayClip} />
+        <ViewerMetadata item={item} fromProtocol={fromProtocol} fromStep={fromStep} />
       </div>
+
+      {isPage && (
+        <ViewerNavFooter
+          canPrev={canPrev}
+          canNext={canNext}
+          onPrev={goPrev}
+          onNext={goNext}
+          onBack={onBack ?? onClose}
+        />
+      )}
     </div>
   );
 }

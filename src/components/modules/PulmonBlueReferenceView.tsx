@@ -13,6 +13,7 @@ import { BibliographyBlock } from "@/components/modules/reference/BibliographyBl
 import { ErrorsCompactCard } from "@/components/modules/reference/ErrorsCompactCard";
 import { PulmonAtlasPanel, PulmonCompareSection } from "@/components/atlas/PulmonAtlasPanel";
 import { MediaViewerModal } from "@/components/atlas/MediaViewerModal";
+import { useOpenViewer } from "@/lib/viewer/use-open-viewer";
 import { pulmonAtlasEntries } from "@/lib/modules/pulmon-atlas";
 import type { AtlasComparisonPair, AtlasEntry } from "@/lib/atlas/types";
 import {
@@ -43,16 +44,22 @@ const gridCalc = {
 
 export function PulmonBlueReferenceView({ onOpenSecondary }: Props) {
   const router = useRouter();
+  const { openAtlasEntry } = useOpenViewer();
   const [viewerEntry, setViewerEntry] = useState<AtlasEntry | null>(null);
   const [viewerCompare, setViewerCompare] = useState<AtlasComparisonPair | null>(null);
   const [viewerNav, setViewerNav] = useState<AtlasEntry[]>(pulmonAtlasEntries);
   const handleNavListChange = useCallback((entries: AtlasEntry[]) => {
     setViewerNav(entries.length > 0 ? entries : pulmonAtlasEntries);
   }, []);
-  const openEntry = useCallback((entry: AtlasEntry) => {
-    setViewerCompare(null);
-    setViewerEntry(entry);
-  }, []);
+  const openEntry = useCallback(
+    (entry: AtlasEntry) => {
+      setViewerCompare(null);
+      if (!openAtlasEntry(entry)) {
+        setViewerEntry(entry);
+      }
+    },
+    [openAtlasEntry],
+  );
   const openCompare = useCallback((pair: AtlasComparisonPair) => {
     setViewerEntry(null);
     setViewerCompare(pair);
