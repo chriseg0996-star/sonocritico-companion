@@ -77,7 +77,7 @@ export function AtlasThumbnail({ entry, aspectRatio = "4/3", showPlayOverlay }: 
               width: 32,
               height: 32,
               borderRadius: "50%",
-              background: "rgba(11, 14, 18, 0.65)",
+              background: theme.overlay.scrim,
               backdropFilter: "blur(4px)",
               display: "flex",
               alignItems: "center",
@@ -114,7 +114,7 @@ export function AtlasThumbnail({ entry, aspectRatio = "4/3", showPlayOverlay }: 
             fontSize: 8,
             padding: "2px 6px",
             borderRadius: 4,
-            background: "rgba(11, 14, 18, 0.8)",
+            background: theme.overlay.scrimStrong,
             color: theme.text.secondary,
           }}
         >
@@ -132,7 +132,7 @@ export function AtlasThumbnail({ entry, aspectRatio = "4/3", showPlayOverlay }: 
             fontWeight: 600,
             padding: "2px 6px",
             borderRadius: 4,
-            background: "rgba(11, 14, 18, 0.75)",
+            background: theme.overlay.scrim,
             color: theme.text.secondary,
           }}
         >

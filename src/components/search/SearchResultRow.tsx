@@ -5,6 +5,7 @@ import { BookOpen, Clapperboard, FileText, ImageIcon, Layers } from "lucide-reac
 import type { ClinicalSearchGroup, ClinicalSearchResult } from "@/lib/search/types";
 import { getAtlasEntryById } from "@/lib/modules/pulmon-atlas";
 import { resolveAtlasMedia } from "@/lib/atlas/resolve-media";
+import { withBasePath } from "@/lib/paths";
 import { theme } from "@/lib/theme";
 
 const GROUP_ICON: Record<ClinicalSearchGroup, ElementType> = {
@@ -25,7 +26,8 @@ export function SearchResultRow({ result, active, onSelect }: Props) {
   const Icon = GROUP_ICON[result.group];
   const entry = result.atlasEntryId ? getAtlasEntryById(result.atlasEntryId) : undefined;
   const media = entry ? resolveAtlasMedia(entry) : null;
-  const thumb = media && !media.isPlaceholder ? media.thumbnailSrc : null;
+  const legacyThumb = media && !media.isPlaceholder ? media.thumbnailSrc : null;
+  const thumb = result.mediaThumb ? withBasePath(result.mediaThumb) : legacyThumb;
 
   return (
     <button

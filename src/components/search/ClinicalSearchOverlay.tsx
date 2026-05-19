@@ -1,35 +1,39 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Search, X } from "lucide-react";
+import { Clock, Search, X } from "lucide-react";
 import { SearchResultRow } from "@/components/search/SearchResultRow";
 import { groupClinicalResults, searchClinicalIndex } from "@/lib/search/query";
+import { getRecentSearches } from "@/lib/search/search-recent";
 import { CLINICAL_DOMAIN_FILTERS } from "@/lib/search/types";
 import type { ClinicalDomainFilter, ClinicalSearchResult } from "@/lib/search/types";
 
-const PLACEHOLDER = "Buscar hallazgo, protocolo, ventana, clip…";
+const PLACEHOLDER = "Buscar hallazgo, protocolo, ventana, diagnóstico…";
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  onSelect: (result: ClinicalSearchResult) => void;
+  onSelect: (result: ClinicalSearchResult, queryForRecent?: string) => void;
 };
 
 export function ClinicalSearchOverlay({ open, onClose, onSelect }: Props) {
   const [query, setQuery] = useState("");
   const [domain, setDomain] = useState<ClinicalDomainFilter>("all");
   const [activeIndex, setActiveIndex] = useState(0);
+  const [recent, setRecent] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const results = useMemo(() => searchClinicalIndex(query, domain), [query, domain]);
   const grouped = useMemo(() => groupClinicalResults(results), [results]);
   const flat = useMemo(() => grouped.flatMap((g) => g.items), [grouped]);
+  const showRecent = query.trim().length === 0;
 
   useEffect(() => {
     if (!open) return;
     setQuery("");
     setDomain("all");
     setActiveIndex(0);
+    setRecent(getRecentSearches());
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const t = window.setTimeout(() => inputRef.current?.focus(), 80);
@@ -46,9 +50,9 @@ export function ClinicalSearchOverlay({ open, onClose, onSelect }: Props) {
   const selectAt = useCallback(
     (index: number) => {
       const item = flat[index];
-      if (item) onSelect(item);
+      if (item) onSelect(item, query);
     },
-    [flat, onSelect]
+    [flat, onSelect, query],
   );
 
   useEffect(() => {
@@ -59,6 +63,7 @@ export function ClinicalSearchOverlay({ open, onClose, onSelect }: Props) {
         onClose();
         return;
       }
+      if (showRecent) return;
       if (e.key === "ArrowDown") {
         e.preventDefault();
         setActiveIndex((i) => Math.min(i + 1, Math.max(0, flat.length - 1)));
@@ -74,7 +79,7 @@ export function ClinicalSearchOverlay({ open, onClose, onSelect }: Props) {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose, flat, activeIndex, selectAt]);
+  }, [open, onClose, flat, activeIndex, selectAt, showRecent]);
 
   if (!open) return null;
 
@@ -128,12 +133,42 @@ export function ClinicalSearchOverlay({ open, onClose, onSelect }: Props) {
         </div>
 
         <p className="clinical-search-count">
-          {flat.length} resultado{flat.length !== 1 ? "s" : ""}
+          {showRecent
+            ? recent.length > 0
+              ? "Búsquedas recientes"
+              : "Escribe para buscar en atlas y curso"
+            : `${flat.length} resultado${flat.length !== 1 ? "s" : ""}`}
         </p>
 
         <div className="clinical-search-results">
-          {flat.length === 0 ? (
-            <p className="clinical-search-empty">Sin coincidencias. Prueba otro término o filtro.</p>
+          {showRecent ? (
+            recent.length === 0 ? (
+              <p className="clinical-search-empty">
+                Sin búsquedas recientes. Prueba: <strong>B lines</strong>, <strong>shock</strong>,{" "}
+                <strong>consolidación</strong>.
+              </p>
+            ) : (
+              <section className="clinical-search-group">
+                <h3 className="clinical-search-group-title">
+                  <Clock size={12} style={{ verticalAlign: "middle", marginRight: 6 }} />
+                  Recientes
+                </h3>
+                {recent.map((term) => (
+                  <button
+                    key={term}
+                    type="button"
+                    className="clinical-search-filter"
+                    onClick={() => setQuery(term)}
+                  >
+                    {term}
+                  </button>
+                ))}
+              </section>
+            )
+          ) : flat.length === 0 ? (
+            <p className="clinical-search-empty">
+              Sin coincidencias. Prueba otro término, sin acentos, o filtro de dominio.
+            </p>
           ) : (
             grouped.map((section) => (
               <section key={section.group} className="clinical-search-group">
@@ -145,7 +180,7 @@ export function ClinicalSearchOverlay({ open, onClose, onSelect }: Props) {
                       key={item.id}
                       result={item}
                       active={idx === activeIndex}
-                      onSelect={() => onSelect(item)}
+                      onSelect={() => onSelect(item, query)}
                     />
                   );
                 })}

@@ -11,6 +11,7 @@ import { EchoMedia } from "@/components/media/EchoMedia";
 import { getCase, getImage } from "@/lib/mock-data";
 import { completeCase, saveQuizResult } from "@/lib/auth";
 import { getStudyHref } from "@/lib/study-links";
+import { CONTENT_NARROW_MAX_WIDTH } from "@/lib/layout-config";
 import type { QuizQuestion } from "@/types";
 
 type CaseStep = "presentation" | "images" | "questions" | "summary";
@@ -82,7 +83,7 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
 
   return (
     <AppLayout user={user}>
-      <div style={{ maxWidth: 720, margin: "0 auto", padding: "16px 16px 32px" }}>
+      <div style={{ maxWidth: CONTENT_NARROW_MAX_WIDTH, margin: "0 auto", padding: "16px 16px 32px" }}>
 
         {/* Back */}
         <div onClick={() => router.push("/casos")} style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer", color: theme.text.muted, marginBottom: 16, fontSize: 12 }}>
@@ -197,7 +198,7 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
 
                 {/* Navigation */}
                 {images.length > 1 && (
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px", borderTop: "1px solid #1E3448" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px", borderTop: `1px solid ${theme.bg.border}` }}>
                     <div
                       onClick={() => setCurrentImg((i) => Math.max(0, i - 1))}
                       style={{ cursor: currentImg > 0 ? "pointer" : "default", opacity: currentImg > 0 ? 1 : 0.3, display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: theme.text.secondary }}
@@ -257,7 +258,7 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
                     <div
                       key={i}
                       onClick={() => !answered && handleAnswer(i)}
-                      style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, border: `1px solid ${border}`, background: bg, cursor: answered ? "default" : "pointer", transition: "all 200ms ease-out", color, fontSize: 13 }}
+                      style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, border: `1px solid ${border}`, background: bg, cursor: answered ? "default" : "pointer", transition: `border-color ${theme.motion.base}, background ${theme.motion.base}, color ${theme.motion.base}`, color, fontSize: 13 }}
                     >
                       <div style={{ width: 22, height: 22, borderRadius: 5, background: theme.bg.primary, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, flexShrink: 0 }}>
                         {String.fromCharCode(65 + i)}

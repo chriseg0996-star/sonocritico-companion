@@ -1,94 +1,84 @@
 "use client";
 
-import type { AtlasEntry } from "@/lib/atlas/types";
-import { AtlasThumbnail } from "@/components/atlas/AtlasThumbnail";
-import { theme } from "@/lib/theme";
-import { type } from "@/lib/typography";
+import { useState } from "react";
+import { ImageOff } from "lucide-react";
+import type { MediaItem } from "@/lib/media/types";
+import { getMediaPreviewSrc, MEDIA_MODULE_LABELS } from "@/lib/media/atlas-filters";
+import { withBasePath } from "@/lib/paths";
+import styles from "@/components/atlas/atlas-library.module.css";
+import { cn } from "@/lib/utils";
 
 type Props = {
-  entry: AtlasEntry;
-  onOpen: (entry: AtlasEntry) => void;
+  item: MediaItem;
+  onOpen?: (item: MediaItem) => void;
 };
 
-export function AtlasCard({ entry, onOpen }: Props) {
-  const isClip = entry.kind === "clip";
+function PreviewFallback({ label }: { label: string }) {
+  return (
+    <div className={styles.fallback} aria-hidden>
+      <ImageOff size={18} strokeWidth={1.5} />
+      <span>{label}</span>
+    </div>
+  );
+}
+
+function MediaPreview({ item }: Pick<Props, "item">) {
+  const [broken, setBroken] = useState(false);
+  const src = getMediaPreviewSrc(item);
+  const resolved = src ? withBasePath(src) : undefined;
+
+  if (!resolved || broken) {
+    return <PreviewFallback label={resolved ? "No disponible" : "Sin preview"} />;
+  }
 
   return (
-    <button
-      type="button"
-      onClick={() => onOpen(entry)}
-      className="atlas-card atlas-card--touch"
-      style={{
-        textAlign: "left",
-        width: "100%",
-        minHeight: 44,
-        padding: 0,
-        border: "none",
-        background: theme.bg.card,
-        borderRadius: theme.radius.sm,
-        overflow: "hidden",
-        cursor: "pointer",
-        boxShadow: theme.shadow.inset,
-        WebkitTapHighlightColor: "transparent",
-      }}
-    >
-      <AtlasThumbnail entry={entry} aspectRatio="5/3" />
-      <div style={{ padding: "10px 11px 11px" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, marginBottom: 4 }}>
-          <p style={{ ...type.titleSm, fontSize: 12, fontWeight: 500, color: theme.text.primary, margin: 0 }}>
-            {entry.title}
-          </p>
-          <span className="atlas-card-badges">
-            <span className="atlas-card-kind">{isClip ? "CLIP" : "IMG"}</span>
-            <span
-              style={{
-                fontSize: 8,
-                fontWeight: 600,
-                padding: "2px 5px",
-                borderRadius: 3,
-                background: entry.isPathological ? theme.state.errorMuted : theme.accent.muted,
-                color: entry.isPathological ? theme.state.danger : theme.accent.soft,
-              }}
-            >
-              {entry.isPathological ? "Patol." : "Normal"}
-            </span>
-          </span>
-        </div>
-        <p style={{ fontSize: 10, color: theme.text.faint, margin: "0 0 6px" }}>{entry.window}</p>
-        <p
-          style={{
-            fontSize: 10,
-            color: theme.text.muted,
-            margin: 0,
-            lineHeight: 1.4,
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-          }}
-        >
-          {entry.description}
-        </p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 8, alignItems: "center" }}>
-          {entry.tags.slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              style={{
-                fontSize: 8,
-                padding: "2px 5px",
-                borderRadius: 3,
-                background: theme.surface.glass,
-                color: theme.text.faint,
-              }}
-            >
-              {tag}
-            </span>
-          ))}
-          {isClip && entry.duration && (
-            <span style={{ fontSize: 8, color: theme.text.faint, marginLeft: "auto" }}>{entry.duration}</span>
-          )}
-        </div>
+    <img
+      src={resolved}
+      alt=""
+      className={styles.previewImg}
+      loading="lazy"
+      decoding="async"
+      onError={() => setBroken(true)}
+    />
+  );
+}
+
+/** Card de hallazgo desde manifest (biblioteca). */
+export function AtlasCard({ item, onOpen }: Props) {
+  const moduleLabel = MEDIA_MODULE_LABELS[item.module as keyof typeof MEDIA_MODULE_LABELS] ?? item.module;
+  const finding = item.metadata?.finding ?? item.category.replace(/-/g, " ");
+
+  const content = (
+    <>
+      <div className={styles.preview}>
+        <MediaPreview item={item} />
       </div>
-    </button>
+      <div className={styles.body}>
+        <div className={styles.metaRow}>
+          <h3 className={styles.title}>{item.title}</h3>
+          <span className={styles.moduleTag}>{moduleLabel}</span>
+        </div>
+        <p className={styles.finding}>{finding}</p>
+      </div>
+    </>
+  );
+
+  if (onOpen) {
+    return (
+      <button
+        type="button"
+        className={cn(styles.card, styles.cardInteractive)}
+        aria-label={`Abrir ${item.title}`}
+        onClick={() => onOpen(item)}
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <article className={styles.card} aria-label={item.title}>
+      {content}
+    </article>
   );
 }

@@ -126,7 +126,7 @@ export function ProtocolNodeDrawer({ node, onClose }: { node: FlowNode; onClose:
         justifyContent: "center",
       }}
     >
-      <div onClick={onClose} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.75)" }} />
+      <div onClick={onClose} style={{ position: "absolute", inset: 0, background: theme.overlay.modal }} />
       <div
         className="scan-line"
         style={{

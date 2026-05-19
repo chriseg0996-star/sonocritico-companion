@@ -1,0 +1,7 @@
+{
+  "id": "module-category-slug",
+  "title": "Título del hallazgo",
+  "finding": "Descripción clínica breve",
+  "probe": "Lineal | Convexo | Fase array",
+  "plane": "Ventana o plano"
+}

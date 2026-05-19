@@ -21,8 +21,12 @@ export interface ClinicalSearchResult {
   category: string;
   tags: string[];
   href?: string;
-  /** Abre viewer PACS (atlas pulmonar) */
+  /** Abre viewer PACS (atlas pulmonar legacy) */
   atlasEntryId?: string;
+  /** Manifest media F2.6 */
+  mediaId?: string;
+  mediaModule?: string;
+  mediaThumb?: string;
   protocolSlug?: string;
   isPathological?: boolean;
   thumbnailKey?: string;

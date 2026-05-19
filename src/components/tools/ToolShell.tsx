@@ -1,6 +1,7 @@
 "use client";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { getNavRoute } from "@/config/navigation";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { PageShell } from "@/components/layout/PageShell";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -27,7 +28,7 @@ export function ToolShell({
       <PageShell narrow>
         <button
           type="button"
-          onClick={() => router.push("/herramientas")}
+          onClick={() => router.push(getNavRoute("calculadoras"))}
           style={{
             display: "flex",
             alignItems: "center",

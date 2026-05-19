@@ -1,17 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronRight } from "lucide-react";
 import { useAuth, LoadingScreen } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { ScanLineCard, Badge, ProgressBar } from "@/components/ui/base";
+import { ModuleCard } from "@/components/ui/ModuleCard";
 import { courseModules, getModuleIcon } from "@/lib/course-modules";
 import { getProgress } from "@/lib/auth";
 import { getModulePercent, getModuleStatus } from "@/lib/module-progress";
 import { PageShell } from "@/components/layout/PageShell";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { type } from "@/lib/typography";
-import { theme } from "@/lib/theme";
 import type { LocalProgress } from "@/lib/auth";
 
 export default function ModulosPage() {
@@ -40,62 +37,17 @@ export default function ModulosPage() {
             const Icon = getModuleIcon(mod.icon);
 
             return (
-              <ScanLineCard
+              <ModuleCard
                 key={mod.slug}
+                order={mod.order}
+                title={mod.title}
+                subtitle={mod.subtitle}
+                estimatedMinutes={mod.estimatedMinutes}
+                percent={pct}
+                status={status}
+                icon={Icon}
                 onClick={() => router.push(`/modulos/${mod.slug}?step=0`)}
-                style={{ padding: "14px 16px" }}
-              >
-                <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
-                  <div
-                    style={{
-                      width: 36,
-                      height: 36,
-                      borderRadius: 8,
-                      background: theme.accent.muted,
-                      border: `1px solid ${theme.accent.borderSubtle}`,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexShrink: 0,
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: 12,
-                      color: theme.brand.primary,
-                    }}
-                  >
-                    {mod.order}
-                  </div>
-                  <Icon size={20} strokeWidth={1.5} color={theme.text.secondary} style={{ marginTop: 8 }} />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "flex-start" }}>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 500, color: theme.text.primary }}>{mod.title}</div>
-                        <div style={{ fontSize: 11, color: theme.text.muted, marginTop: 2 }}>{mod.subtitle}</div>
-                      </div>
-                      <Badge variant={status === "complete" ? "white" : status === "in-progress" ? "brand" : "gray"}>
-                        {status === "complete" ? "Listo" : status === "in-progress" ? "En curso" : "Pendiente"}
-                      </Badge>
-                    </div>
-                    <div style={{ marginTop: 10 }}>
-                      <ProgressBar value={pct} height={3} />
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        marginTop: 6,
-                        fontSize: 10,
-                        color: theme.text.muted,
-                        fontFamily: "'IBM Plex Mono', monospace",
-                      }}
-                    >
-                      <span>~{mod.estimatedMinutes} min</span>
-                      <span style={{ display: "flex", alignItems: "center", gap: 4, color: theme.brand.primary }}>
-                        Abrir <ChevronRight size={12} />
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </ScanLineCard>
+              />
             );
           })}
         </div>

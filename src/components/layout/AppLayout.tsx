@@ -1,68 +1,38 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  Activity,
-  BookOpen,
-  Brain,
-  Image,
-  LayoutDashboard,
-  LogOut,
-  Search,
-  Wrench,
-  User,
-} from "lucide-react";
+import { LogOut, Search } from "lucide-react";
 import { ClinicalSearchProvider, useClinicalSearch } from "@/components/search/ClinicalSearchProvider";
+import {
+  getBottomNavItems,
+  getNavSections,
+  isNavItemActive,
+  type NavItem,
+} from "@/config/navigation";
 import { logout } from "@/lib/auth";
 import { fonts } from "@/lib/typography";
 import { theme } from "@/lib/theme";
 import type { User as UserType } from "@/types";
 
-type NavItem = { href: string; icon: React.ElementType; label: string };
-
-const navSections: { label: string; items: NavItem[] }[] = [
-  {
-    label: "Consulta",
-    items: [
-      { href: "/dashboard", icon: LayoutDashboard, label: "Inicio" },
-      { href: "/modulos", icon: BookOpen, label: "Módulos" },
-    ],
-  },
-  {
-    label: "Entrenamiento",
-    items: [
-      { href: "/casos", icon: Activity, label: "Casos" },
-      { href: "/repaso", icon: Brain, label: "Repaso" },
-      { href: "/imagenes", icon: Image, label: "Biblioteca" },
-    ],
-  },
-  {
-    label: "Herramientas críticas",
-    items: [{ href: "/herramientas", icon: Wrench, label: "Calculadoras" }],
-  },
-  {
-    label: "Cuenta",
-    items: [{ href: "/progreso", icon: User, label: "Progreso" }],
-  },
-];
-
-const bottomNavItems: NavItem[] = [
-  { href: "/dashboard", icon: LayoutDashboard, label: "Inicio" },
-  { href: "/modulos", icon: BookOpen, label: "Módulos" },
-  { href: "/casos", icon: Activity, label: "Casos" },
-  { href: "/progreso", icon: User, label: "Progreso" },
-];
-
 function NavLink({
-  href,
-  icon: Icon,
-  label,
+  item,
   active,
   onClick,
-}: NavItem & { active: boolean; onClick: () => void }) {
+}: {
+  item: NavItem;
+  active: boolean;
+  onClick: () => void;
+}) {
+  const Icon = item.icon;
   return (
-    <button type="button" onClick={onClick} className={`nav-link${active ? " nav-link--active" : ""}`} style={{ width: "100%", textAlign: "left" }}>
+    <button
+      type="button"
+      onClick={onClick}
+      className={`nav-link${active ? " nav-link--active" : ""}`}
+      style={{ width: "100%", textAlign: "left" }}
+      aria-current={active ? "page" : undefined}
+    >
       <Icon size={16} strokeWidth={1.5} />
-      {label}
+      {item.title}
     </button>
   );
 }
@@ -71,14 +41,12 @@ function AppLayoutShell({ children, user }: { children: React.ReactNode; user: U
   const pathname = usePathname();
   const router = useRouter();
   const { openSearch } = useClinicalSearch();
+  const navSections = getNavSections();
+  const bottomNavItems = getBottomNavItems();
 
   function handleLogout() {
     logout();
     router.push("/login");
-  }
-
-  function isActive(href: string) {
-    return pathname === href || pathname.startsWith(href + "/");
   }
 
   return (
@@ -147,10 +115,15 @@ function AppLayoutShell({ children, user }: { children: React.ReactNode; user: U
 
         <nav style={{ flex: 1, padding: "8px 10px 12px", overflowY: "auto" }}>
           {navSections.map((section) => (
-            <div key={section.label}>
+            <div key={section.section}>
               <p className="nav-section-label">{section.label}</p>
               {section.items.map((item) => (
-                <NavLink key={item.href} {...item} active={isActive(item.href)} onClick={() => router.push(item.href)} />
+                <NavLink
+                  key={item.id}
+                  item={item}
+                  active={isNavItemActive(pathname, item)}
+                  onClick={() => router.push(item.route)}
+                />
               ))}
             </div>
           ))}
@@ -167,19 +140,20 @@ function AppLayoutShell({ children, user }: { children: React.ReactNode; user: U
       <main className="app-main">{children}</main>
 
       <nav className="app-bottom-nav">
-        {bottomNavItems.slice(0, 2).map(({ href, icon: Icon, label }) => {
-          const active = isActive(href);
+        {bottomNavItems.slice(0, 2).map((item) => {
+          const active = isNavItemActive(pathname, item);
+          const Icon = item.icon;
           return (
             <button
-              key={href}
+              key={item.id}
               type="button"
-              onClick={() => router.push(href)}
+              onClick={() => router.push(item.route)}
               className="app-bottom-nav-item"
               data-active={active}
               style={{ color: active ? theme.accent.primary : theme.text.muted, fontWeight: active ? 600 : 400 }}
             >
               <Icon size={20} strokeWidth={1.5} />
-              {label}
+              {item.title}
             </button>
           );
         })}
@@ -191,19 +165,20 @@ function AppLayoutShell({ children, user }: { children: React.ReactNode; user: U
         >
           <Search size={22} strokeWidth={1.5} />
         </button>
-        {bottomNavItems.slice(2).map(({ href, icon: Icon, label }) => {
-          const active = isActive(href);
+        {bottomNavItems.slice(2).map((item) => {
+          const active = isNavItemActive(pathname, item);
+          const Icon = item.icon;
           return (
             <button
-              key={href}
+              key={item.id}
               type="button"
-              onClick={() => router.push(href)}
+              onClick={() => router.push(item.route)}
               className="app-bottom-nav-item"
               data-active={active}
               style={{ color: active ? theme.accent.primary : theme.text.muted, fontWeight: active ? 600 : 400 }}
             >
               <Icon size={20} strokeWidth={1.5} />
-              {label}
+              {item.title}
             </button>
           );
         })}

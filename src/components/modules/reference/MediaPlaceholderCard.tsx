@@ -6,31 +6,7 @@ import { theme } from "@/lib/theme";
 import { type } from "@/lib/typography";
 import { withBasePath } from "@/lib/paths";
 import { getImage } from "@/lib/mock-data";
-
-type PlaceholderVariant = "pattern-a" | "blines" | "consolidation" | "effusion" | "lung-point";
-
-const variantStyles: Record<PlaceholderVariant, { gradient: string; label: string }> = {
-  "pattern-a": {
-    gradient: "linear-gradient(135deg, #171C24 0%, #34425B 50%, #0B0E12 100%)",
-    label: "A",
-  },
-  blines: {
-    gradient: "linear-gradient(180deg, #1a2230 0%, #34425B55 50%, #0B0E12 100%)",
-    label: "B",
-  },
-  consolidation: {
-    gradient: "linear-gradient(160deg, #1E2632 0%, #171C24 60%, #0B0E12 100%)",
-    label: "C",
-  },
-  effusion: {
-    gradient: "linear-gradient(180deg, #0d1218 0%, #5D7396 30%, #0B0E12 100%)",
-    label: "D",
-  },
-  "lung-point": {
-    gradient: "linear-gradient(90deg, #0B0E12 48%, #5D7396 50%, #171C24 52%, #0B0E12 100%)",
-    label: "LP",
-  },
-};
+import { placeholderGradients, type PlaceholderVariant } from "@/lib/atlas/placeholders";
 
 type GalleryProps = {
   mode: "gallery";
@@ -122,7 +98,7 @@ export function MediaPlaceholderCard(props: Props) {
 
   const img = props.imageId ? getImage(props.imageId) : undefined;
   const variant = props.placeholderVariant ?? "pattern-a";
-  const v = variantStyles[variant];
+  const v = placeholderGradients[variant];
   const [imgFailed, setImgFailed] = useState(false);
   const showPlaceholder = !img || imgFailed;
 

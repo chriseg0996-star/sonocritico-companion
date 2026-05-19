@@ -18,7 +18,7 @@ export function ModuleSectionNav({ links }: Props) {
         zIndex: 30,
         margin: "0 0 24px",
         padding: "8px 0 10px",
-        background: "rgba(11, 14, 18, 0.82)",
+        background: theme.overlay.scrimStrong,
         backdropFilter: "blur(10px)",
         WebkitBackdropFilter: "blur(10px)",
       }}

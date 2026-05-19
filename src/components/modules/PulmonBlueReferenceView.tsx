@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { Badge, Btn, ScanLineCard } from "@/components/ui/base";
+import { CONTENT_NARROW_MAX_WIDTH } from "@/lib/layout-config";
 import { ModuleClinicalBlock, ModuleSection } from "@/components/modules/reference/ModuleSection";
 import { ModuleSectionNav } from "@/components/modules/reference/ModuleSectionNav";
 import { FindingCard } from "@/components/modules/reference/FindingCard";
@@ -62,7 +63,7 @@ export function PulmonBlueReferenceView({ onOpenSecondary }: Props) {
   }, []);
 
   return (
-    <div style={{ maxWidth: 720, margin: "0 auto" }}>
+    <div style={{ maxWidth: CONTENT_NARROW_MAX_WIDTH, margin: "0 auto" }}>
       <header style={{ marginBottom: 20, paddingBottom: 4 }}>
         <h1 style={{ ...type.title, color: theme.text.primary, margin: "0 0 4px", lineHeight: 1.15, fontSize: "1.25rem" }}>
           {pulmonHeader.title}

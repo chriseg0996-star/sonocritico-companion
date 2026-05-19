@@ -1,6 +1,6 @@
 "use client";
 
-import { layout } from "@/lib/typography";
+import { CONTENT_MAX_WIDTH, CONTENT_NARROW_MAX_WIDTH } from "@/lib/layout-config";
 import { cn } from "@/lib/utils";
 
 export function PageShell({
@@ -16,7 +16,7 @@ export function PageShell({
     <div
       className={cn("page-shell", narrow && "page-shell--narrow", className)}
       style={{
-        maxWidth: narrow ? layout.contentNarrow : layout.contentMax,
+        maxWidth: narrow ? CONTENT_NARROW_MAX_WIDTH : CONTENT_MAX_WIDTH,
       }}
     >
       {children}

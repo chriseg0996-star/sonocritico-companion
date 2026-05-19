@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { OfflineBootstrap } from "@/components/offline/OfflineBootstrap";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "SONOCRÍTICO — Companion USG Crítico",
   description: "Referencia para protocolos, imágenes y calculadoras en ultrasonido crítico (UCI).",
+  manifest: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/manifest.webmanifest`,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -16,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body style={{ background: "var(--bg-primary)", color: "var(--text-primary)", minHeight: "100vh" }}>
+        <OfflineBootstrap />
         {children}
       </body>
     </html>

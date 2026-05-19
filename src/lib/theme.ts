@@ -1,3 +1,5 @@
+import { CARD_RADIUS } from "@/lib/layout-config";
+
 /** SONOCRÍTICO — workstation POCUS: capas silenciosas, slate, alertas puntuales */
 export const theme = {
   bg: {
@@ -73,9 +75,22 @@ export const theme = {
   },
   radius: {
     sm: 8,
-    md: 12,
+    md: CARD_RADIUS,
     lg: 16,
     xl: 20,
+  },
+  overlay: {
+    modal: "rgba(0, 0, 0, 0.75)",
+    scrim: "rgba(11, 14, 18, 0.75)",
+    scrimStrong: "rgba(11, 14, 18, 0.82)",
+    viewerFull: "rgba(0, 0, 0, 0.9)",
+  },
+  badge: {
+    successBg: "rgba(111, 174, 149, 0.08)",
+    warningBg: "rgba(212, 163, 115, 0.1)",
+  },
+  viewer: {
+    stageBg: "#030405",
   },
 } as const;
 

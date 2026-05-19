@@ -1,8 +1,10 @@
 import { clinicalSearchIndex } from "@/lib/search/clinical-index";
 import { matchesDomainFilter } from "@/lib/search/domains";
+import { filterMediaHitsByDomain, mediaHitToClinicalResult } from "@/lib/search/media-search-bridge";
+import { searchMedia } from "@/lib/media/search-media";
 import type { ClinicalDomainFilter, ClinicalSearchGroup, ClinicalSearchResult } from "@/lib/search/types";
 
-function matchesQuery(item: ClinicalSearchResult, q: string): boolean {
+function matchesLegacyQuery(item: ClinicalSearchResult, q: string): boolean {
   if (!q) return true;
   const blob = [
     item.title,
@@ -39,15 +41,27 @@ export function searchClinicalIndex(
   domainFilter: ClinicalDomainFilter
 ): ClinicalSearchResult[] {
   const q = query.trim().toLowerCase();
-  return clinicalSearchIndex.filter(
+  if (!q) return [];
+
+  const legacy = clinicalSearchIndex.filter(
     (item) =>
-      matchesQuery(item, q) &&
+      matchesLegacyQuery(item, q) &&
       matchesDomainFilter(domainFilter, {
         protocolSlug: item.protocolSlug,
         moduleSlug: item.moduleSlug,
         isPathological: item.isPathological,
-      })
+      }),
   );
+
+  const mediaHits = filterMediaHitsByDomain(searchMedia(q, { limit: 20 }), domainFilter);
+  const mediaResults = mediaHits.map(mediaHitToClinicalResult);
+
+  const byId = new Map<string, ClinicalSearchResult>();
+  for (const item of [...mediaResults, ...legacy]) {
+    if (!byId.has(item.id)) byId.set(item.id, item);
+  }
+
+  return [...byId.values()];
 }
 
 export function groupClinicalResults(results: ClinicalSearchResult[]): GroupedClinicalResults {

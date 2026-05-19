@@ -120,7 +120,7 @@ function ImagenesContent() {
               position: "fixed",
               inset: 0,
               zIndex: 100,
-              background: "rgba(0,0,0,0.9)",
+              background: theme.overlay.viewerFull,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",

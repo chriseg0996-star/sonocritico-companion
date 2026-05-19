@@ -1,0 +1,11 @@
+/**
+ * Variables CSS espejo de src/lib/layout-config.ts — mantener valores idénticos.
+ */
+
+:root {
+  --layout-sidebar-width: 248px;
+  --layout-content-max: 1040px;
+  --layout-content-narrow: 720px;
+  --layout-card-radius: 12px;
+  --layout-content-gap: 32px;
+}

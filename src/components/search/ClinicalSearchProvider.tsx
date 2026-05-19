@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ClinicalSearchOverlay } from "@/components/search/ClinicalSearchOverlay";
 import { MediaViewerModal } from "@/components/atlas/MediaViewerModal";
 import { getAtlasEntryById, pulmonAtlasEntries } from "@/lib/modules/pulmon-atlas";
+import { pushRecentSearch } from "@/lib/search/search-recent";
 import type { AtlasEntry } from "@/lib/atlas/types";
 import type { ClinicalSearchResult } from "@/lib/search/types";
 
@@ -42,8 +43,16 @@ export function ClinicalSearchProvider({ children }: { children: React.ReactNode
   }, []);
 
   const handleSelect = useCallback(
-    (result: ClinicalSearchResult) => {
+    (result: ClinicalSearchResult, queryForRecent?: string) => {
+      if (queryForRecent?.trim()) pushRecentSearch(queryForRecent);
+
       setOpen(false);
+
+      if (result.mediaId) {
+        router.push(`/biblioteca?media=${encodeURIComponent(result.mediaId)}`);
+        return;
+      }
+
       if (result.atlasEntryId) {
         const entry = getAtlasEntryById(result.atlasEntryId);
         if (entry) {
@@ -51,16 +60,17 @@ export function ClinicalSearchProvider({ children }: { children: React.ReactNode
           return;
         }
       }
+
       if (result.href) router.push(result.href);
     },
-    [router]
+    [router],
   );
 
   const viewerNav = useMemo(() => pulmonAtlasEntries, []);
 
   const value = useMemo(
     () => ({ open, openSearch, closeSearch }),
-    [open, openSearch, closeSearch]
+    [open, openSearch, closeSearch],
   );
 
   return (

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { AtlasComparisonPair, AtlasEntry, AtlasFilterId } from "@/lib/atlas/types";
 import { SearchBar } from "@/components/atlas/SearchBar";
 import { FilterChips } from "@/components/atlas/FilterChips";
-import { AtlasGrid } from "@/components/atlas/AtlasGrid";
+import { ModuleAtlasGrid } from "@/components/atlas/ModuleAtlasGrid";
 import { ComparisonCard } from "@/components/atlas/ComparisonCard";
 import {
   PULMON_ATLAS_SEARCH_PLACEHOLDER,
@@ -55,7 +55,7 @@ export function PulmonAtlasPanel({ onOpenEntry, onNavListChange }: PanelProps) {
 
       <p className="atlas-hint">Clic en miniatura para abrir viewer PACS · ← → en modal</p>
 
-      <AtlasGrid
+      <ModuleAtlasGrid
         entries={filterId === "clip" ? gridClips : gridStills.length > 0 ? gridStills : filtered}
         onOpen={onOpenEntry}
         listKey={`stills-${listKey}`}
@@ -66,7 +66,7 @@ export function PulmonAtlasPanel({ onOpenEntry, onNavListChange }: PanelProps) {
         <section id="clips" className="atlas-clips-section">
           <h3 className="atlas-clips-title">Clips ecográficos</h3>
           <p className="atlas-clips-sub">Reproducción en viewer (muted, loop)</p>
-          <AtlasGrid entries={gridClips} onOpen={onOpenEntry} listKey={`clips-${listKey}`} />
+          <ModuleAtlasGrid entries={gridClips} onOpen={onOpenEntry} listKey={`clips-${listKey}`} />
         </section>
       )}
     </div>

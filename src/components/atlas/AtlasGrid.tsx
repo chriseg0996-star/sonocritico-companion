@@ -1,35 +1,37 @@
 "use client";
 
-import type { AtlasEntry } from "@/lib/atlas/types";
+import type { MediaItem } from "@/lib/media/types";
 import { AtlasCard } from "@/components/atlas/AtlasCard";
-import { theme } from "@/lib/theme";
+import styles from "@/components/atlas/atlas-library.module.css";
 
 type Props = {
-  entries: AtlasEntry[];
-  onOpen: (entry: AtlasEntry) => void;
+  items: MediaItem[];
+  loading?: boolean;
   emptyMessage?: string;
-  /** Cambia con filtro/búsqueda para transición suave */
-  listKey?: string;
+  onSelect?: (item: MediaItem) => void;
 };
 
+/** Grid de media desde manifests (biblioteca). */
 export function AtlasGrid({
-  entries,
-  onOpen,
-  emptyMessage = "Sin hallazgos para este filtro.",
-  listKey = "default",
+  items,
+  loading = false,
+  emptyMessage = "Sin hallazgos para este módulo.",
+  onSelect,
 }: Props) {
-  if (entries.length === 0) {
-    return (
-      <p className="atlas-grid-empty" style={{ fontSize: 12, color: theme.text.faint, textAlign: "center", padding: "28px 0" }}>
-        {emptyMessage}
-      </p>
-    );
+  if (loading) {
+    return <p className={styles.empty}>Cargando atlas…</p>;
+  }
+
+  if (items.length === 0) {
+    return <p className={styles.empty}>{emptyMessage}</p>;
   }
 
   return (
-    <div key={listKey} className="atlas-grid">
-      {entries.map((entry) => (
-        <AtlasCard key={entry.id} entry={entry} onOpen={onOpen} />
+    <div className={styles.grid} role="list">
+      {items.map((item) => (
+        <div key={item.id} role="listitem">
+          <AtlasCard item={item} onOpen={onSelect} />
+        </div>
       ))}
     </div>
   );
