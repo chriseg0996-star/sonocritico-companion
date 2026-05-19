@@ -12,6 +12,8 @@ import { getCase, getImage } from "@/lib/mock-data";
 import { completeCase, saveQuizResult } from "@/lib/auth";
 import { getStudyHref } from "@/lib/study-links";
 import { CONTENT_NARROW_MAX_WIDTH } from "@/lib/layout-config";
+import { isEngineCaseId } from "@/lib/cases";
+import { EngineCaseScreen } from "@/components/cases/EngineCaseScreen";
 import type { QuizQuestion } from "@/types";
 
 type CaseStep = "presentation" | "images" | "questions" | "summary";
@@ -41,6 +43,17 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
   }, [step, qIndex, answered]);
 
   if (loading || !user) return <LoadingScreen />;
+
+  if (isEngineCaseId(resolvedParams.id)) {
+    return (
+      <AppLayout user={user}>
+        <div style={{ maxWidth: CONTENT_NARROW_MAX_WIDTH, margin: "0 auto", padding: "16px 16px 32px" }}>
+          <EngineCaseScreen caseId={resolvedParams.id} />
+        </div>
+      </AppLayout>
+    );
+  }
+
   const caseData = getCase(resolvedParams.id);
   if (!caseData) return <div style={{ padding: 24, color: theme.brand.red }}>Caso no encontrado.</div>;
 

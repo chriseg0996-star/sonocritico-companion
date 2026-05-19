@@ -42,3 +42,4 @@ export {
   type PersistedProtocolContext,
 } from "@/lib/protocols/protocol-context-storage";
 export { protocolUrlForError } from "@/lib/protocols/error-trainer-links";
+export { caseProtocolLabel, caseProtocolUrl } from "@/lib/protocols/case-integration";

@@ -8,6 +8,8 @@ import { PageShell } from "@/components/layout/PageShell";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ScanLineCard, Badge } from "@/components/ui/base";
 import { clinicalCases } from "@/lib/mock-data";
+import { getEngineCases } from "@/lib/cases";
+import { CaseCard } from "@/components/cases/CaseCard";
 import { getProgress } from "@/lib/auth";
 import { theme } from "@/lib/theme";
 import type { LocalProgress } from "@/lib/auth";
@@ -32,6 +34,26 @@ export default function CasosPage() {
           title="Casos clinicos"
           subtitle={`${progress.completedCases.length} de ${clinicalCases.length} completados · Modulo 10`}
         />
+
+        {getEngineCases().length > 0 && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 16 }}>
+            <p
+              style={{
+                fontSize: 10,
+                fontWeight: 600,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                color: theme.text.muted,
+                margin: "0 0 4px",
+              }}
+            >
+              Casos interactivos
+            </p>
+            {getEngineCases().map((c) => (
+              <CaseCard key={c.id} caseDef={c} onOpen={(id) => router.push(`/casos/${id}`)} />
+            ))}
+          </div>
+        )}
 
         {clinicalCases.length === 0 ? (
           <ScanLineCard style={{ padding: 24, textAlign: "center" }}>

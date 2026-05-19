@@ -12,3 +12,9 @@ export {
   markErrorSeen,
   markErrorsSeen,
 } from "@/lib/training/error-trainer-storage";
+export {
+  loadCasesProgress,
+  markCaseStarted,
+  markCaseCompleted,
+  getCaseProgress,
+} from "@/lib/training/case-session";
