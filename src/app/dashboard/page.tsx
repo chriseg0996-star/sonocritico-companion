@@ -7,6 +7,7 @@ import { PageShell } from "@/components/layout/PageShell";
 import {
   ContinueCourse,
   CourseProgress,
+  DailyTrainingCard,
   DashboardHero,
   QuickAccess,
   QuickConsult,
@@ -29,6 +30,7 @@ export default function DashboardPage() {
     <AppLayout user={user}>
       <PageShell>
         <DashboardHero />
+        <DailyTrainingCard />
         <QuickAccess />
         <QuickConsult />
         <ContinueCourse progress={progress} />

@@ -18,3 +18,19 @@ export {
   markCaseCompleted,
   getCaseProgress,
 } from "@/lib/training/case-session";
+export type {
+  DailyTrainingKind,
+  DailyTrainingItem,
+  DailyTrainingPack,
+  LastDailyTraining,
+} from "@/lib/training/daily-training-types";
+export {
+  getDailyTrainingPack,
+  DAILY_TRAINING_ESTIMATE_MIN,
+} from "@/lib/training/daily-training";
+export {
+  loadLastDailyTraining,
+  markDailyTrainingDone,
+  isDailyKindDone,
+  todayKey as dailyTrainingTodayKey,
+} from "@/lib/training/daily-training-storage";

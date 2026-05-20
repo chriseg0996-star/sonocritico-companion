@@ -1,4 +1,5 @@
 export { DashboardHero } from "./DashboardHero";
+export { DailyTrainingCard } from "./DailyTrainingCard";
 export { QuickAccess } from "./QuickAccess";
 export { QuickConsult } from "./QuickConsult";
 export { ContinueCourse, type ContinueCourseProps } from "./ContinueCourse";
