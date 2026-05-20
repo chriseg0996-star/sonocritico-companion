@@ -225,7 +225,13 @@ button.module-tile {
   border-color: transparent;
 }
 
+/* —— Sidebar panel (HUD workstation — v0.6.0.1) —— */
 .app-sidebar {
+  --sidebar-surface: #141820;
+  --sidebar-surface-hover: #181e27;
+  --sidebar-surface-active: #1c232d;
+  --sidebar-divider: rgba(255, 255, 255, 0.05);
+
   display: none;
   flex-direction: column;
   position: fixed;
@@ -235,8 +241,72 @@ button.module-tile {
   width: var(--layout-sidebar-width);
   min-width: var(--layout-sidebar-width);
   z-index: 40;
-  background: var(--bg-sidebar);
-  border-right: 1px solid var(--bg-border);
+  background-color: var(--sidebar-surface);
+  background-image: linear-gradient(
+    180deg,
+    #181e28 0%,
+    var(--sidebar-surface) 32%,
+    #0c0f14 100%
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.35);
+}
+
+.app-sidebar__brand {
+  padding: 24px 18px 20px;
+  border-bottom: 1px solid var(--sidebar-divider);
+}
+
+.app-sidebar__profile {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--sidebar-divider);
+}
+
+.app-sidebar__search {
+  padding: 0;
+  border-bottom: 1px solid var(--sidebar-divider);
+}
+
+.app-sidebar__nav {
+  flex: 1;
+  padding: 8px 10px 12px;
+  overflow-y: auto;
+  border-bottom: 1px solid var(--sidebar-divider);
+}
+
+.app-sidebar__footer {
+  padding: 12px 10px;
+  border-top: 1px solid var(--sidebar-divider);
+}
+
+.app-sidebar .nav-link:hover {
+  background: var(--sidebar-surface-hover);
+  color: var(--text-secondary);
+}
+
+.app-sidebar .nav-link--active {
+  background: var(--sidebar-surface-active);
+  color: var(--accent-soft);
+  border-color: rgba(143, 167, 196, 0.1);
+  box-shadow:
+    inset 0 0 0 1px rgba(143, 167, 196, 0.14),
+    inset 0 1px 14px rgba(143, 167, 196, 0.07);
+}
+
+.app-sidebar .clinical-search-trigger--sidebar {
+  background: var(--sidebar-surface-hover);
+  border-color: rgba(255, 255, 255, 0.06);
+  transition:
+    background var(--motion-fast),
+    border-color var(--motion-fast);
+}
+
+.app-sidebar .clinical-search-trigger--sidebar:hover {
+  background: var(--sidebar-surface-active);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
 }
 
 .app-main {

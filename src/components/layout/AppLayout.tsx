@@ -53,19 +53,12 @@ function AppLayoutShell({ children, user }: { children: React.ReactNode; user: U
   return (
     <div style={{ minHeight: "100vh", display: "flex" }}>
       <aside className="app-sidebar">
-        <div style={{ padding: "24px 18px 20px" }}>
+        <div className="app-sidebar__brand">
           <p className="brand-wordmark">SONOCRÍTICO</p>
           <p className="brand-tagline">Visualiza el problema. Actúa con certeza.</p>
         </div>
 
-        <div
-          style={{
-            padding: "14px 16px",
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-          }}
-        >
+        <div className="app-sidebar__profile" style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div
             style={{
               width: 36,
@@ -103,18 +96,20 @@ function AppLayoutShell({ children, user }: { children: React.ReactNode; user: U
           </div>
         </div>
 
-        <button
-          type="button"
-          className="clinical-search-trigger clinical-search-trigger--sidebar"
-          onClick={openSearch}
-          aria-label="Búsqueda clínica (Ctrl+K)"
-        >
-          <Search size={16} strokeWidth={1.5} />
-          <span>Buscar clínico</span>
-          <kbd className="clinical-search-kbd">{typeof navigator !== "undefined" && /Mac/i.test(navigator.platform) ? "⌘K" : "Ctrl+K"}</kbd>
-        </button>
+        <div className="app-sidebar__search">
+          <button
+            type="button"
+            className="clinical-search-trigger clinical-search-trigger--sidebar"
+            onClick={openSearch}
+            aria-label="Búsqueda clínica (Ctrl+K)"
+          >
+            <Search size={16} strokeWidth={1.5} />
+            <span>Buscar clínico</span>
+            <kbd className="clinical-search-kbd">{typeof navigator !== "undefined" && /Mac/i.test(navigator.platform) ? "⌘K" : "Ctrl+K"}</kbd>
+          </button>
+        </div>
 
-        <nav style={{ flex: 1, padding: "8px 10px 12px", overflowY: "auto" }}>
+        <nav className="app-sidebar__nav">
           {navSections.map((section) => (
             <div key={section.section}>
               <p className="nav-section-label">{section.label}</p>
@@ -130,7 +125,7 @@ function AppLayoutShell({ children, user }: { children: React.ReactNode; user: U
           ))}
         </nav>
 
-        <div style={{ padding: "12px 10px", borderTop: `1px solid ${theme.bg.border}` }}>
+        <div className="app-sidebar__footer">
           <button type="button" onClick={handleLogout} className="nav-link" style={{ width: "100%", color: theme.text.muted }}>
             <LogOut size={16} strokeWidth={1.5} />
             Cerrar sesión
