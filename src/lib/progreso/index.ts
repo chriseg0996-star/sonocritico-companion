@@ -12,9 +12,14 @@ export {
   getNextObjective,
   getRecentActivity,
   getEvolutionMilestones,
-  getActivityTypeLabel,
+  getObjectiveChecklist,
+  getObjectiveProgress,
 } from "@/lib/progreso/page-helpers";
-export type { RecentActivityItem, EvolutionMilestone } from "@/lib/progreso/page-helpers";
+export type {
+  RecentActivityItem,
+  EvolutionMilestone,
+  ObjectiveChecklist,
+} from "@/lib/progreso/page-helpers";
 export { DOMINIO_LEGEND, getDominioBandColor } from "@/lib/progreso/dominio-legend";
 export {
   recordEvolutionSnapshot,

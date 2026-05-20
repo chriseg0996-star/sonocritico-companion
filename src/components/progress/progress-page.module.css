@@ -22,7 +22,7 @@
     grid-column: 1 / -1;
   }
 
-  .domainsSection {
+  .bottomSpan {
     grid-column: 1 / -1;
   }
 }
@@ -34,7 +34,6 @@
 .colLeft {
   display: flex;
   flex-direction: column;
-  gap: 12px;
   min-width: 0;
 }
 
@@ -45,7 +44,7 @@
 .sideStack {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 @media (min-width: 880px) {
@@ -55,8 +54,18 @@
   }
 }
 
-.domainsSection {
+.bottomBand {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
   width: 100%;
+}
+
+@media (min-width: 880px) {
+  .bottomBand {
+    grid-template-columns: 1.2fr 1fr;
+    gap: 16px;
+  }
 }
 
 /* Header */
@@ -116,19 +125,19 @@
   color: #e8ecf2;
 }
 
-/* Constellation wrapper — scale only */
+/* Constellation — position/size only */
 .constellationWrap {
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-top: -4px;
+  margin-top: -40px;
   margin-bottom: 0;
 }
 
 .constellationScaled {
   width: 100%;
   max-width: 460px;
-  transform: scale(1.17);
+  transform: scale(1.264);
   transform-origin: center top;
 }
 
@@ -138,60 +147,12 @@
   }
 }
 
-/* Legend */
-.legend {
-  padding: 8px 4px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.legendList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 12px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.legendItem {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-family: "IBM Plex Sans", system-ui, sans-serif;
-  font-size: 9px;
-  color: #6d7785;
-}
-
-.legendDot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: rgba(143, 167, 196, 0.35);
-}
-
-.legendDot[data-stage="explorando"] {
-  background: rgba(143, 167, 196, 0.5);
-}
-
-.legendDot[data-stage="en-progreso"] {
-  background: rgba(143, 167, 196, 0.65);
-}
-
-.legendDot[data-stage="avanzado"] {
-  background: rgba(143, 167, 196, 0.8);
-}
-
-.legendDot[data-stage="dominio-alto"] {
-  background: rgba(232, 236, 242, 0.5);
-}
-
-/* Panel cards F5.5E */
+/* Panel cards */
 .panelCard {
   padding: 20px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  background: linear-gradient(165deg, rgba(24, 29, 38, 0.95) 0%, rgba(14, 17, 23, 0.98) 100%);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #181c24;
   font-family: "IBM Plex Sans", system-ui, sans-serif;
 }
 
@@ -213,18 +174,12 @@
 }
 
 .panelDomainPct {
-  margin: 0 0 4px;
+  margin: 0 0 14px;
   font-family: "IBM Plex Mono", monospace;
   font-size: 22px;
   font-weight: 500;
   line-height: 1;
   color: #e8ecf2;
-}
-
-.panelStage {
-  margin: 0 0 14px;
-  font-size: 11px;
-  color: #8fa7c4;
 }
 
 .panelStats {
@@ -250,13 +205,6 @@
   color: #c5cdd8;
 }
 
-.panelBody {
-  margin: 0 0 14px;
-  font-size: 12px;
-  line-height: 1.5;
-  color: #b7c0cc;
-}
-
 .panelCtaPrimary {
   display: flex;
   align-items: center;
@@ -265,7 +213,7 @@
   min-height: 44px;
   padding: 10px 16px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.08);
   color: #f5f7fa;
   font-family: inherit;
@@ -276,29 +224,7 @@
 }
 
 .panelCtaPrimary:active {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.panelCtaSecondary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 44px;
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: transparent;
-  color: #c5cdd8;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.panelCtaSecondary:active {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.11);
 }
 
 /* Recommended */
@@ -319,9 +245,9 @@
   width: 100%;
   min-height: 44px;
   padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #141820;
   font-family: inherit;
   text-align: left;
   cursor: pointer;
@@ -329,7 +255,7 @@
 }
 
 .recoCard:active {
-  background: rgba(255, 255, 255, 0.06);
+  background: #1a2030;
 }
 
 .recoCardType {
@@ -352,81 +278,67 @@
   flex-shrink: 0;
 }
 
-/* Evolution timeline */
-.evolutionTrack {
-  display: flex;
-  align-items: flex-start;
-  gap: 0;
-  margin: 0;
-  padding: 4px 0 0;
+/* Objective checklist */
+.objectiveLead {
+  margin: 0 0 8px;
+  font-size: 11px;
+  color: #8a939f;
+}
+
+.checklist {
+  margin: 0 0 12px;
+  padding: 0;
   list-style: none;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.evolutionTrack::-webkit-scrollbar {
-  display: none;
-}
-
-.evolutionStep {
-  position: relative;
-  flex: 1 1 0;
-  min-width: 52px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 6px;
-  padding: 0 4px;
 }
 
-.evolutionDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(143, 167, 196, 0.25);
-  border: 1px solid rgba(143, 167, 196, 0.35);
+.checklistItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #c5cdd8;
 }
 
-.evolutionDot[data-state="done"] {
-  background: rgba(143, 167, 196, 0.55);
-}
-
-.evolutionDot[data-state="current"] {
-  background: #8fa7c4;
-  border-color: #b7c0cc;
-  box-shadow: 0 0 0 3px rgba(143, 167, 196, 0.15);
-}
-
-.evolutionDot[data-state="goal"] {
+.checkbox {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   background: transparent;
-  border-style: dashed;
+  flex-shrink: 0;
 }
 
-.evolutionLabel {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 8px;
-  color: #6d7785;
-  text-align: center;
-  white-space: nowrap;
+.checkbox[data-checked="true"] {
+  background: rgba(143, 167, 196, 0.35);
+  border-color: rgba(143, 167, 196, 0.5);
 }
 
-.evolutionLabel[data-state="current"] {
-  color: #e8ecf2;
-  font-weight: 500;
+.objectiveBarTrack {
+  display: block;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
 }
 
-.evolutionConnector {
-  position: absolute;
-  top: 4px;
-  left: calc(50% + 8px);
-  width: calc(100% - 16px);
-  height: 1px;
-  background: rgba(143, 167, 196, 0.2);
-  pointer-events: none;
+.objectiveBarFill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: rgba(143, 167, 196, 0.55);
+  transition: width 300ms ease;
 }
 
 /* Activity */
+.activityLead {
+  margin: 0 0 10px;
+  font-size: 10px;
+  color: #6d7785;
+}
+
 .activityFeed {
   margin: 0;
   padding: 0;
@@ -440,75 +352,46 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.activityFeedItem:last-child {
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.activityType {
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #5c6573;
-}
-
-.activityTitle {
-  font-size: 11px;
-  color: #c5cdd8;
-}
-
-.activityMeta {
+.activityWhen {
   font-family: "IBM Plex Mono", monospace;
   font-size: 9px;
   color: #6d7785;
 }
 
+.activityDetail {
+  font-size: 11px;
+  color: #c5cdd8;
+}
+
 .activityEmpty {
   font-size: 11px;
   color: #6d7785;
-  line-height: 1.45;
 }
 
-/* Domains bottom panel */
-.domainsCard {
-  padding: 20px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  background: linear-gradient(165deg, rgba(20, 24, 32, 0.9) 0%, rgba(12, 15, 20, 0.95) 100%);
-}
-
-.domainsTitle {
-  margin: 0 0 12px;
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #5c6573;
+/* Domains grid (bottom) */
+.domainsPanel {
+  margin: 0;
 }
 
 .domainsGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 10px;
+  gap: 12px;
 }
 
 @media (min-width: 640px) {
   .domainsGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px 16px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px 16px;
   }
 }
 
-.domainRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 44px;
-  align-items: center;
-  gap: 8px;
+.domainCell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   width: 100%;
   padding: 0;
   border: none;
@@ -518,42 +401,116 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.domainName {
+.domainCellHead {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
-  color: #b7c0cc;
   min-width: 0;
 }
 
-.domainSwatch {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
+.domainCellIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
-.domainBarTrack {
-  grid-column: 1 / -1;
+.domainCellName {
+  flex: 1;
+  font-size: 11px;
+  color: #b7c0cc;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.domainCellPct {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  color: #8fa7c4;
+  flex-shrink: 0;
+}
+
+.domainMicroTrack {
+  display: block;
   height: 4px;
-  border-radius: 3px;
+  border-radius: 2px;
   background: rgba(255, 255, 255, 0.06);
   overflow: hidden;
 }
 
-.domainBarFill {
+.domainMicroFill {
+  display: block;
   height: 100%;
-  border-radius: 3px;
-  opacity: 0.8;
-  transition: width 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 2px;
+  opacity: 0.85;
 }
 
-.domainPct {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 10px;
-  color: #8fa7c4;
-  text-align: right;
+/* Journey evolution (bottom) */
+.evolutionPanel {
+  margin: 0;
+}
+
+.journeyTrack {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  gap: 4px;
+}
+
+.journeyStep {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.journeyDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(143, 167, 196, 0.2);
+  border: 1px solid rgba(143, 167, 196, 0.3);
+  flex-shrink: 0;
+}
+
+.journeyDot[data-state="done"] {
+  background: rgba(143, 167, 196, 0.45);
+}
+
+.journeyDot[data-state="current"] {
+  background: #9aadc4;
+  border-color: #c5cdd8;
+  box-shadow: 0 0 0 3px rgba(143, 167, 196, 0.12);
+}
+
+.journeyLabel {
+  font-size: 9px;
+  color: #6d7785;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.journeyLabel[data-state="current"] {
+  color: #e8ecf2;
+  font-weight: 600;
+}
+
+.journeyLine {
+  position: absolute;
+  top: 5px;
+  left: calc(50% + 10px);
+  width: calc(100% - 20px);
+  height: 1px;
+  background: rgba(143, 167, 196, 0.18);
+  pointer-events: none;
 }
 
 /* Mobile order */
@@ -577,27 +534,21 @@
   order: 5;
 }
 
-.orderEvolution {
+.orderActivity {
   order: 6;
 }
 
-.orderActivity {
+.bottomSpan {
   order: 7;
 }
 
-.orderDomains {
-  order: 8;
-}
-
 @media (min-width: 880px) {
-  .orderHeader,
   .orderConstellationCol,
   .orderDominant,
   .orderReco,
   .orderObjective,
-  .orderEvolution,
   .orderActivity,
-  .orderDomains {
+  .bottomSpan {
     order: unset;
   }
 }
@@ -612,19 +563,10 @@
     display: contents;
   }
 
-  .colLeft {
+  .colLeft,
+  .colRight,
+  .sideStack,
+  .bottomBand {
     display: contents;
-  }
-
-  .colRight {
-    display: contents;
-  }
-
-  .sideStack {
-    display: contents;
-  }
-
-  .legendDesktop {
-    display: none;
   }
 }

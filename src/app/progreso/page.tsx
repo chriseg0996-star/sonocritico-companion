@@ -10,8 +10,7 @@ import { computeLearningScore, touchLearningActivity } from "@/lib/learning";
 import type { LearningScoreSnapshot } from "@/lib/learning";
 import {
   KnowledgeConstellation,
-  ProgressDomainsStrip,
-  ProgressGrowthLegend,
+  ProgressBottomBand,
   ProgressPageHeader,
   ProgressSideColumn,
 } from "@/components/progress";
@@ -19,7 +18,8 @@ import {
   computeKnowledgeHex,
   getEvolutionMilestones,
   getKnowledgeRecommendations,
-  getNextObjective,
+  getObjectiveChecklist,
+  getObjectiveProgress,
   getRecentActivity,
   loadSelectedDomain,
   recordEvolutionSnapshot,
@@ -51,10 +51,12 @@ export default function ProgresoPage() {
     return getKnowledgeRecommendations(dominant, progress);
   }, [progress, dominant]);
 
-  const nextObjective = useMemo(() => {
-    if (!dominant) return "";
-    return getNextObjective(dominant);
+  const checklist = useMemo(() => {
+    if (!dominant) return { case: false, clip: false, protocol: false };
+    return getObjectiveChecklist(dominant);
   }, [dominant]);
+
+  const objectiveProgress = useMemo(() => getObjectiveProgress(checklist), [checklist]);
 
   const recentActivity = useMemo(() => {
     if (!progress) return [];
@@ -71,10 +73,6 @@ export default function ProgresoPage() {
   }, [snapshot]);
 
   const continueHref = recommendations[0]?.href ?? "/modulos";
-  const objectiveHref =
-    recommendations.find((r) => r.kind === "case")?.href ??
-    recommendations[0]?.href ??
-    "/modulos";
 
   const handleSelect = useCallback((id: KnowledgeDomainId) => {
     setHighlightId(id);
@@ -84,10 +82,6 @@ export default function ProgresoPage() {
   const handleContinue = useCallback(() => {
     router.push(continueHref);
   }, [router, continueHref]);
-
-  const handleStartObjective = useCallback(() => {
-    router.push(objectiveHref);
-  }, [router, objectiveHref]);
 
   if (loading || !user || !progress || !snapshot || !dominant || !learning) {
     return <LoadingScreen />;
@@ -110,26 +104,25 @@ export default function ProgresoPage() {
                 />
               </div>
             </div>
-            <ProgressGrowthLegend className={styles.legendDesktop} />
           </div>
 
           <div className={styles.colRight}>
             <ProgressSideColumn
               domain={dominant}
-              nextObjective={nextObjective}
+              checklist={checklist}
+              objectiveProgress={objectiveProgress}
               recommendations={recommendations}
               recentActivity={recentActivity}
-              evolutionMilestones={evolutionMilestones}
               onContinue={handleContinue}
-              onStartObjective={handleStartObjective}
             />
           </div>
 
-          <ProgressDomainsStrip
+          <ProgressBottomBand
             domains={snapshot.domains}
             activeId={highlightId}
-            onSelect={handleSelect}
-            className={`${styles.domainsSection} ${styles.orderDomains}`}
+            evolutionMilestones={evolutionMilestones}
+            onSelectDomain={handleSelect}
+            className={styles.bottomSpan}
           />
         </div>
       </PageShell>

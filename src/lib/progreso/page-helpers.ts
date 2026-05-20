@@ -6,14 +6,20 @@ import type { DomainStats } from "@/lib/progreso/compute";
 export type RecentActivityItem = {
   id: string;
   type: "clip" | "case" | "protocol" | "quiz";
-  title: string;
-  meta: string;
+  whenLabel: string;
+  detail: string;
 };
 
 export type EvolutionMilestone = {
   id: string;
   label: string;
-  state: "done" | "current" | "goal" | "pending";
+  state: "done" | "current" | "pending";
+};
+
+export type ObjectiveChecklist = {
+  case: boolean;
+  clip: boolean;
+  protocol: boolean;
 };
 
 export function getNextObjective(domain: DomainStats): string {
@@ -29,85 +35,96 @@ export function getNextObjective(domain: DomainStats): string {
   return `Profundiza en ${domain.label} para mantener dominio alto.`;
 }
 
+export function getObjectiveChecklist(domain: DomainStats): ObjectiveChecklist {
+  return {
+    case: domain.cases >= 1,
+    clip: domain.clips >= 1,
+    protocol: domain.protocols >= 1,
+  };
+}
+
+export function getObjectiveProgress(check: ObjectiveChecklist): number {
+  const done = [check.case, check.clip, check.protocol].filter(Boolean).length;
+  return Math.round((done / 3) * 100);
+}
+
+/** Hitos de trayectoria global (panel inferior). */
 export function getEvolutionMilestones(globalPercent: number): EvolutionMilestone[] {
   const p = Math.round(globalPercent);
-  const step = (value: number): EvolutionMilestone["state"] => {
-    if (p >= value) return "done";
-    return "pending";
-  };
-
-  return [
-    { id: "m20", label: "20%", state: step(20) },
-    { id: "m40", label: "40%", state: step(40) },
-    { id: "m60", label: "60%", state: step(60) },
-    { id: "now", label: `Actual ${p}%`, state: "current" },
-    { id: "goal", label: "Meta 100%", state: p >= 100 ? "done" : "goal" },
+  const stages = [
+    { id: "inicio", label: "Inicio", min: 0 },
+    { id: "explorando", label: "Explorando", min: 25 },
+    { id: "consolidando", label: "Consolidando", min: 50 },
+    { id: "dominio", label: "Dominio", min: 75 },
   ];
+
+  let currentIdx = 0;
+  if (p >= 75) currentIdx = 3;
+  else if (p >= 50) currentIdx = 2;
+  else if (p >= 25) currentIdx = 1;
+
+  return stages.map((s, i) => ({
+    id: s.id,
+    label: s.label,
+    state: i < currentIdx ? "done" : i === currentIdx ? "current" : "pending",
+  }));
 }
 
-function formatRelative(iso: string): string {
-  const then = new Date(iso).getTime();
-  if (Number.isNaN(then)) return "Reciente";
-  const days = Math.floor((Date.now() - then) / 86400000);
-  if (days <= 0) return "Hoy";
-  if (days === 1) return "Ayer";
-  return `Hace ${days} días`;
+function formatWhenLabel(iso?: string, fallbackIndex = 0): string {
+  if (iso) {
+    const then = new Date(iso).getTime();
+    if (!Number.isNaN(then)) {
+      const days = Math.floor((Date.now() - then) / 86400000);
+      if (days <= 0) return "Hoy";
+      if (days === 1) return "Ayer";
+      return `Hace ${days} días`;
+    }
+  }
+  return ["Hoy", "Ayer", "Hace 3 días"][fallbackIndex] ?? "Reciente";
 }
 
-export function getActivityTypeLabel(type: RecentActivityItem["type"]): string {
+function activityDetail(type: RecentActivityItem["type"], title: string): string {
   switch (type) {
     case "clip":
-      return "Clip visto";
+      return title.length > 28 ? "Clip revisado" : title;
     case "case":
-      return "Caso completado";
+      return title.length > 28 ? "Caso completado" : title;
     case "protocol":
-      return "Protocolo revisado";
+      return title.length > 28 ? "Protocolo abierto" : title;
     default:
-      return "Actividad";
+      return title;
   }
 }
 
 export function getRecentActivity(progress: LocalProgress): RecentActivityItem[] {
-  const items: RecentActivityItem[] = [];
-
-  for (const caseId of [...progress.completedCases].reverse().slice(0, 2)) {
-    const legacy = clinicalCases.find((c) => c.id === caseId);
-    const engine = getEngineCase(caseId);
-    items.push({
-      id: `case-${caseId}`,
-      type: "case",
-      title: legacy?.title ?? engine?.title ?? `Caso ${caseId}`,
-      meta: "Completado",
-    });
-  }
-
-  for (const slug of [...progress.completedProtocols].reverse().slice(0, 2)) {
-    items.push({
-      id: `proto-${slug}`,
-      type: "protocol",
-      title: slug,
-      meta: "Revisado",
-    });
-  }
+  const raw: { type: RecentActivityItem["type"]; title: string; iso?: string }[] = [];
 
   for (const q of [...progress.quizResults].reverse().slice(0, 1)) {
-    items.push({
-      id: `quiz-${q.quizId}`,
-      type: "clip",
-      title: `Quiz ${q.protocolRef}`,
-      meta: formatRelative(q.completedAt),
+    raw.push({ type: "clip", title: q.protocolRef, iso: q.completedAt });
+  }
+
+  for (const caseId of [...progress.completedCases].reverse().slice(0, 1)) {
+    const legacy = clinicalCases.find((c) => c.id === caseId);
+    const engine = getEngineCase(caseId);
+    raw.push({
+      type: "case",
+      title: legacy?.title ?? engine?.title ?? "Caso clínico",
     });
   }
 
-  if (items.length < 3 && progress.completedModules.length > 0) {
+  for (const slug of [...progress.completedProtocols].reverse().slice(0, 1)) {
+    raw.push({ type: "protocol", title: slug });
+  }
+
+  if (raw.length < 3 && progress.completedModules.length > 0) {
     const mod = progress.completedModules[progress.completedModules.length - 1]!;
-    items.push({
-      id: `mod-${mod}`,
-      type: "clip",
-      title: mod,
-      meta: "Módulo avanzado",
-    });
+    raw.push({ type: "clip", title: mod });
   }
 
-  return items.slice(0, 3);
+  return raw.slice(0, 3).map((item, i) => ({
+    id: `act-${i}-${item.type}`,
+    type: item.type,
+    whenLabel: formatWhenLabel(item.iso, i),
+    detail: activityDetail(item.type, item.title),
+  }));
 }

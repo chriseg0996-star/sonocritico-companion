@@ -1,10 +1,6 @@
 export { KnowledgeConstellation } from "@/components/progress/KnowledgeConstellation";
 export { ProgressPageHeader } from "@/components/progress/ProgressPageHeader";
 export { ProgressSideColumn } from "@/components/progress/ProgressSideColumn";
-export { ProgressGrowthLegend } from "@/components/progress/ProgressGrowthLegend";
+export { ProgressBottomBand } from "@/components/progress/ProgressBottomBand";
 export { ProgressDomainsStrip } from "@/components/progress/ProgressDomainsStrip";
-export { ProgressPanelPrimary } from "@/components/progress/ProgressPanelPrimary";
-export { ProgressPanelRecommended } from "@/components/progress/ProgressPanelRecommended";
-export { ProgressPanelObjective } from "@/components/progress/ProgressPanelObjective";
 export { ProgressPanelEvolution } from "@/components/progress/ProgressPanelEvolution";
-export { ProgressPanelActivity } from "@/components/progress/ProgressPanelActivity";

@@ -1,6 +1,5 @@
 "use client";
 
-import { getGrowthStageLabel } from "@/lib/progreso";
 import type { DomainStats } from "@/lib/progreso";
 import styles from "@/components/progress/progress-page.module.css";
 
@@ -11,8 +10,6 @@ type Props = {
 };
 
 export function ProgressPanelPrimary({ domain, onContinue, className }: Props) {
-  const stage = getGrowthStageLabel(domain.percent);
-
   return (
     <section
       className={`${styles.panelCard} ${styles.orderDominant} ${className ?? ""}`}
@@ -25,7 +22,6 @@ export function ProgressPanelPrimary({ domain, onContinue, className }: Props) {
         {domain.label}
       </p>
       <p className={styles.panelDomainPct}>{domain.percent}%</p>
-      <p className={styles.panelStage}>{stage}</p>
 
       <ul className={styles.panelStats}>
         <li>
