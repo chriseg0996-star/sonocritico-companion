@@ -8,3 +8,11 @@ export {
   growthFactor,
 } from "@/lib/progreso/compute";
 export { GROWTH_LEGEND, getGrowthStageLabel } from "@/lib/progreso/growth-stages";
+export { getNextObjective, getRecentActivity } from "@/lib/progreso/page-helpers";
+export type { RecentActivityItem } from "@/lib/progreso/page-helpers";
+export { DOMINIO_LEGEND, getDominioBandColor } from "@/lib/progreso/dominio-legend";
+export {
+  recordEvolutionSnapshot,
+  getEvolutionNodes,
+  type EvolutionNode,
+} from "@/lib/progreso/evolution";
