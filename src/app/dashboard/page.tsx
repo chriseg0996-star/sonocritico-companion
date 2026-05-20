@@ -12,7 +12,6 @@ import {
   DashboardHero,
   QuickAccess,
   QuickConsult,
-  ReleaseFooter,
 } from "@/components/dashboard";
 import { getProgress } from "@/lib/auth";
 import type { LocalProgress } from "@/lib/auth";
@@ -37,7 +36,6 @@ export default function DashboardPage() {
         <QuickConsult />
         <ContinueCourse progress={progress} />
         <CourseProgress progress={progress} />
-        <ReleaseFooter />
       </PageShell>
     </AppLayout>
   );

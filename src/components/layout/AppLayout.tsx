@@ -10,7 +10,9 @@ import {
   isNavItemActive,
   type NavItem,
 } from "@/config/navigation";
+import { GlobalFooter } from "@/components/layout/GlobalFooter";
 import { logout } from "@/lib/auth";
+import { shouldShowGlobalFooter } from "@/lib/layout-footer";
 import { fonts } from "@/lib/typography";
 import { theme } from "@/lib/theme";
 import type { User as UserType } from "@/types";
@@ -45,6 +47,7 @@ function AppLayoutShell({ children, user }: { children: React.ReactNode; user: U
   const { openSearch } = useClinicalSearch();
   const navSections = getNavSections();
   const bottomNavItems = getBottomNavItems();
+  const showGlobalFooter = shouldShowGlobalFooter(pathname);
 
   function handleLogout() {
     logout();
@@ -136,6 +139,7 @@ function AppLayoutShell({ children, user }: { children: React.ReactNode; user: U
 
       <main className="app-main">
         <CompanionLayoutShell>{children}</CompanionLayoutShell>
+        {showGlobalFooter ? <GlobalFooter /> : null}
       </main>
 
       <nav className="app-bottom-nav">

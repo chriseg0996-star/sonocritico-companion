@@ -5,7 +5,6 @@ export { QuickAccess } from "./QuickAccess";
 export { QuickConsult } from "./QuickConsult";
 export { ContinueCourse, type ContinueCourseProps } from "./ContinueCourse";
 export { CourseProgress, type CourseProgressProps } from "./CourseProgress";
-export { ReleaseFooter } from "./ReleaseFooter";
 
 /** @deprecated Usar `DashboardHero`. */
 export { DashboardHero as CompanionHero } from "./DashboardHero";
