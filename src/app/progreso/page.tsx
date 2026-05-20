@@ -9,8 +9,8 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { getProgress, type LocalProgress } from "@/lib/auth";
 import {
   KnowledgeBloom,
-  KnowledgeDomainList,
-  KnowledgeDominantBlock,
+  KnowledgeBloomPanel,
+  KnowledgeGrowthLegend,
 } from "@/components/progress";
 import {
   computeKnowledgeHex,
@@ -36,11 +36,14 @@ export default function ProgresoPage() {
 
   const dominant = snapshot?.primary ?? null;
 
-  const continueHref = useMemo(() => {
-    if (!progress || !dominant) return "/modulos";
-    const recs = getKnowledgeRecommendations(dominant, progress);
-    return recs[0]?.href ?? `/modulos`;
+  const recommendations = useMemo(() => {
+    if (!progress || !dominant) return [];
+    return getKnowledgeRecommendations(dominant, progress);
   }, [progress, dominant]);
+
+  const continueHref = useMemo(() => {
+    return recommendations[0]?.href ?? "/modulos";
+  }, [recommendations]);
 
   const handleSelect = useCallback((id: KnowledgeDomainId) => {
     setHighlightId(id);
@@ -57,25 +60,32 @@ export default function ProgresoPage() {
 
   return (
     <AppLayout user={user}>
-      <PageShell>
-        <PageHeader title="Mi progreso" subtitle="Mapa de crecimiento clínico" />
+      <PageShell className={styles.page}>
+        <PageHeader
+          title="Mi progreso"
+          subtitle="Tu mapa clínico evoluciona con cada caso."
+        />
 
-        <div className={styles.page}>
-          <KnowledgeBloom
-            globalPercent={snapshot.globalPercent}
-            domains={snapshot.domains}
-            activeId={highlightId}
-            onDomainSelect={handleSelect}
-          />
+        <div className={styles.workspace}>
+          <div className={styles.main}>
+            <KnowledgeBloom
+              globalPercent={snapshot.globalPercent}
+              domains={snapshot.domains}
+              activeId={highlightId}
+              onDomainSelect={handleSelect}
+            />
+          </div>
 
-          <KnowledgeDomainList
-            domains={snapshot.domains}
-            activeId={highlightId}
-            onSelect={handleSelect}
-          />
-
-          <KnowledgeDominantBlock domain={dominant} onContinue={handleContinue} />
+          <div className={styles.aside}>
+            <KnowledgeBloomPanel
+              domain={dominant}
+              recommendations={recommendations}
+              onContinue={handleContinue}
+            />
+          </div>
         </div>
+
+        <KnowledgeGrowthLegend />
       </PageShell>
     </AppLayout>
   );

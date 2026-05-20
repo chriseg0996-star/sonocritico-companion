@@ -61,7 +61,7 @@ export const KNOWLEDGE_DOMAINS: KnowledgeDomainConfig[] = [
     id: "neuro",
     label: "NeuroUSG",
     shortLabel: "Neuro",
-    color: "#6b7ec4",
+    color: "#b86baf",
     moduleSlugs: ["neuro-pocus"],
     protocolSlugs: [],
     clipCapacity: 12,

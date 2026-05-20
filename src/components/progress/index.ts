@@ -1,3 +1,3 @@
 export { KnowledgeBloom } from "@/components/progress/KnowledgeBloom";
-export { KnowledgeDomainList } from "@/components/progress/KnowledgeDomainList";
-export { KnowledgeDominantBlock } from "@/components/progress/KnowledgeDominantBlock";
+export { KnowledgeBloomPanel } from "@/components/progress/KnowledgeBloomPanel";
+export { KnowledgeGrowthLegend } from "@/components/progress/KnowledgeGrowthLegend";

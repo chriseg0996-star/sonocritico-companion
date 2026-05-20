@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   DOMAIN_VERTEX_ANGLES,
   growthFactor,
   type DomainStats,
   type KnowledgeDomainId,
 } from "@/lib/progreso";
+import { DOMAIN_ICONS } from "@/components/progress/domain-icons";
 import styles from "@/components/progress/knowledge-bloom.module.css";
 
 type Props = {
@@ -16,34 +17,25 @@ type Props = {
   onDomainSelect: (id: KnowledgeDomainId) => void;
 };
 
-const SIZE = 400;
+const SIZE = 480;
 const CX = SIZE / 2;
 const CY = SIZE / 2;
-const MAX_R = SIZE * 0.4;
-const MIN_R = SIZE * 0.08;
-const SEED_R = SIZE * 0.045;
+const MAX_R = SIZE * 0.41;
+const MIN_R = SIZE * 0.05;
+const SEED_R = SIZE * 0.04;
+const ORBIT_PCT = 46;
 
 function polar(radius: number, angleDeg: number) {
   const rad = (angleDeg * Math.PI) / 180;
   return { x: CX + radius * Math.cos(rad), y: CY + radius * Math.sin(rad) };
 }
 
-function smoothClosedPath(points: { x: number; y: number }[]): string {
-  const n = points.length;
-  if (n < 3) return "";
-  let d = `M ${points[0]!.x.toFixed(1)} ${points[0]!.y.toFixed(1)}`;
-  for (let i = 0; i < n; i++) {
-    const p0 = points[(i - 1 + n) % n]!;
-    const p1 = points[i]!;
-    const p2 = points[(i + 1) % n]!;
-    const p3 = points[(i + 2) % n]!;
-    const cp1x = p1.x + (p2.x - p0.x) / 6;
-    const cp1y = p1.y + (p2.y - p0.y) / 6;
-    const cp2x = p2.x - (p3.x - p1.x) / 6;
-    const cp2y = p2.y - (p3.y - p1.y) / 6;
-    d += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)}, ${cp2x.toFixed(1)} ${cp2y.toFixed(1)}, ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
-  }
-  return `${d} Z`;
+function orbitPosition(angleDeg: number) {
+  const rad = (angleDeg * Math.PI) / 180;
+  return {
+    left: `${50 + ORBIT_PCT * Math.cos(rad)}%`,
+    top: `${50 + ORBIT_PCT * Math.sin(rad)}%`,
+  };
 }
 
 export function KnowledgeBloom({
@@ -54,6 +46,7 @@ export function KnowledgeBloom({
 }: Props) {
   const [hoveredId, setHoveredId] = useState<KnowledgeDomainId | null>(null);
   const highlightId = hoveredId ?? activeId;
+  const hoverDomain = domains.find((d) => d.id === hoveredId) ?? null;
 
   const perimeter = useMemo(() => {
     return domains.map((d) => {
@@ -63,11 +56,15 @@ export function KnowledgeBloom({
     });
   }, [domains]);
 
-  const bodyPath = useMemo(() => smoothClosedPath(perimeter.map((p) => ({ x: p.x, y: p.y }))), [perimeter]);
+  const hoverCardPos = useMemo(() => {
+    if (!hoveredId) return null;
+    const angle = DOMAIN_VERTEX_ANGLES[hoveredId];
+    return orbitPosition(angle);
+  }, [hoveredId]);
 
-  const handleHover = (id: KnowledgeDomainId | null) => {
+  const setHover = useCallback((id: KnowledgeDomainId | null) => {
     setHoveredId(id);
-  };
+  }, []);
 
   return (
     <div className={styles.bloomStage}>
@@ -78,56 +75,90 @@ export function KnowledgeBloom({
         aria-label={`Conocimiento global ${globalPercent} por ciento`}
       >
         <defs>
-          <filter id="knowledge-bloom-blur" x="-40%" y="-40%" width="180%" height="180%">
+          <filter id="knowledge-bloom-soft" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
-          <radialGradient id="knowledge-bloom-core" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#1a2030" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#11151b" stopOpacity="0.2" />
-          </radialGradient>
         </defs>
 
-        <g className={styles.bloomLayers} filter="url(#knowledge-bloom-blur)">
+        <g className={styles.bloomLayers} filter="url(#knowledge-bloom-soft)">
           {perimeter.map((p) => {
             const push = MIN_R + (MAX_R - MIN_R) * growthFactor(p.domain.percent);
-            const tip = polar(push * 0.92, p.angle);
+            const tip = polar(push * 0.9, p.angle);
             const isActive = highlightId === p.domain.id;
+            const scale = isActive ? 1.14 : 1;
             return (
               <ellipse
                 key={p.domain.id}
                 className={`${styles.domainBlob} ${isActive ? styles.domainBlobActive : ""}`}
                 cx={(CX + tip.x) / 2}
                 cy={(CY + tip.y) / 2}
-                rx={push * 0.55}
-                ry={push * 0.38}
+                rx={push * 0.58 * scale}
+                ry={push * 0.42 * scale}
                 fill={p.domain.color}
-                opacity={isActive ? 0.32 : 0.14}
+                opacity={isActive ? 0.28 : 0.11}
                 transform={`rotate(${p.angle} ${CX} ${CY})`}
-                onMouseEnter={() => handleHover(p.domain.id)}
-                onMouseLeave={() => handleHover(null)}
+                onMouseEnter={() => setHover(p.domain.id)}
+                onMouseLeave={() => setHover(null)}
+                onFocus={() => setHover(p.domain.id)}
+                onBlur={() => setHover(null)}
                 onClick={() => onDomainSelect(p.domain.id)}
+                tabIndex={0}
               />
             );
           })}
-          <path d={bodyPath} fill="url(#knowledge-bloom-core)" opacity={0.55} pointerEvents="none" />
         </g>
 
-        <circle cx={CX} cy={CY} r={SEED_R} fill="#1e2430" opacity={0.95} pointerEvents="none" />
-        <circle cx={CX} cy={CY} r={SEED_R * 1.8} fill="#8fa7c4" opacity={0.06} pointerEvents="none" />
+        <circle cx={CX} cy={CY} r={SEED_R * 2.2} fill="#8fa7c4" opacity={0.04} pointerEvents="none" />
+        <circle cx={CX} cy={CY} r={SEED_R} fill="#1c222c" opacity={0.92} pointerEvents="none" />
       </svg>
 
       <div className={styles.bloomCenter}>
         <span className={styles.bloomPercent}>{globalPercent}%</span>
-        <span className={styles.bloomCaption}>
-          Conocimiento
-          <br />
-          global
-        </span>
+        <span className={styles.bloomCaption}>Conocimiento global</span>
       </div>
+
+      <div className={styles.domainOrbit} aria-hidden={false}>
+        {domains.map((d) => {
+          const Icon = DOMAIN_ICONS[d.id];
+          const pos = orbitPosition(DOMAIN_VERTEX_ANGLES[d.id]);
+          const isActive = highlightId === d.id;
+          return (
+            <button
+              key={d.id}
+              type="button"
+              className={`${styles.orbitChip} ${isActive ? styles.orbitChipActive : ""}`}
+              style={pos}
+              onMouseEnter={() => setHover(d.id)}
+              onMouseLeave={() => setHover(null)}
+              onClick={() => onDomainSelect(d.id)}
+              aria-label={`${d.label} ${d.percent} por ciento`}
+            >
+              <span className={styles.orbitIcon} style={{ color: d.color }}>
+                <Icon size={14} strokeWidth={1.5} aria-hidden />
+              </span>
+              <span className={styles.orbitLabel}>{d.shortLabel}</span>
+              <span className={styles.orbitPct}>{d.percent}%</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {hoverDomain && hoverCardPos ? (
+        <div
+          className={styles.hoverCard}
+          style={{ left: hoverCardPos.left, top: hoverCardPos.top }}
+          role="tooltip"
+        >
+          <p className={styles.hoverCardTitle}>{hoverDomain.label}</p>
+          <p className={styles.hoverCardRow}>Casos: {hoverDomain.cases}</p>
+          <p className={styles.hoverCardRow}>Clips: {hoverDomain.clips}</p>
+          <p className={styles.hoverCardRow}>Protocolos: {hoverDomain.protocols}</p>
+        </div>
+      ) : null}
     </div>
   );
 }

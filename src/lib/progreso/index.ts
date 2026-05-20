@@ -7,3 +7,4 @@ export {
   getKnowledgeRecommendations,
   growthFactor,
 } from "@/lib/progreso/compute";
+export { GROWTH_LEGEND, getGrowthStageLabel } from "@/lib/progreso/growth-stages";
