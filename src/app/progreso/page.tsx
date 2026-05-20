@@ -1,225 +1,91 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth, LoadingScreen } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { PageShell } from "@/components/layout/PageShell";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { ScanLineCard, Badge, ProgressBar, Btn } from "@/components/ui/base";
-import { clinicalCases, quizQuestions } from "@/lib/mock-data";
-import { getProgress } from "@/lib/auth";
-import { calcQuizAvg } from "@/lib/mock-data";
-import { courseModules, getModuleIcon } from "@/lib/course-modules";
-import {
-  getCoursePercent,
-  getModuleProgressBreakdown,
-  getModuleStatus,
-} from "@/lib/module-progress";
-import { type } from "@/lib/typography";
-import { theme } from "@/lib/theme";
-import type { LocalProgress } from "@/lib/auth";
+import { Btn } from "@/components/ui/base";
+import { getProgress, type LocalProgress } from "@/lib/auth";
 import { LearningScorePanel } from "@/components/learning/LearningScorePanel";
 import { computeLearningScore, touchLearningActivity } from "@/lib/learning";
 import type { LearningScoreSnapshot } from "@/lib/learning";
+import { KnowledgeHex, KnowledgeHexPanel } from "@/components/progress";
+import {
+  computeKnowledgeHex,
+  getKnowledgeRecommendations,
+  loadSelectedDomain,
+  saveSelectedDomain,
+  type KnowledgeDomainId,
+} from "@/lib/progreso";
+import styles from "@/components/progress/knowledge-hex.module.css";
 
 export default function ProgresoPage() {
-  const { user, loading } = useAuth("student");
   const router = useRouter();
+  const { user, loading } = useAuth("student");
   const [progress, setProgress] = useState<LocalProgress | null>(null);
   const [learningScore, setLearningScore] = useState<LearningScoreSnapshot | null>(null);
+  const [selectedId, setSelectedId] = useState<KnowledgeDomainId | null>(null);
 
   useEffect(() => {
     touchLearningActivity();
     setProgress(getProgress());
     setLearningScore(computeLearningScore());
+    setSelectedId(loadSelectedDomain());
   }, []);
 
-  if (loading || !user || !progress || !learningScore) return <LoadingScreen />;
+  const hex = useMemo(() => (progress ? computeKnowledgeHex(progress) : null), [progress]);
 
-  const coursePct = getCoursePercent(progress);
-  const quizAvg = calcQuizAvg(progress.quizResults);
-  const completedModules = progress.completedModules.length;
-  const modulesInProgress = courseModules.filter(
-    (m) => getModuleStatus(m.slug, progress) === "in-progress"
-  ).length;
+  const selectedDomain = useMemo(() => {
+    if (!hex) return null;
+    const id = selectedId ?? hex.primary.id;
+    return hex.domains.find((d) => d.id === id) ?? hex.primary;
+  }, [hex, selectedId]);
+
+  const recommendations = useMemo(() => {
+    if (!progress || !selectedDomain) return [];
+    return getKnowledgeRecommendations(selectedDomain, progress);
+  }, [progress, selectedDomain]);
+
+  const handleSelect = useCallback((id: KnowledgeDomainId) => {
+    setSelectedId(id);
+    saveSelectedDomain(id);
+  }, []);
+
+  if (loading || !user || !progress || !learningScore || !hex || !selectedDomain) {
+    return <LoadingScreen />;
+  }
 
   return (
     <AppLayout user={user}>
       <PageShell>
         <PageHeader
           title="Mi progreso"
-          subtitle="Sonocritic Score y avance del curso"
+          subtitle="Mapa radial de conocimiento por dominio"
         />
 
         <LearningScorePanel snapshot={learningScore} />
 
-        <ScanLineCard style={{ padding: 20, marginBottom: 16, textAlign: "center" }}>
-          <div
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 52,
-              color: theme.brand.primary,
-              lineHeight: 1,
-            }}
-          >
-            {coursePct}%
+        <div className={styles.layout}>
+          <div className={styles.layoutHex}>
+            <KnowledgeHex
+              globalPercent={hex.globalPercent}
+              domains={hex.domains}
+              selectedId={selectedDomain.id}
+              onSelect={handleSelect}
+            />
           </div>
-          <div style={{ fontSize: 12, color: theme.text.muted, marginTop: 6 }}>
-            Progreso general del curso
+          <div className={styles.layoutPanel}>
+            <KnowledgeHexPanel domain={selectedDomain} recommendations={recommendations} />
           </div>
-          <div style={{ marginTop: 14 }}>
-            <ProgressBar value={coursePct} />
-          </div>
-        </ScanLineCard>
+        </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 8,
-            marginBottom: 20,
-          }}
+        <Btn
+          variant="ghost"
+          onClick={() => router.push("/modulos")}
+          style={{ marginTop: 16, width: "100%" }}
         >
-          {[
-            { label: "Módulos", value: `${completedModules}/${courseModules.length}` },
-            { label: "En curso", value: String(modulesInProgress) },
-            { label: "Casos", value: `${progress.completedCases.length}/${clinicalCases.length}` },
-          ].map(({ label, value }) => (
-            <ScanLineCard key={label} style={{ padding: "12px 10px", textAlign: "center" }}>
-              <div
-                style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: 22,
-                  color: theme.text.primary,
-                  lineHeight: 1,
-                }}
-              >
-                {value}
-              </div>
-              <div style={{ fontSize: 10, color: theme.text.muted, marginTop: 4 }}>{label}</div>
-            </ScanLineCard>
-          ))}
-        </div>
-
-        <h2 style={{ ...type.eyebrow, color: theme.brand.primary, margin: "0 0 8px" }}>
-          Modulos del curso
-        </h2>
-        <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
-          {courseModules.map((mod) => {
-            const breakdown = getModuleProgressBreakdown(mod.slug, progress);
-            const status = getModuleStatus(mod.slug, progress);
-            const Icon = getModuleIcon(mod.icon);
-
-            return (
-              <ScanLineCard
-                key={mod.slug}
-                onClick={() => router.push(`/modulos/${mod.slug}`)}
-                style={{ padding: "12px 14px", cursor: "pointer" }}
-              >
-                <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                  <Icon size={18} color={theme.brand.primary} strokeWidth={1.5} style={{ marginTop: 2, flexShrink: 0 }} />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        gap: 8,
-                        alignItems: "flex-start",
-                        marginBottom: 6,
-                      }}
-                    >
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: theme.text.primary }}>
-                          {mod.order}. {mod.title}
-                        </div>
-                        <div style={{ fontSize: 10, color: theme.text.muted, marginTop: 2 }}>
-                          {mod.subtitle}
-                        </div>
-                      </div>
-                      <Badge variant={status === "complete" ? "white" : status === "in-progress" ? "brand" : "gray"}>
-                        {status === "complete" ? "Listo" : status === "in-progress" ? "En curso" : "Pendiente"}
-                      </Badge>
-                    </div>
-                    <ProgressBar value={breakdown.overall} height={4} />
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: 12,
-                        marginTop: 6,
-                        fontSize: 9,
-                        color: theme.text.muted,
-                        fontFamily: "'IBM Plex Mono', monospace",
-                        flexWrap: "wrap",
-                      }}
-                    >
-                      <span>Total {breakdown.overall}%</span>
-                      <span>Checklist {breakdown.checklist}%</span>
-                      <span>Quiz {breakdown.quiz}%</span>
-                    </div>
-                  </div>
-                </div>
-              </ScanLineCard>
-            );
-          })}
-        </div>
-
-        {progress.quizResults.length > 0 && (
-          <>
-            <h2 style={{ ...type.eyebrow, color: theme.brand.primary, margin: "0 0 8px" }}>
-              Historial de quizzes · promedio {quizAvg > 0 ? `${quizAvg}%` : "—"}
-            </h2>
-            <ScanLineCard style={{ padding: 12 }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                {progress.quizResults.map((r, i) => {
-                  const q = quizQuestions.find((qq) => qq.id === r.quizId);
-                  return (
-                    <div
-                      key={`${r.quizId}-${i}`}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        padding: "6px 0",
-                        borderBottom:
-                          i < progress.quizResults.length - 1
-                            ? `1px solid ${theme.bg.border}`
-                            : "none",
-                      }}
-                    >
-                      <div style={{ minWidth: 0, paddingRight: 8 }}>
-                        <div
-                          style={{
-                            fontSize: 11,
-                            color: theme.text.secondary,
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          {q?.question ?? r.quizId}
-                        </div>
-                        <div
-                          style={{
-                            fontSize: 9,
-                            color: theme.text.muted,
-                            fontFamily: "'IBM Plex Mono', monospace",
-                          }}
-                        >
-                          {r.protocolRef}
-                        </div>
-                      </div>
-                      <Badge variant={r.score === 100 ? "white" : r.score >= 50 ? "gray" : "red"}>
-                        {r.score}%
-                      </Badge>
-                    </div>
-                  );
-                })}
-              </div>
-            </ScanLineCard>
-          </>
-        )}
-
-        <Btn variant="ghost" onClick={() => router.push("/modulos")} style={{ marginTop: 16, width: "100%" }}>
           Ver todos los módulos
         </Btn>
       </PageShell>
