@@ -10,13 +10,13 @@ export type ManifestMedia = {
 
 export const lungMediaManifest: Record<string, ManifestMedia> = {
   "a-lines/still": {
-    "src": "/media/lung/a-lines/still.svg",
-    "thumb": "/media/lung/a-lines/still.svg",
+    "src": "/media/lung/a-lines/still.png",
+    "thumb": "/media/lung/a-lines/still.png",
     "mime": "image"
   },
   "a-lines/clip": {
     "src": "/media/lung/a-lines/clip.svg",
-    "thumb": "/media/lung/a-lines/still.svg",
+    "thumb": "/media/lung/a-lines/still.png",
     "mime": "image"
   },
   "b-lines/still": {

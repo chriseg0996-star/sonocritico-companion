@@ -98,7 +98,17 @@ for (const [cat, slots] of Object.entries(categories)) {
   const dir = path.join(ROOT, cat);
   fs.mkdirSync(dir, { recursive: true });
   for (const [slot, svg] of Object.entries(slots)) {
-    fs.writeFileSync(path.join(dir, `${slot}.svg`), svg.trim());
+    const outPath = path.join(dir, `${slot}.svg`);
+    if (slot === "still") {
+      const hasRealStill = ["still.webp", "still.png", "still.jpg", "still.jpeg"].some((name) =>
+        fs.existsSync(path.join(dir, name)),
+      );
+      if (hasRealStill) {
+        console.log("skip", `${cat}/${slot}.svg`, "(real still present)");
+        continue;
+      }
+    }
+    fs.writeFileSync(outPath, svg.trim());
     console.log("wrote", `${cat}/${slot}.svg`);
   }
 }

@@ -30,7 +30,7 @@ const PRECACHE_URLS = [
   "/media/fast/ruq-fluid/still.svg",
   "/media/fast/ruq-normal/still.svg",
   "/media/fast/subxiphoid-normal/still.svg",
-  "/media/lung/a-lines/still.svg",
+  "/media/lung/a-lines/still.png",
   "/media/lung/b-lines/still.svg",
   "/media/lung/consolidation/still.svg",
   "/media/lung/lung-point/still.svg",

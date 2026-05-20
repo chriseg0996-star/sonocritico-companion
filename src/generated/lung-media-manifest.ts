@@ -7,7 +7,7 @@ export const media: MediaItem[] = [
     "module": "lung",
     "category": "a-lines",
     "title": "Líneas A",
-    "still": "/media/lung/a-lines/still.svg",
+    "still": "/media/lung/a-lines/still.png",
     "clip": "/media/lung/a-lines/clip.svg",
     "metadata": {
       "finding": "Patrón A — líneas horizontales paralelas al pleura",
