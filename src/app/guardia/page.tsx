@@ -5,13 +5,13 @@ import { useSearchParams } from "next/navigation";
 import { useAuth, LoadingScreen } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { PageShell } from "@/components/layout/PageShell";
-import { GuardiaWorkflowPanel } from "@/components/guardia";
+import { GuardiaPagePanels } from "@/components/guardia";
 
 function GuardiaContent() {
   const searchParams = useSearchParams();
   const escenario = searchParams.get("escenario");
 
-  return <GuardiaWorkflowPanel initialComplaintId={escenario} />;
+  return <GuardiaPagePanels initialComplaintId={escenario} />;
 }
 
 export default function GuardiaPage() {
