@@ -34,6 +34,9 @@ export {
   getCaseProgress,
   saveCaseRoute,
   loadCaseRoute,
+  saveCaseResume,
+  loadCaseResume,
+  clearCaseResume,
   type CasesProgressStore,
   type CaseAttemptRecord,
 } from "@/lib/cases/case-storage";

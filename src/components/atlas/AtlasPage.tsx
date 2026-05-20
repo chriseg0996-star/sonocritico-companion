@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AtlasFilters } from "@/components/atlas/AtlasFilters";
 import { AtlasGrid } from "@/components/atlas/AtlasGrid";
@@ -27,6 +27,7 @@ export function AtlasPage() {
   const searchParams = useSearchParams();
   const moduleParam = searchParams.get("module");
   const viewParam = searchParams.get("view");
+  const queryParam = searchParams.get("q")?.trim() ?? "";
   const initialModule: AtlasFilterModule =
     moduleParam && isAtlasFilterModule(moduleParam) ? moduleParam : "lung";
 
@@ -34,6 +35,19 @@ export function AtlasPage() {
   const [view, setView] = useState<AtlasLibraryView>(() => parseView(viewParam));
   const { items, loading } = useMedia(module);
   const { openMedia } = useOpenViewer();
+
+  const displayItems = useMemo(() => {
+    if (!queryParam) return items;
+    const term = queryParam.toLowerCase();
+    return items.filter((item) => {
+      const finding = item.metadata?.finding?.toLowerCase() ?? "";
+      return (
+        item.title.toLowerCase().includes(term) ||
+        item.category.toLowerCase().includes(term) ||
+        finding.includes(term)
+      );
+    });
+  }, [items, queryParam]);
 
   useEffect(() => {
     if (moduleParam && isAtlasFilterModule(moduleParam) && moduleParam !== module) {
@@ -95,9 +109,13 @@ export function AtlasPage() {
       {view === "findings" ? (
         <>
           <p className={styles.count}>
-            {loading ? "…" : items.length} hallazgo{items.length === 1 ? "" : "s"}
+            {loading
+              ? "…"
+              : queryParam
+                ? `${displayItems.length} de ${items.length} · “${queryParam}”`
+                : `${items.length} hallazgo${items.length === 1 ? "" : "s"}`}
           </p>
-          <AtlasGrid items={items} loading={loading} onSelect={handleSelect} />
+          <AtlasGrid items={displayItems} loading={loading} onSelect={handleSelect} />
         </>
       ) : (
         <div className={styles.errorsPanelWrap}>

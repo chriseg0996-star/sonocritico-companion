@@ -1,5 +1,6 @@
 import type { AtlasFilterModule } from "@/lib/media/atlas-filters";
 import { recordFindingSaved } from "@/lib/learning/events";
+import { recordLastClip } from "@/lib/resume/record";
 
 const SESSION_KEY = "sonocritico-viewer-session";
 const SAVED_KEY = "sonocritico-saved-findings";
@@ -40,6 +41,12 @@ export function saveViewerSession(partial: Partial<ViewerSession>): ViewerSessio
       localStorage.setItem(SESSION_KEY, JSON.stringify(next));
     } catch {
       /* quota */
+    }
+    if (next.lastMediaId) {
+      recordLastClip(
+        next.lastMediaId,
+        typeof next.lastModule === "string" ? next.lastModule : undefined,
+      );
     }
   }
   return next;

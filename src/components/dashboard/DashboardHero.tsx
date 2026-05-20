@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search } from "lucide-react";
+import { Play, Search } from "lucide-react";
 import { Btn } from "@/components/ui";
 import { getNavRoute } from "@/config/navigation";
 import { getSessionHeroQuestion } from "@/lib/dashboard/heroQuestions";
+import { getSmartResumeTarget, recordLastSearch } from "@/lib/resume";
+import type { ResumePointer } from "@/lib/resume";
+import { pushRecentSearch } from "@/lib/search/search-recent";
 import { theme } from "@/lib/theme";
 
 /** Bloque A — hero de consulta (HUD congelado: clases companion-hero). */
@@ -14,17 +17,26 @@ export function DashboardHero() {
   const [query, setQuery] = useState("");
   const [heroQuestion, setHeroQuestion] = useState<string | null>(null);
   const [titleVisible, setTitleVisible] = useState(false);
+  const [resume, setResume] = useState<ResumePointer | null>(null);
 
   useEffect(() => {
     const selectedQuestion = getSessionHeroQuestion();
     console.log("[hero]", selectedQuestion);
     setHeroQuestion(selectedQuestion);
+    setResume(getSmartResumeTarget());
     const id = requestAnimationFrame(() => setTitleVisible(true));
     return () => cancelAnimationFrame(id);
   }, []);
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
+    const trimmed = query.trim();
+    if (trimmed.length >= 2) {
+      pushRecentSearch(trimmed);
+      recordLastSearch(trimmed);
+      router.push(`/biblioteca?q=${encodeURIComponent(trimmed)}`);
+      return;
+    }
     router.push(getNavRoute("biblioteca"));
   }
 
@@ -40,8 +52,31 @@ export function DashboardHero() {
         Protocolos, atlas de hallazgos, videos, bibliografía y calculadoras para consulta rápida durante el curso.
       </p>
 
+      {resume && (
+        <button
+          type="button"
+          className="companion-hero__continue"
+          onClick={() => router.push(resume.href)}
+        >
+          <span className="companion-hero__continue-icon" aria-hidden>
+            <Play size={16} strokeWidth={1.5} />
+          </span>
+          <span className="companion-hero__continue-text">
+            <span className="companion-hero__continue-label">Continuar</span>
+            <span className="companion-hero__continue-meta">
+              {resume.sublabel ? `${resume.sublabel} · ` : ""}
+              {resume.label}
+            </span>
+          </span>
+        </button>
+      )}
+
       <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 16 }}>
-        <Btn variant="primary" onClick={() => router.push(getNavRoute("modulos"))} style={{ padding: "11px 20px" }}>
+        <Btn
+          variant={resume ? "secondary" : "primary"}
+          onClick={() => router.push(getNavRoute("modulos"))}
+          style={{ padding: "11px 20px" }}
+        >
           Explorar módulos
         </Btn>
         <Btn variant="secondary" onClick={() => router.push(getNavRoute("biblioteca"))} style={{ padding: "11px 20px" }}>

@@ -8,6 +8,12 @@ export type CaseAttemptRecord = {
   completedAt?: string;
   score?: number;
   route?: CaseRouteEntry[];
+  /** Reanudar flujo adaptativo */
+  resumeNodeId?: string;
+  resumeSelectedId?: string | null;
+  resumeShowFeedback?: boolean;
+  /** Reanudar flujo lineal */
+  resumeStepIndex?: number;
 };
 
 export type CasesProgressStore = {
@@ -65,6 +71,55 @@ export function loadCaseRoute(caseId: string): CaseRouteEntry[] {
   return store.started[caseId]?.route ?? store.completed[caseId]?.route ?? [];
 }
 
+export function saveCaseResume(
+  caseId: string,
+  data: {
+    nodeId?: string;
+    stepIndex?: number;
+    selectedId?: string | null;
+    showFeedback?: boolean;
+  },
+): void {
+  const store = loadCasesProgress();
+  const existing = store.started[caseId];
+  if (!existing || store.completed[caseId]) return;
+  store.started[caseId] = {
+    ...existing,
+    resumeNodeId: data.nodeId,
+    resumeStepIndex: data.stepIndex,
+    resumeSelectedId: data.selectedId,
+    resumeShowFeedback: data.showFeedback,
+  };
+  save(store);
+}
+
+export function loadCaseResume(caseId: string): {
+  nodeId?: string;
+  stepIndex?: number;
+  selectedId: string | null;
+  showFeedback: boolean;
+} | null {
+  const store = loadCasesProgress();
+  const record = store.started[caseId];
+  if (!record || store.completed[caseId]) return null;
+  if (!record.resumeNodeId && record.resumeStepIndex === undefined) return null;
+  return {
+    nodeId: record.resumeNodeId,
+    stepIndex: record.resumeStepIndex,
+    selectedId: record.resumeSelectedId ?? null,
+    showFeedback: record.resumeShowFeedback ?? false,
+  };
+}
+
+export function clearCaseResume(caseId: string): void {
+  const store = loadCasesProgress();
+  const started = store.started[caseId];
+  if (!started) return;
+  const { resumeNodeId, resumeStepIndex, resumeSelectedId, resumeShowFeedback, ...rest } = started;
+  store.started[caseId] = rest;
+  save(store);
+}
+
 export function markCaseCompleted(caseId: string, score: number, route?: CaseRouteEntry[]): void {
   const store = loadCasesProgress();
   const now = new Date().toISOString();
@@ -76,6 +131,7 @@ export function markCaseCompleted(caseId: string, score: number, route?: CaseRou
     score,
     route: finalRoute,
   };
+  delete store.started[caseId];
   save(store);
   const optimal = finalRoute?.filter((e) => e.isOptimal).length ?? 0;
   const total = finalRoute?.length ?? 0;

@@ -1,3 +1,5 @@
+import { recordLastSearch } from "@/lib/resume/record";
+
 const STORAGE_KEY = "sonocritico-clinical-search-recent";
 const MAX_RECENT = 8;
 
@@ -25,4 +27,5 @@ export function pushRecentSearch(query: string): void {
   const prev = getRecentSearches().filter((q) => q.trim().toLowerCase() !== trimmed.toLowerCase());
   const next = [trimmed, ...prev].slice(0, MAX_RECENT);
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  recordLastSearch(trimmed);
 }

@@ -20,6 +20,7 @@ import { PULMON_BLUE_SLUG } from "@/lib/modules/pulmonar-blue-reference";
 import { getProgress, completeModule } from "@/lib/auth";
 import { getModulePercent, getModuleStatus } from "@/lib/module-progress";
 import { getModuleSteps } from "@/lib/module-steps";
+import { recordLastModule } from "@/lib/resume/record";
 import { parseModuleTab, type ModuleTabId } from "@/lib/module-tabs";
 import { PageShell } from "@/components/layout/PageShell";
 import { type } from "@/lib/typography";
@@ -70,6 +71,11 @@ export default function ModuloDetailPage({ params }: { params: Promise<{ slug: s
   useEffect(() => {
     setProgress(getProgress());
   }, []);
+
+  useEffect(() => {
+    const step = steps[stepIndex];
+    if (step) recordLastModule(slug, stepIndex, step.title);
+  }, [slug, stepIndex, steps]);
 
   if (loading || !user || !progress) return <LoadingScreen />;
   if (!mod) {

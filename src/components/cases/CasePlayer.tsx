@@ -17,7 +17,10 @@ import {
   markCaseCompleted,
   saveCaseRoute,
   loadCaseRoute,
+  saveCaseResume,
+  loadCaseResume,
 } from "@/lib/cases/case-storage";
+import { recordLastCase } from "@/lib/resume/record";
 import { scoreCaseChoices } from "@/lib/cases/scoring";
 import { CaseStep } from "@/components/cases/CaseStep";
 import { CaseSummary } from "@/components/cases/CaseSummary";
@@ -70,9 +73,28 @@ function AdaptiveCasePlayer({
 
   useEffect(() => {
     markCaseStarted(caseDef.id);
+    recordLastCase(caseDef.id, caseDef.title);
     const saved = loadCaseRoute(caseDef.id);
     if (saved.length > 0) setRoute(saved);
-  }, [caseDef.id]);
+    const resume = loadCaseResume(caseDef.id);
+    if (resume?.nodeId && graph.nodes[resume.nodeId]) {
+      setCurrentNodeId(resume.nodeId);
+      if (resume.selectedId) {
+        setSelectedId(resume.selectedId);
+        setShowFeedback(resume.showFeedback);
+      }
+    }
+  }, [caseDef.id, caseDef.title, graph.nodes]);
+
+  useEffect(() => {
+    if (finished) return;
+    saveCaseResume(caseDef.id, {
+      nodeId: currentNodeId,
+      selectedId,
+      showFeedback,
+    });
+    recordLastCase(caseDef.id, caseDef.title);
+  }, [caseDef.id, caseDef.title, currentNodeId, selectedId, showFeedback, finished]);
 
   const handleSelect = useCallback(
     (choiceId: string) => {
@@ -201,7 +223,18 @@ function LinearCasePlayer({ caseDef }: { caseDef: InteractiveClinicalCase }) {
 
   useEffect(() => {
     markCaseStarted(caseDef.id);
-  }, [caseDef.id]);
+    recordLastCase(caseDef.id, caseDef.title);
+    const resume = loadCaseResume(caseDef.id);
+    if (resume?.stepIndex !== undefined) {
+      setStepIndex(Math.min(resume.stepIndex, Math.max(0, steps.length - 1)));
+    }
+  }, [caseDef.id, caseDef.title, steps.length]);
+
+  useEffect(() => {
+    if (finished) return;
+    saveCaseResume(caseDef.id, { stepIndex });
+    recordLastCase(caseDef.id, caseDef.title);
+  }, [caseDef.id, caseDef.title, stepIndex, finished]);
 
   const handleSelect = useCallback(
     (choiceId: string) => {
