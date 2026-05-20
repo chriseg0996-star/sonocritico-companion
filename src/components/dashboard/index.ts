@@ -1,5 +1,6 @@
 export { DashboardHero } from "./DashboardHero";
 export { DailyTrainingCard } from "./DailyTrainingCard";
+export { CompanionModePanel } from "@/components/companion/CompanionModePanel";
 export { QuickAccess } from "./QuickAccess";
 export { QuickConsult } from "./QuickConsult";
 export { ContinueCourse, type ContinueCourseProps } from "./ContinueCourse";
