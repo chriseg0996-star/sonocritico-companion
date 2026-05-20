@@ -5,13 +5,13 @@ import { useSearchParams } from "next/navigation";
 import { useAuth, LoadingScreen } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { PageShell } from "@/components/layout/PageShell";
-import { CompanionModePanel } from "@/components/companion/CompanionModePanel";
+import { GuardiaWorkflowPanel } from "@/components/guardia";
 
 function GuardiaContent() {
   const searchParams = useSearchParams();
   const escenario = searchParams.get("escenario");
 
-  return <CompanionModePanel initialScenarioId={escenario} />;
+  return <GuardiaWorkflowPanel initialComplaintId={escenario} />;
 }
 
 export default function GuardiaPage() {
