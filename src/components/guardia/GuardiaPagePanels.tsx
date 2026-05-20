@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GuardiaDifferentialPanel } from "@/components/guardia/GuardiaDifferentialPanel";
 import { GuardiaWorkflowPanel } from "@/components/guardia/GuardiaWorkflowPanel";
+import { GUARDIA_RESET_EVENT } from "@/lib/guardia";
 import tabStyles from "@/components/guardia/guardia-tabs.module.css";
 
 type TabId = "flujo" | "diferencial";
@@ -13,6 +14,13 @@ type Props = {
 
 export function GuardiaPagePanels({ initialComplaintId = null }: Props) {
   const [tab, setTab] = useState<TabId>("flujo");
+  const [resetKey, setResetKey] = useState(0);
+
+  useEffect(() => {
+    const onReset = () => setResetKey((k) => k + 1);
+    window.addEventListener(GUARDIA_RESET_EVENT, onReset);
+    return () => window.removeEventListener(GUARDIA_RESET_EVENT, onReset);
+  }, []);
 
   return (
     <>
@@ -38,9 +46,9 @@ export function GuardiaPagePanels({ initialComplaintId = null }: Props) {
       </div>
 
       {tab === "flujo" ? (
-        <GuardiaWorkflowPanel initialComplaintId={initialComplaintId} />
+        <GuardiaWorkflowPanel key={`wf-${resetKey}`} initialComplaintId={initialComplaintId} />
       ) : (
-        <GuardiaDifferentialPanel />
+        <GuardiaDifferentialPanel key={`dx-${resetKey}`} />
       )}
     </>
   );

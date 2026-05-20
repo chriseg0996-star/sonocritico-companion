@@ -1,6 +1,7 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
 import { LogOut, Search } from "lucide-react";
+import { QuickActionsProvider } from "@/components/navigation";
 import { ClinicalSearchProvider, useClinicalSearch } from "@/components/search/ClinicalSearchProvider";
 import {
   getBottomNavItems,
@@ -190,7 +191,9 @@ function AppLayoutShell({ children, user }: { children: React.ReactNode; user: U
 export function AppLayout(props: { children: React.ReactNode; user: UserType }) {
   return (
     <ClinicalSearchProvider>
-      <AppLayoutShell {...props} />
+      <QuickActionsProvider>
+        <AppLayoutShell {...props} />
+      </QuickActionsProvider>
     </ClinicalSearchProvider>
   );
 }
