@@ -5,21 +5,44 @@ import type { DomainStats } from "@/lib/progreso/compute";
 
 export type RecentActivityItem = {
   id: string;
-  label: string;
+  type: "clip" | "case" | "protocol" | "quiz";
+  title: string;
   meta: string;
+};
+
+export type EvolutionMilestone = {
+  id: string;
+  label: string;
+  state: "done" | "current" | "goal" | "pending";
 };
 
 export function getNextObjective(domain: DomainStats): string {
   if (domain.cases < domain.casesTotal) {
-    return `Completar 1 caso de ${domain.shortLabel}`;
+    return `Completa 1 caso de ${domain.shortLabel} para consolidar dominio.`;
   }
   if (domain.protocols < domain.protocolsTotal) {
-    return `Completar 1 protocolo de ${domain.shortLabel}`;
+    return `Completa 1 protocolo de ${domain.shortLabel} para consolidar dominio.`;
   }
   if (domain.clips < domain.clipsTotal) {
-    return `Revisar 1 clip de ${domain.shortLabel}`;
+    return `Revisa 1 clip de ${domain.shortLabel} para consolidar dominio.`;
   }
-  return `Profundizar en ${domain.label}`;
+  return `Profundiza en ${domain.label} para mantener dominio alto.`;
+}
+
+export function getEvolutionMilestones(globalPercent: number): EvolutionMilestone[] {
+  const p = Math.round(globalPercent);
+  const step = (value: number): EvolutionMilestone["state"] => {
+    if (p >= value) return "done";
+    return "pending";
+  };
+
+  return [
+    { id: "m20", label: "20%", state: step(20) },
+    { id: "m40", label: "40%", state: step(40) },
+    { id: "m60", label: "60%", state: step(60) },
+    { id: "now", label: `Actual ${p}%`, state: "current" },
+    { id: "goal", label: "Meta 100%", state: p >= 100 ? "done" : "goal" },
+  ];
 }
 
 function formatRelative(iso: string): string {
@@ -31,32 +54,58 @@ function formatRelative(iso: string): string {
   return `Hace ${days} días`;
 }
 
+export function getActivityTypeLabel(type: RecentActivityItem["type"]): string {
+  switch (type) {
+    case "clip":
+      return "Clip visto";
+    case "case":
+      return "Caso completado";
+    case "protocol":
+      return "Protocolo revisado";
+    default:
+      return "Actividad";
+  }
+}
+
 export function getRecentActivity(progress: LocalProgress): RecentActivityItem[] {
   const items: RecentActivityItem[] = [];
-
-  for (const q of [...progress.quizResults].reverse().slice(0, 2)) {
-    items.push({
-      id: `quiz-${q.quizId}`,
-      label: `Quiz · ${q.protocolRef}`,
-      meta: `${q.score}% · ${formatRelative(q.completedAt)}`,
-    });
-  }
 
   for (const caseId of [...progress.completedCases].reverse().slice(0, 2)) {
     const legacy = clinicalCases.find((c) => c.id === caseId);
     const engine = getEngineCase(caseId);
     items.push({
       id: `case-${caseId}`,
-      label: legacy?.title ?? engine?.title ?? `Caso ${caseId}`,
+      type: "case",
+      title: legacy?.title ?? engine?.title ?? `Caso ${caseId}`,
       meta: "Completado",
     });
   }
 
-  for (const slug of [...progress.completedProtocols].reverse().slice(0, 1)) {
+  for (const slug of [...progress.completedProtocols].reverse().slice(0, 2)) {
     items.push({
       id: `proto-${slug}`,
-      label: `Protocolo ${slug}`,
-      meta: "Completado",
+      type: "protocol",
+      title: slug,
+      meta: "Revisado",
+    });
+  }
+
+  for (const q of [...progress.quizResults].reverse().slice(0, 1)) {
+    items.push({
+      id: `quiz-${q.quizId}`,
+      type: "clip",
+      title: `Quiz ${q.protocolRef}`,
+      meta: formatRelative(q.completedAt),
+    });
+  }
+
+  if (items.length < 3 && progress.completedModules.length > 0) {
+    const mod = progress.completedModules[progress.completedModules.length - 1]!;
+    items.push({
+      id: `mod-${mod}`,
+      type: "clip",
+      title: mod,
+      meta: "Módulo avanzado",
     });
   }
 

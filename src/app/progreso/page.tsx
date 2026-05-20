@@ -17,10 +17,12 @@ import {
 } from "@/components/progress";
 import {
   computeKnowledgeHex,
+  getEvolutionMilestones,
   getKnowledgeRecommendations,
   getNextObjective,
   getRecentActivity,
   loadSelectedDomain,
+  recordEvolutionSnapshot,
   saveSelectedDomain,
   type KnowledgeDomainId,
 } from "@/lib/progreso";
@@ -59,7 +61,20 @@ export default function ProgresoPage() {
     return getRecentActivity(progress);
   }, [progress]);
 
+  const evolutionMilestones = useMemo(() => {
+    if (!snapshot) return [];
+    return getEvolutionMilestones(snapshot.globalPercent);
+  }, [snapshot]);
+
+  useEffect(() => {
+    if (snapshot) recordEvolutionSnapshot(snapshot.globalPercent);
+  }, [snapshot]);
+
   const continueHref = recommendations[0]?.href ?? "/modulos";
+  const objectiveHref =
+    recommendations.find((r) => r.kind === "case")?.href ??
+    recommendations[0]?.href ??
+    "/modulos";
 
   const handleSelect = useCallback((id: KnowledgeDomainId) => {
     setHighlightId(id);
@@ -70,6 +85,10 @@ export default function ProgresoPage() {
     router.push(continueHref);
   }, [router, continueHref]);
 
+  const handleStartObjective = useCallback(() => {
+    router.push(objectiveHref);
+  }, [router, objectiveHref]);
+
   if (loading || !user || !progress || !snapshot || !dominant || !learning) {
     return <LoadingScreen />;
   }
@@ -78,10 +97,10 @@ export default function ProgresoPage() {
     <AppLayout user={user}>
       <PageShell className={styles.page}>
         <div className={styles.grid}>
-          <div className={styles.colLeft}>
-            <ProgressPageHeader learning={learning} className={styles.orderHeader} />
+          <ProgressPageHeader learning={learning} className={`${styles.headerSpan} ${styles.orderHeader}`} />
 
-            <div className={`${styles.constellationWrap} ${styles.orderConstellation}`}>
+          <div className={`${styles.colLeft} ${styles.orderConstellationCol}`}>
+            <div className={styles.constellationWrap}>
               <div className={styles.constellationScaled}>
                 <KnowledgeConstellation
                   globalPercent={snapshot.globalPercent}
@@ -91,8 +110,7 @@ export default function ProgresoPage() {
                 />
               </div>
             </div>
-
-            <ProgressGrowthLegend className={`${styles.legendDesktop} ${styles.orderLegend}`} />
+            <ProgressGrowthLegend className={styles.legendDesktop} />
           </div>
 
           <div className={styles.colRight}>
@@ -101,7 +119,9 @@ export default function ProgresoPage() {
               nextObjective={nextObjective}
               recommendations={recommendations}
               recentActivity={recentActivity}
+              evolutionMilestones={evolutionMilestones}
               onContinue={handleContinue}
+              onStartObjective={handleStartObjective}
             />
           </div>
 

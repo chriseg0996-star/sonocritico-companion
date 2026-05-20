@@ -1,6 +1,6 @@
 .page {
   width: 100%;
-  max-width: 1120px;
+  max-width: 1160px;
   margin: 0 auto;
 }
 
@@ -14,9 +14,21 @@
   .grid {
     display: grid;
     grid-template-columns: 65fr 35fr;
-    gap: 20px 24px;
+    gap: 28px;
     align-items: start;
   }
+
+  .headerSpan {
+    grid-column: 1 / -1;
+  }
+
+  .domainsSection {
+    grid-column: 1 / -1;
+  }
+}
+
+.headerSpan {
+  width: 100%;
 }
 
 .colLeft {
@@ -27,10 +39,13 @@
 }
 
 .colRight {
+  min-width: 0;
+}
+
+.sideStack {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  min-width: 0;
+  gap: 12px;
 }
 
 @media (min-width: 880px) {
@@ -42,12 +57,6 @@
 
 .domainsSection {
   width: 100%;
-}
-
-@media (min-width: 880px) {
-  .domainsSection {
-    grid-column: 1 / -1;
-  }
 }
 
 /* Header */
@@ -93,7 +102,7 @@
   min-height: 28px;
   padding: 4px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.04);
   font-family: "IBM Plex Sans", system-ui, sans-serif;
   font-size: 10px;
@@ -107,13 +116,13 @@
   color: #e8ecf2;
 }
 
-/* Constellation wrapper — scale only, core unchanged */
+/* Constellation wrapper — scale only */
 .constellationWrap {
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-top: -6px;
-  margin-bottom: -4px;
+  margin-top: -4px;
+  margin-bottom: 0;
 }
 
 .constellationScaled {
@@ -129,9 +138,9 @@
   }
 }
 
-/* Compact legend */
+/* Legend */
 .legend {
-  padding: 8px 4px 4px;
+  padding: 8px 4px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -176,56 +185,88 @@
   background: rgba(232, 236, 242, 0.5);
 }
 
-/* Cards */
-.card {
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: linear-gradient(168deg, rgba(20, 24, 32, 0.92) 0%, rgba(12, 15, 20, 0.96) 100%);
+/* Panel cards F5.5E */
+.panelCard {
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: linear-gradient(165deg, rgba(24, 29, 38, 0.95) 0%, rgba(14, 17, 23, 0.98) 100%);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
   font-family: "IBM Plex Sans", system-ui, sans-serif;
 }
 
-.cardEyebrow {
-  margin: 0 0 6px;
+.panelEyebrow {
+  margin: 0 0 10px;
   font-size: 9px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #5c6573;
 }
 
-.cardTitle {
-  margin: 0 0 4px;
-  font-size: 15px;
+.panelDomainName {
+  margin: 0 0 2px;
+  font-size: 17px;
   font-weight: 600;
-  line-height: 1.25;
+  line-height: 1.2;
   color: #f5f7fa;
 }
 
-.cardPct {
-  margin: 0 0 12px;
+.panelDomainPct {
+  margin: 0 0 4px;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 13px;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+  color: #e8ecf2;
+}
+
+.panelStage {
+  margin: 0 0 14px;
+  font-size: 11px;
   color: #8fa7c4;
 }
 
-.cardBody {
-  margin: 0;
+.panelStats {
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.panelStats li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  color: #8a939f;
+}
+
+.panelStats strong {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 500;
+  color: #c5cdd8;
+}
+
+.panelBody {
+  margin: 0 0 14px;
   font-size: 12px;
-  line-height: 1.45;
+  line-height: 1.5;
   color: #b7c0cc;
 }
 
-.continuarBtn {
+.panelCtaPrimary {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   min-height: 44px;
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.07);
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
   color: #f5f7fa;
   font-family: inherit;
   font-size: 13px;
@@ -234,72 +275,189 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.continuarBtn:active {
-  background: rgba(255, 255, 255, 0.1);
+.panelCtaPrimary:active {
+  background: rgba(255, 255, 255, 0.12);
 }
 
-.recoList {
+.panelCtaSecondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: #c5cdd8;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.panelCtaSecondary:active {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Recommended */
+.recoCards {
   margin: 0;
   padding: 0;
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
-.recoRow {
-  display: flex;
+.recoCard {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 8px;
-  min-height: 40px;
   width: 100%;
-  padding: 6px 8px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  background: rgba(255, 255, 255, 0.02);
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
   font-family: inherit;
-  font-size: 11px;
-  color: #c5cdd8;
   text-align: left;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
-.recoRow:active {
-  background: rgba(255, 255, 255, 0.05);
+.recoCard:active {
+  background: rgba(255, 255, 255, 0.06);
 }
 
-.recoKind {
-  flex-shrink: 0;
-  width: 52px;
+.recoCardType {
   font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #5c6573;
 }
 
-.activityList {
+.recoCardTitle {
+  font-size: 11px;
+  color: #e8ecf2;
+  line-height: 1.35;
+  min-width: 0;
+}
+
+.recoChevron {
+  color: #6d7785;
+  flex-shrink: 0;
+}
+
+/* Evolution timeline */
+.evolutionTrack {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  margin: 0;
+  padding: 4px 0 0;
+  list-style: none;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.evolutionTrack::-webkit-scrollbar {
+  display: none;
+}
+
+.evolutionStep {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 52px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 0 4px;
+}
+
+.evolutionDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(143, 167, 196, 0.25);
+  border: 1px solid rgba(143, 167, 196, 0.35);
+}
+
+.evolutionDot[data-state="done"] {
+  background: rgba(143, 167, 196, 0.55);
+}
+
+.evolutionDot[data-state="current"] {
+  background: #8fa7c4;
+  border-color: #b7c0cc;
+  box-shadow: 0 0 0 3px rgba(143, 167, 196, 0.15);
+}
+
+.evolutionDot[data-state="goal"] {
+  background: transparent;
+  border-style: dashed;
+}
+
+.evolutionLabel {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 8px;
+  color: #6d7785;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.evolutionLabel[data-state="current"] {
+  color: #e8ecf2;
+  font-weight: 500;
+}
+
+.evolutionConnector {
+  position: absolute;
+  top: 4px;
+  left: calc(50% + 8px);
+  width: calc(100% - 16px);
+  height: 1px;
+  background: rgba(143, 167, 196, 0.2);
+  pointer-events: none;
+}
+
+/* Activity */
+.activityFeed {
   margin: 0;
   padding: 0;
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
-.activityItem {
+.activityFeedItem {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.activityItem:last-child {
+.activityFeedItem:last-child {
   padding-bottom: 0;
   border-bottom: none;
 }
 
-.activityLabel {
+.activityType {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #5c6573;
+}
+
+.activityTitle {
   font-size: 11px;
   color: #c5cdd8;
 }
@@ -310,32 +468,45 @@
   color: #6d7785;
 }
 
-/* Domains strip */
+.activityEmpty {
+  font-size: 11px;
+  color: #6d7785;
+  line-height: 1.45;
+}
+
+/* Domains bottom panel */
 .domainsCard {
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(14, 17, 22, 0.65);
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: linear-gradient(165deg, rgba(20, 24, 32, 0.9) 0%, rgba(12, 15, 20, 0.95) 100%);
 }
 
 .domainsTitle {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   font-size: 9px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #5c6573;
 }
 
 .domainsGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 640px) {
+  .domainsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 16px;
+  }
 }
 
 .domainRow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 40px;
+  grid-template-columns: minmax(0, 1fr) 44px;
   align-items: center;
   gap: 8px;
   width: 100%;
@@ -365,16 +536,16 @@
 
 .domainBarTrack {
   grid-column: 1 / -1;
-  height: 3px;
-  border-radius: 2px;
+  height: 4px;
+  border-radius: 3px;
   background: rgba(255, 255, 255, 0.06);
   overflow: hidden;
 }
 
 .domainBarFill {
   height: 100%;
-  border-radius: 2px;
-  opacity: 0.75;
+  border-radius: 3px;
+  opacity: 0.8;
   transition: width 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -390,15 +561,15 @@
   order: 1;
 }
 
-.orderConstellation {
+.orderConstellationCol {
   order: 2;
 }
 
-.orderLegend {
+.orderDominant {
   order: 3;
 }
 
-.orderDominant {
+.orderReco {
   order: 4;
 }
 
@@ -406,7 +577,7 @@
   order: 5;
 }
 
-.orderReco {
+.orderEvolution {
   order: 6;
 }
 
@@ -420,28 +591,14 @@
 
 @media (min-width: 880px) {
   .orderHeader,
-  .orderConstellation,
-  .orderLegend {
-    order: unset;
-  }
-
+  .orderConstellationCol,
   .orderDominant,
-  .orderObjective,
   .orderReco,
-  .orderActivity {
-    order: unset;
-  }
-
+  .orderObjective,
+  .orderEvolution,
+  .orderActivity,
   .orderDomains {
     order: unset;
-  }
-
-  .colRight {
-    display: flex;
-  }
-
-  .mobileOnlyInColumn {
-    display: none;
   }
 }
 
@@ -463,13 +620,11 @@
     display: contents;
   }
 
-  .legendDesktop {
-    display: none;
+  .sideStack {
+    display: contents;
   }
-}
 
-@media (min-width: 880px) {
-  .legendMobile {
+  .legendDesktop {
     display: none;
   }
 }

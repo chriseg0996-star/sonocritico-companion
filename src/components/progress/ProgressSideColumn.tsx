@@ -1,22 +1,22 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import type { DomainStats, KnowledgeRecommendation } from "@/lib/progreso";
-import type { RecentActivityItem } from "@/lib/progreso/page-helpers";
+import type { EvolutionMilestone, RecentActivityItem } from "@/lib/progreso";
+import { ProgressPanelActivity } from "@/components/progress/ProgressPanelActivity";
+import { ProgressPanelEvolution } from "@/components/progress/ProgressPanelEvolution";
+import { ProgressPanelObjective } from "@/components/progress/ProgressPanelObjective";
+import { ProgressPanelPrimary } from "@/components/progress/ProgressPanelPrimary";
+import { ProgressPanelRecommended } from "@/components/progress/ProgressPanelRecommended";
 import styles from "@/components/progress/progress-page.module.css";
-
-const KIND_LABEL: Record<KnowledgeRecommendation["kind"], string> = {
-  case: "Caso",
-  clip: "Clip",
-  protocol: "Protocolo",
-};
 
 type Props = {
   domain: DomainStats;
   nextObjective: string;
   recommendations: KnowledgeRecommendation[];
   recentActivity: RecentActivityItem[];
+  evolutionMilestones: EvolutionMilestone[];
   onContinue: () => void;
+  onStartObjective: () => void;
 };
 
 export function ProgressSideColumn({
@@ -24,71 +24,17 @@ export function ProgressSideColumn({
   nextObjective,
   recommendations,
   recentActivity,
+  evolutionMilestones,
   onContinue,
+  onStartObjective,
 }: Props) {
-  const router = useRouter();
-
   return (
-    <>
-      <section className={`${styles.card} ${styles.orderDominant}`} aria-labelledby="card-dominant">
-        <p className={styles.cardEyebrow} id="card-dominant">
-          Dominio dominante
-        </p>
-        <p className={styles.cardTitle} style={{ color: domain.color }}>
-          {domain.label}
-        </p>
-        <p className={styles.cardPct}>{domain.percent}%</p>
-        <button type="button" className={styles.continuarBtn} onClick={onContinue}>
-          Continuar
-        </button>
-      </section>
-
-      <section className={`${styles.card} ${styles.orderObjective}`} aria-labelledby="card-objective">
-        <p className={styles.cardEyebrow} id="card-objective">
-          Próximo objetivo
-        </p>
-        <p className={styles.cardBody}>{nextObjective}</p>
-      </section>
-
-      <section className={`${styles.card} ${styles.orderReco}`} aria-labelledby="card-reco">
-        <p className={styles.cardEyebrow} id="card-reco">
-          Recomendado para ti
-        </p>
-        <ul className={styles.recoList}>
-          {recommendations.map((rec) => (
-            <li key={`${rec.kind}-${rec.href}`}>
-              <button
-                type="button"
-                className={styles.recoRow}
-                onClick={() => router.push(rec.href)}
-              >
-                <span className={styles.recoKind}>{KIND_LABEL[rec.kind]}</span>
-                <span>{rec.label}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className={`${styles.card} ${styles.orderActivity}`} aria-labelledby="card-activity">
-        <p className={styles.cardEyebrow} id="card-activity">
-          Actividad reciente
-        </p>
-        <ul className={styles.activityList}>
-          {recentActivity.length === 0 ? (
-            <li className={styles.activityItem}>
-              <span className={styles.activityLabel}>Sin actividad reciente</span>
-            </li>
-          ) : (
-            recentActivity.map((item) => (
-              <li key={item.id} className={styles.activityItem}>
-                <span className={styles.activityLabel}>{item.label}</span>
-                <span className={styles.activityMeta}>{item.meta}</span>
-              </li>
-            ))
-          )}
-        </ul>
-      </section>
-    </>
+    <div className={styles.sideStack}>
+      <ProgressPanelPrimary domain={domain} onContinue={onContinue} />
+      <ProgressPanelRecommended recommendations={recommendations} />
+      <ProgressPanelObjective objective={nextObjective} onStart={onStartObjective} />
+      <ProgressPanelEvolution milestones={evolutionMilestones} />
+      <ProgressPanelActivity items={recentActivity} />
+    </div>
   );
 }
