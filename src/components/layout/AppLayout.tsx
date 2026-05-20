@@ -1,6 +1,7 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
 import { LogOut, Search } from "lucide-react";
+import { CompanionLayoutShell } from "@/components/companion/CompanionLayoutShell";
 import { QuickActionsProvider } from "@/components/navigation";
 import { ClinicalSearchProvider, useClinicalSearch } from "@/components/search/ClinicalSearchProvider";
 import {
@@ -133,7 +134,9 @@ function AppLayoutShell({ children, user }: { children: React.ReactNode; user: U
         </div>
       </aside>
 
-      <main className="app-main">{children}</main>
+      <main className="app-main">
+        <CompanionLayoutShell>{children}</CompanionLayoutShell>
+      </main>
 
       <nav className="app-bottom-nav">
         {bottomNavItems.slice(0, 2).map((item) => {

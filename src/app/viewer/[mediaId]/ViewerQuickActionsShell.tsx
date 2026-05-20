@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { QuickActionsProvider } from "@/components/navigation";
 import { ClinicalSearchProvider } from "@/components/search/ClinicalSearchProvider";
 import { ClinicalViewerRoute } from "@/components/viewer/ClinicalViewerRoute";
+import { ViewerCompanionShell } from "@/components/viewer/ViewerCompanionShell";
 
 function ViewerShellInner({ mediaId }: { mediaId: string }) {
   const searchParams = useSearchParams();
@@ -23,14 +24,18 @@ function ViewerShellInner({ mediaId }: { mediaId: string }) {
         fromStep,
       }}
     >
-      <ClinicalViewerRoute
-        mediaId={mediaId}
-        moduleParam={moduleParam}
-        autoplay={autoplay}
-        fromProtocol={fromProtocol}
-        fromStep={fromStep}
-        errorsOpen={errorsOpen}
-      />
+      <ViewerCompanionShell
+        hints={{ mediaId, fromProtocol, fromStep }}
+      >
+        <ClinicalViewerRoute
+          mediaId={mediaId}
+          moduleParam={moduleParam}
+          autoplay={autoplay}
+          fromProtocol={fromProtocol}
+          fromStep={fromStep}
+          errorsOpen={errorsOpen}
+        />
+      </ViewerCompanionShell>
     </QuickActionsProvider>
   );
 }
