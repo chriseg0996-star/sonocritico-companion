@@ -8,9 +8,8 @@ import { PageShell } from "@/components/layout/PageShell";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { getProgress, type LocalProgress } from "@/lib/auth";
 import {
-  KnowledgeBloom,
-  KnowledgeBloomPanel,
-  KnowledgeGrowthLegend,
+  KnowledgeConstellation,
+  KnowledgeConstellationPanel,
 } from "@/components/progress";
 import {
   computeKnowledgeHex,
@@ -19,7 +18,7 @@ import {
   saveSelectedDomain,
   type KnowledgeDomainId,
 } from "@/lib/progreso";
-import styles from "@/components/progress/knowledge-bloom.module.css";
+import styles from "@/components/progress/knowledge-constellation.module.css";
 
 export default function ProgresoPage() {
   const router = useRouter();
@@ -41,9 +40,8 @@ export default function ProgresoPage() {
     return getKnowledgeRecommendations(dominant, progress);
   }, [progress, dominant]);
 
-  const continueHref = useMemo(() => {
-    return recommendations[0]?.href ?? "/modulos";
-  }, [recommendations]);
+  const continueHref = recommendations[0]?.href ?? "/modulos";
+  const nextCase = recommendations.find((r) => r.kind === "case") ?? null;
 
   const handleSelect = useCallback((id: KnowledgeDomainId) => {
     setHighlightId(id);
@@ -53,6 +51,10 @@ export default function ProgresoPage() {
   const handleContinue = useCallback(() => {
     router.push(continueHref);
   }, [router, continueHref]);
+
+  const handleNextCase = useCallback(() => {
+    if (nextCase) router.push(nextCase.href);
+  }, [router, nextCase]);
 
   if (loading || !user || !progress || !snapshot || !dominant) {
     return <LoadingScreen />;
@@ -68,7 +70,7 @@ export default function ProgresoPage() {
 
         <div className={styles.workspace}>
           <div className={styles.main}>
-            <KnowledgeBloom
+            <KnowledgeConstellation
               globalPercent={snapshot.globalPercent}
               domains={snapshot.domains}
               activeId={highlightId}
@@ -77,15 +79,14 @@ export default function ProgresoPage() {
           </div>
 
           <div className={styles.aside}>
-            <KnowledgeBloomPanel
+            <KnowledgeConstellationPanel
               domain={dominant}
-              recommendations={recommendations}
+              nextCase={nextCase}
               onContinue={handleContinue}
+              onNextCase={handleNextCase}
             />
           </div>
         </div>
-
-        <KnowledgeGrowthLegend />
       </PageShell>
     </AppLayout>
   );

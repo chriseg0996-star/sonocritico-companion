@@ -1,3 +1,2 @@
-export { KnowledgeBloom } from "@/components/progress/KnowledgeBloom";
-export { KnowledgeBloomPanel } from "@/components/progress/KnowledgeBloomPanel";
-export { KnowledgeGrowthLegend } from "@/components/progress/KnowledgeGrowthLegend";
+export { KnowledgeConstellation } from "@/components/progress/KnowledgeConstellation";
+export { KnowledgeConstellationPanel } from "@/components/progress/KnowledgeConstellationPanel";
