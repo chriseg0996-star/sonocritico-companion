@@ -1,11 +1,18 @@
 /* Auto-generated — npm run generate:sw — F2.7 v0.4.0 */
 const CACHE_SHELL = "sonocritico-shell-v0.4.0";
+const CACHE_ASSETS = "sonocritico-assets-v0.4.0";
 const CACHE_ATLAS_MEDIA = "sonocritico-atlas-media-v0.4.0";
 const CACHE_ATLAS_CLIP = "sonocritico-atlas-clip-v0.4.0";
 const BASE_PATH = "";
 
 const PRECACHE_URLS = [
   "/",
+  "/dashboard/",
+  "/login/",
+  "/planes/",
+  "/manifest.json",
+  "/icon-192.png",
+  "/icon-512.png",
   "/biblioteca/",
   "/offline.html",
   "/media/cardiac/a4c-fevi-reduced/still.svg",
@@ -94,7 +101,7 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
-      const keep = new Set([CACHE_SHELL, CACHE_ATLAS_MEDIA, CACHE_ATLAS_CLIP]);
+      const keep = new Set([CACHE_SHELL, CACHE_ASSETS, CACHE_ATLAS_MEDIA, CACHE_ATLAS_CLIP]);
       const names = await caches.keys();
       await Promise.all(names.filter((n) => !keep.has(n)).map((n) => caches.delete(n)));
       await self.clients.claim();
@@ -128,16 +135,33 @@ async function networkFirstClip(request) {
   }
 }
 
-async function staleWhileRevalidate(request, cacheName) {
-  const cache = await caches.open(cacheName);
-  const hit = await cache.match(request);
-  const network = fetch(request)
-    .then((res) => {
-      if (res.ok) void cache.put(request, res.clone());
-      return res;
-    })
-    .catch(() => null);
-  return hit ?? (await network) ?? Response.error();
+async function networkFirstPage(request) {
+  const shell = await caches.open(CACHE_SHELL);
+  try {
+    const res = await fetch(request);
+    if (res.ok) await shell.put(request, res.clone());
+    return res;
+  } catch {
+    const hit = await shell.match(request);
+    if (hit) return hit;
+    const fallbacks = [
+      BASE_PATH + "/dashboard/",
+      BASE_PATH + "/",
+      BASE_PATH + "/offline.html",
+    ];
+    for (const path of fallbacks) {
+      const page = await shell.match(path);
+      if (page) return page;
+    }
+    return Response.error();
+  }
+}
+
+function isStaticAsset(url) {
+  return (
+    url.pathname.includes("/_next/static/") ||
+    /\.(js|css|png|jpg|jpeg|webp|svg|woff2?|ico|json)(\?|$)/i.test(url.pathname)
+  );
 }
 
 self.addEventListener("fetch", (event) => {
@@ -148,20 +172,7 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
 
   if (request.mode === "navigate") {
-    event.respondWith(
-      (async () => {
-        try {
-          return await fetch(request);
-        } catch {
-          const shell = await caches.open(CACHE_SHELL);
-          const biblioteca = await shell.match(BASE_PATH + "/biblioteca/");
-          if (biblioteca) return biblioteca;
-          const offline = await shell.match(BASE_PATH + "/offline.html");
-          if (offline) return offline;
-          return Response.error();
-        }
-      })(),
-    );
+    event.respondWith(networkFirstPage(request));
     return;
   }
 
@@ -175,7 +186,8 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (url.pathname.includes("/_next/static/") || url.pathname.endsWith(".css")) {
-    event.respondWith(staleWhileRevalidate(request, CACHE_SHELL));
+  if (isStaticAsset(url)) {
+    event.respondWith(cacheFirst(request, CACHE_ASSETS));
+    return;
   }
 });

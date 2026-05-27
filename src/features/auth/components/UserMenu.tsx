@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ChevronUp, LogOut, UserRound } from "lucide-react";
 import { Chip } from "@/components/ui";
 import { useAuthOptional } from "@/features/auth/AuthProvider";
+import type { User } from "@/features/auth/types";
 import { logout as legacyLogout } from "@/lib/auth";
 import styles from "@/features/auth/auth.module.css";
 
@@ -21,6 +22,38 @@ function rolLabel(rol: string): string {
   return "Estudiante";
 }
 
+function isGuestUser(user: User | null | undefined, displayName?: string): boolean {
+  if (displayName?.trim().toLowerCase() === "invitado") return true;
+  if (!user) return false;
+  if (user.id === "saas-guest") return true;
+  if (!user.email?.trim()) return true;
+  return user.nombre.trim().toLowerCase() === "invitado";
+}
+
+function resolveDisplayName(user: User | null | undefined, displayName?: string): string {
+  if (isGuestUser(user, displayName)) return "Invitado";
+  const raw = (user?.nombre ?? displayName ?? "Usuario").trim();
+  const rolSuffix = user ? ` ${rolLabel(user.rol)}` : "";
+  if (rolSuffix && raw.endsWith(rolSuffix)) {
+    return raw.slice(0, -rolSuffix.length).trim();
+  }
+  return raw;
+}
+
+function resolveDisplayMeta(
+  user: User | null | undefined,
+  displayMeta?: string,
+  displayName?: string,
+): string {
+  if (isGuestUser(user, displayName)) {
+    return `Plan ${(user?.plan ?? "free").toUpperCase()}`;
+  }
+  if (user) {
+    return `${rolLabel(user.rol)} · Plan ${user.plan.toUpperCase()}`;
+  }
+  return displayMeta ?? "Companion";
+}
+
 export function UserMenu({ displayName, displayMeta, initials }: Props) {
   const router = useRouter();
   const auth = useAuthOptional();
@@ -28,11 +61,12 @@ export function UserMenu({ displayName, displayMeta, initials }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
 
   const user = auth?.user;
-  const nombre = user?.nombre ?? displayName ?? "Usuario";
-  const meta = user
-    ? `${rolLabel(user.rol)} · Plan ${user.plan.toUpperCase()}`
-    : (displayMeta ?? "Companion");
-  const avatar = initials ?? nombre.split(/\s+/).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+  const guest = isGuestUser(user, displayName);
+  const nombre = resolveDisplayName(user, displayName);
+  const meta = resolveDisplayMeta(user, displayMeta, displayName);
+  const avatar =
+    initials ??
+    (guest ? "IN" : nombre.split(/\s+/).slice(0, 2).map((w) => w[0]).join("").toUpperCase());
 
   useEffect(() => {
     if (!open) return;

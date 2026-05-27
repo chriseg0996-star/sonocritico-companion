@@ -6,8 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "media:manifest": "node scripts/build-media-manifest.mjs",
+    "generate:icons": "node scripts/generate-pwa-icons.mjs",
     "generate:sw": "node scripts/generate-sw.mjs",
-    "prebuild": "node scripts/generate-sw.mjs",
+    "prebuild": "node scripts/generate-pwa-icons.mjs && node scripts/generate-sw.mjs",
     "build:pages": "node scripts/generate-lung-media.mjs && node scripts/build-lung-media-manifest.mjs && node scripts/generate-fast-media.mjs && node scripts/build-fast-media-manifest.mjs && node scripts/generate-cardiac-media.mjs && node scripts/build-cardiac-media-manifest.mjs && node scripts/generate-vexus-media.mjs && node scripts/build-vexus-media-manifest.mjs && node scripts/generate-sw.mjs && node scripts/build-pages.mjs",
     "media:lung": "node scripts/generate-lung-media.mjs && node scripts/build-lung-media-manifest.mjs",
     "media:fast": "node scripts/generate-fast-media.mjs && node scripts/build-fast-media-manifest.mjs",
@@ -36,6 +37,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "sharp": "^0.34.2",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
