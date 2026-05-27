@@ -34,9 +34,15 @@ const SOLUTIONS = [
   },
 ] as const;
 
+const LANDING_ROOT_STYLE = {
+  background: "var(--bg-primary, #0b0e12)",
+  color: "var(--text-primary, #f5f7fa)",
+  minHeight: "100vh",
+} as const;
+
 export function LandingPage() {
   return (
-    <div className={styles.landingPage}>
+    <div className={styles.landingPage} style={LANDING_ROOT_STYLE}>
       <main className={styles.landingMain}>
         <section className={styles.landingHero} aria-labelledby="landing-hero-title">
           <span className={styles.landingHeroEmoji} aria-hidden>
