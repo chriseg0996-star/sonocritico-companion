@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/features/auth/useAuth";
+import { AUTH_STORAGE_KEY, dispatchAuthChanged } from "@/features/auth/storage";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, loginAsGuest } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
@@ -24,20 +23,50 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 800));
-    const result = login(email, password);
-    setLoading(false);
-    if (!result.ok) {
-      setError(result.error);
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail || trimmedEmail.length < 3) {
+      setError("Ingresa un email válido.");
       return;
     }
+    if (!password) {
+      setError("Ingresa tu contraseña.");
+      return;
+    }
+    setLoading(true);
+    await new Promise((r) => setTimeout(r, 800));
+    if (typeof window !== "undefined") {
+      const rol = trimmedEmail.toLowerCase() === "instructor@demo.com" ? "instructor" : "estudiante";
+      localStorage.setItem(
+        AUTH_STORAGE_KEY,
+        JSON.stringify({
+          id: `saas-${Date.now()}`,
+          email: trimmedEmail,
+          nombre: trimmedEmail.split("@")[0] || "Usuario",
+          rol,
+          plan: rol === "instructor" ? "pro" : "free",
+        }),
+      );
+      dispatchAuthChanged();
+    }
+    setLoading(false);
     router.push("/dashboard");
   };
 
   const handleGuest = () => {
     setError("");
-    loginAsGuest();
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        AUTH_STORAGE_KEY,
+        JSON.stringify({
+          id: "saas-guest",
+          email: "",
+          nombre: "Invitado",
+          rol: "estudiante",
+          plan: "free",
+        }),
+      );
+      dispatchAuthChanged();
+    }
     router.push("/dashboard");
   };
 

@@ -39,7 +39,7 @@ export default function InstructorPage() {
         minHeight: "100vh",
         background: "#080808",
         color: "#F0F4F8",
-        fontFamily: "system-ui, -apple-system, sans-serif",
+        fontFamily: "system-ui",
         margin: 0,
         padding: 0,
         boxSizing: "border-box",

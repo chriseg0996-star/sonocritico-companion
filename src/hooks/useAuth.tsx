@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth as useSaasAuth } from "@/features/auth/useAuth";
 import { toLegacyUser } from "@/features/auth/legacy";
+import { readStoredUser } from "@/features/auth/storage";
 import { theme } from "@/lib/theme";
 import type { User } from "@/types";
 
@@ -14,19 +15,29 @@ export function useAuth(requiredRole?: "student" | "instructor") {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     if (isLoading) return;
-    if (!isAuthenticated || !saasUser) {
+
+    const sessionUser = saasUser ?? readStoredUser();
+
+    if (!sessionUser) {
       router.push("/login");
       return;
     }
-    const legacy = toLegacyUser(saasUser);
+
+    const legacy = toLegacyUser(sessionUser);
     if (requiredRole && legacy.role !== requiredRole) {
       router.push(legacy.role === "instructor" ? "/instructor" : "/dashboard");
       return;
     }
+
     setUser(legacy);
     setReady(true);
   }, [isAuthenticated, isLoading, requiredRole, router, saasUser]);
+
+  if (typeof window === "undefined") {
+    return { user: null, loading: true };
+  }
 
   return { user, loading: isLoading || !ready };
 }

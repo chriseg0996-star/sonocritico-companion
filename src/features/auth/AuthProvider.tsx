@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -27,16 +28,25 @@ type AuthContextValue = AuthState & {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+function readSessionUser(): User | null {
+  if (typeof window === "undefined") return null;
+  return readStoredUser();
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  useLayoutEffect(() => {
+    setUser(readSessionUser());
+    setIsLoading(false);
+  }, []);
+
   useEffect(() => {
     const refresh = () => {
-      setUser(readStoredUser());
+      setUser(readSessionUser());
       setIsLoading(false);
     };
-    refresh();
 
     const onStorage = (e: StorageEvent) => {
       if (e.key === null || e.key === AUTH_STORAGE_KEY) refresh();
