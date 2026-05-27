@@ -1,53 +1,88 @@
-import type { User } from "@/features/auth/types";
+import type { User, UserPlan, UserRole } from "@/features/auth/types";
 
-export const SAAS_AUTH_STORAGE_KEY = "sonocritico_saas_auth";
+/** Única key de sesión (login, AuthProvider, logout). */
+export const AUTH_STORAGE_KEY = "sc_user";
 
-const LEGACY_USER_KEY = "sonocritico_user";
+export const AUTH_CHANGED_EVENT = "sc-auth-changed";
 
-function initialsFromNombre(nombre: string): string {
-  return nombre
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase() ?? "")
-    .join("");
-}
+const LEGACY_KEYS = ["sonocritico_saas_auth", "sonocritico_user"] as const;
 
-/** Mantiene compatibilidad con páginas que usan `@/lib/auth`. */
-export function syncLegacyUser(user: User): void {
+export function dispatchAuthChanged(): void {
   if (typeof window === "undefined") return;
-  const legacyRole =
-    user.rol === "instructor" || user.rol === "admin" ? "instructor" : "student";
-  const legacy = {
-    id: user.id,
-    email: user.email,
-    name: user.nombre,
-    initials: initialsFromNombre(user.nombre),
-    role: legacyRole,
-    courseCode: "SONO2024",
-    specialty: "urgencias" as const,
-  };
-  localStorage.setItem(LEGACY_USER_KEY, JSON.stringify(legacy));
+  window.dispatchEvent(new Event(AUTH_CHANGED_EVENT));
 }
 
-export function readStoredUser(): User | null {
-  if (typeof window === "undefined") return null;
-  const raw = localStorage.getItem(SAAS_AUTH_STORAGE_KEY);
+function resolveRol(rol?: unknown, role?: unknown): UserRole {
+  const r = String(rol ?? role ?? "").toLowerCase();
+  if (r === "admin") return "admin";
+  if (r === "instructor") return "instructor";
+  return "estudiante";
+}
+
+function resolvePlan(plan?: unknown, rol?: UserRole): UserPlan {
+  if (plan === "pro") return "pro";
+  if (rol === "instructor" || rol === "admin") return "pro";
+  return "free";
+}
+
+function normalizeUser(raw: Record<string, unknown>): User {
+  const email = String(raw.email ?? "").trim().toLowerCase();
+  const nombre = String(raw.nombre ?? raw.name ?? "Usuario");
+  const rol = resolveRol(raw.rol, raw.role);
+  const plan = resolvePlan(raw.plan, rol);
+  const id = String(raw.id ?? (email ? `saas-${email}` : `saas-guest-${Date.now()}`));
+
+  return { id, email, nombre, rol, plan };
+}
+
+function parseStoredUser(raw: string | null): User | null {
   if (!raw) return null;
   try {
-    return JSON.parse(raw) as User;
+    const parsed = JSON.parse(raw) as Record<string, unknown>;
+    if (!parsed || typeof parsed !== "object") return null;
+    return normalizeUser(parsed);
   } catch {
     return null;
   }
 }
 
+export function readStoredUser(): User | null {
+  if (typeof window === "undefined") return null;
+
+  const current = parseStoredUser(localStorage.getItem(AUTH_STORAGE_KEY));
+  if (current) return current;
+
+  for (const key of LEGACY_KEYS) {
+    const migrated = parseStoredUser(localStorage.getItem(key));
+    if (migrated) {
+      writeStoredUser(migrated);
+      localStorage.removeItem(key);
+      return migrated;
+    }
+  }
+
+  return null;
+}
+
 export function writeStoredUser(user: User | null): void {
   if (typeof window === "undefined") return;
+
   if (!user) {
-    localStorage.removeItem(SAAS_AUTH_STORAGE_KEY);
-    localStorage.removeItem(LEGACY_USER_KEY);
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    for (const key of LEGACY_KEYS) {
+      localStorage.removeItem(key);
+    }
+    dispatchAuthChanged();
     return;
   }
-  localStorage.setItem(SAAS_AUTH_STORAGE_KEY, JSON.stringify(user));
-  syncLegacyUser(user);
+
+  const normalized = normalizeUser(user as unknown as Record<string, unknown>);
+  localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(normalized));
+  for (const key of LEGACY_KEYS) {
+    localStorage.removeItem(key);
+  }
+  dispatchAuthChanged();
 }
+
+/** @deprecated Usar AUTH_STORAGE_KEY */
+export const SAAS_AUTH_STORAGE_KEY = AUTH_STORAGE_KEY;

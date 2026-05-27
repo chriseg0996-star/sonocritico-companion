@@ -10,7 +10,12 @@ import {
   type ReactNode,
 } from "react";
 import { buildGuestUser, buildUserFromEmail } from "@/features/auth/buildUser";
-import { readStoredUser, writeStoredUser } from "@/features/auth/storage";
+import {
+  AUTH_CHANGED_EVENT,
+  AUTH_STORAGE_KEY,
+  readStoredUser,
+  writeStoredUser,
+} from "@/features/auth/storage";
 import type { AuthState, User, UserPlan } from "@/features/auth/types";
 
 type AuthContextValue = AuthState & {
@@ -27,8 +32,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setUser(readStoredUser());
-    setIsLoading(false);
+    const refresh = () => {
+      setUser(readStoredUser());
+      setIsLoading(false);
+    };
+    refresh();
+
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === null || e.key === AUTH_STORAGE_KEY) refresh();
+    };
+    const onAuthChanged = () => refresh();
+
+    window.addEventListener("storage", onStorage);
+    window.addEventListener(AUTH_CHANGED_EVENT, onAuthChanged);
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener(AUTH_CHANGED_EVENT, onAuthChanged);
+    };
   }, []);
 
   const login = useCallback((email: string, password: string) => {

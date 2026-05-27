@@ -1,10 +1,11 @@
 import type { User } from "@/types";
+import { toLegacyUser } from "@/features/auth/legacy";
+import { readStoredUser, writeStoredUser } from "@/features/auth/storage";
+import { buildUserFromEmail } from "@/features/auth/buildUser";
 import { PROTOCOL_TO_MODULES } from "@/lib/course-modules";
 import { recordCaseCompleted, recordQuizCompleted } from "@/lib/learning/events";
 import { migrateProgress } from "@/lib/module-progress";
 import { mockCourse } from "./mock-data";
-
-const STORAGE_KEY = "sonocritico_user";
 
 export function login(
   email: string,
@@ -42,27 +43,21 @@ export function login(
   };
 
   if (typeof window !== "undefined") {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+    const saas = buildUserFromEmail(email);
+    writeStoredUser({ ...saas, email: user.email, nombre: user.name });
   }
 
   return { user };
 }
 
 export function getStoredUser(): User | null {
-  if (typeof window === "undefined") return null;
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as User;
-  } catch {
-    return null;
-  }
+  const saas = readStoredUser();
+  return saas ? toLegacyUser(saas) : null;
 }
 
 export function logout() {
   if (typeof window !== "undefined") {
-    localStorage.removeItem(STORAGE_KEY);
-    localStorage.removeItem("sonocritico_saas_auth");
+    writeStoredUser(null);
     localStorage.removeItem("sonocritico_progress");
   }
 }

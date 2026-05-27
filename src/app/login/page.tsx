@@ -2,13 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/features/auth/useAuth";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login, loginAsGuest } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     e.currentTarget.style.border = "1px solid #4A9EFF";
@@ -20,35 +23,21 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     setLoading(true);
     await new Promise((r) => setTimeout(r, 800));
-    if (typeof window !== "undefined") {
-      const role = email === "instructor@demo.com" ? "instructor" : "estudiante";
-      localStorage.setItem(
-        "sc_user",
-        JSON.stringify({
-          email,
-          nombre: email.split("@")[0],
-          rol: role,
-          plan: "free",
-        }),
-      );
+    const result = login(email, password);
+    setLoading(false);
+    if (!result.ok) {
+      setError(result.error);
+      return;
     }
     router.push("/dashboard");
   };
 
   const handleGuest = () => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem(
-        "sc_user",
-        JSON.stringify({
-          email: "",
-          nombre: "Invitado",
-          rol: "estudiante",
-          plan: "free",
-        }),
-      );
-    }
+    setError("");
+    loginAsGuest();
     router.push("/dashboard");
   };
 
@@ -214,6 +203,18 @@ export default function LoginPage() {
               Demo instructor: instructor@demo.com + cualquier contraseña
             </p>
           </div>
+
+          {error ? (
+            <p
+              style={{
+                fontSize: "13px",
+                color: "#FF6B6B",
+                margin: "0 0 12px",
+              }}
+            >
+              {error}
+            </p>
+          ) : null}
 
           {/* Botón principal */}
           <button
