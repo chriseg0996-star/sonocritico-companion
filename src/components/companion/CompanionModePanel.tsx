@@ -12,18 +12,33 @@ import {
   saveCompanionLastUse,
 } from "@/lib/companion";
 import type { GuardScenarioId } from "@/lib/companion";
+import {
+  dispatchCompanionOpenWorkflow,
+  type CompanionProtocolId,
+} from "@/features/companion-workflow/events";
 import styles from "@/components/companion/companion-mode.module.css";
 
 type Props = {
   /** Escenario inicial (p. ej. desde /guardia?escenario=disnea). */
   initialScenarioId?: string | null;
   showFullPageLink?: boolean;
+  /** Callback opcional al elegir protocolo con flujo companion. */
+  onProtocolSelect?: (protocolId: CompanionProtocolId) => void;
 };
+
+function protocolIdFromHref(href: string): CompanionProtocolId | null {
+  if (href === "/protocolos/blue") return "blue";
+  if (href === "/protocolos/fast") return "fast";
+  if (href === "/protocolos/vexus") return "vexus";
+  if (href === "/protocolos/rush") return "rush";
+  return null;
+}
 
 /** Modo guardia — queja → protocolo / atlas / calculadora / caso en 1–2 toques. */
 export function CompanionModePanel({
   initialScenarioId = null,
   showFullPageLink = false,
+  onProtocolSelect,
 }: Props) {
   const router = useRouter();
   const [activeId, setActiveId] = useState<GuardScenarioId | null>(null);
@@ -43,6 +58,12 @@ export function CompanionModePanel({
   const scenario = activeId ? getGuardScenario(activeId) : null;
 
   const openLink = (href: string) => {
+    const protocolId = protocolIdFromHref(href);
+    if (protocolId) {
+      onProtocolSelect?.(protocolId);
+      dispatchCompanionOpenWorkflow(protocolId);
+      return;
+    }
     router.push(href);
   };
 

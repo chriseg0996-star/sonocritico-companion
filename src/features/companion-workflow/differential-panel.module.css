@@ -1,0 +1,181 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.diagnosisBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.diagnostico {
+  margin: 0;
+  font-family: var(--font-bebas), "Bebas Neue", sans-serif;
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+.certezaChip {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  min-height: 28px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.certezaAlta {
+  background: var(--badge-success-bg);
+  color: var(--success);
+}
+
+.certezaMedia {
+  background: var(--badge-warning-bg);
+  color: var(--warning);
+}
+
+.certezaBaja {
+  background: var(--danger-muted);
+  color: var(--danger);
+}
+
+.sectionTitle {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.alternatives {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.altBtn {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 14px;
+  border: 1px solid var(--bg-border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  text-align: left;
+  cursor: pointer;
+}
+
+.altBtn:focus-visible {
+  outline: 1px solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
+}
+
+.altBtn:active {
+  background: var(--surface-glass-hover);
+}
+
+.altIcon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-muted);
+  color: var(--accent);
+}
+
+.altBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.altName {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.altHint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.redFlags {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.redFlagItem {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--danger-muted);
+  border: 1px solid var(--danger-muted);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.redFlagIcon {
+  flex-shrink: 0;
+  color: var(--danger);
+  margin-top: 1px;
+}
+
+.accionesList {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.accionesList li + li {
+  margin-top: 6px;
+}
+
+.quickActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quickActions :global(.ui-btn) {
+  flex: 1 1 calc(50% - 4px);
+  min-height: 44px;
+  min-width: 0;
+}
+
+.noteSaved {
+  margin: 0;
+  font-size: 12px;
+  color: var(--success);
+}

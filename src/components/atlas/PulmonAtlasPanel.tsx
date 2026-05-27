@@ -18,10 +18,12 @@ import {
 type PanelProps = {
   onOpenEntry: (entry: AtlasEntry) => void;
   onNavListChange?: (entries: AtlasEntry[]) => void;
+  /** Prefill de búsqueda (p. ej. panel companion). */
+  initialQuery?: string;
 };
 
-export function PulmonAtlasPanel({ onOpenEntry, onNavListChange }: PanelProps) {
-  const [query, setQuery] = useState("");
+export function PulmonAtlasPanel({ onOpenEntry, onNavListChange, initialQuery = "" }: PanelProps) {
+  const [query, setQuery] = useState(initialQuery);
   const [filterId, setFilterId] = useState<AtlasFilterId>("all");
 
   const filtered = useMemo(
@@ -34,6 +36,10 @@ export function PulmonAtlasPanel({ onOpenEntry, onNavListChange }: PanelProps) {
   useEffect(() => {
     onNavListChange?.(navList);
   }, [navList, onNavListChange]);
+
+  useEffect(() => {
+    setQuery(initialQuery);
+  }, [initialQuery]);
 
   const stills = useMemo(() => filtered.filter((e) => e.kind === "still"), [filtered]);
   const clips = useMemo(() => filtered.filter((e) => e.kind === "clip"), [filtered]);

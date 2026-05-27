@@ -15,6 +15,7 @@ import {
 } from "@/components/dashboard";
 import { getProgress } from "@/lib/auth";
 import type { LocalProgress } from "@/lib/auth";
+import { WorkflowController } from "@/features/companion-workflow/WorkflowController";
 
 export default function DashboardPage() {
   const { user, loading } = useAuth("student");
@@ -37,6 +38,7 @@ export default function DashboardPage() {
         <ContinueCourse progress={progress} />
         <CourseProgress progress={progress} />
       </PageShell>
+      <WorkflowController />
     </AppLayout>
   );
 }
