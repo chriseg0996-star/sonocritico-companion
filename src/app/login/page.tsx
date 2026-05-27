@@ -10,6 +10,14 @@ export default function LoginPage() {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.border = "1px solid #4A9EFF";
+  };
+
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.border = "1px solid #2E2E2E";
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -53,7 +61,10 @@ export default function LoginPage() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "24px",
+        margin: 0,
+        padding: "0 24px 24px",
+        boxSizing: "border-box",
+        width: "100%",
         fontFamily: "system-ui, -apple-system, sans-serif",
       }}
     >
@@ -82,7 +93,7 @@ export default function LoginPage() {
           maxWidth: "400px",
           background: "#111111",
           border: "1px solid #242424",
-          borderRadius: "20px",
+          borderRadius: "24px",
           padding: "32px",
         }}
       >
@@ -124,6 +135,8 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
               placeholder="tu@hospital.mx"
               style={{
                 width: "100%",
@@ -157,6 +170,8 @@ export default function LoginPage() {
                 type={showPass ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
                 placeholder="••••••••"
                 style={{
                   width: "100%",
@@ -221,20 +236,6 @@ export default function LoginPage() {
             {loading ? "Ingresando..." : "Ingresar"}
           </button>
 
-          {/* Divider */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              margin: "4px 0 12px",
-            }}
-          >
-            <div style={{ flex: 1, height: "1px", background: "#1E1E1E" }} />
-            <span style={{ fontSize: "12px", color: "#444" }}>o</span>
-            <div style={{ flex: 1, height: "1px", background: "#1E1E1E" }} />
-          </div>
-
           {/* Invitado */}
           <button
             type="button"
@@ -243,12 +244,13 @@ export default function LoginPage() {
               width: "100%",
               background: "transparent",
               color: "#8FA7C4",
-              border: "1px solid #242424",
+              border: "1px solid #2E2E2E",
               borderRadius: "10px",
               padding: "13px",
               fontSize: "14px",
               fontWeight: "500",
               cursor: "pointer",
+              marginTop: "12px",
             }}
           >
             Continuar como invitado
