@@ -66,9 +66,15 @@ export function UserMenu({ displayName, displayMeta, initials, compact = false }
   const guest = isGuestUser(user, displayName);
   const nombre = resolveDisplayName(user, displayName);
   const meta = resolveDisplayMeta(user, displayMeta, displayName);
-  const avatar =
-    initials ??
-    (guest ? "IN" : nombre.split(/\s+/).slice(0, 2).map((w) => w[0]).join("").toUpperCase());
+  const avatar = guest
+    ? ""
+    : initials ??
+      nombre
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((w) => w[0])
+        .join("")
+        .toUpperCase();
 
   useEffect(() => {
     if (!open) return;
