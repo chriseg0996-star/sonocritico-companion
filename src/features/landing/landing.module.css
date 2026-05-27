@@ -1,0 +1,229 @@
+.landing-page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-ibm-plex-sans), "IBM Plex Sans", system-ui, sans-serif;
+}
+
+.landing-main {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.landing-hero {
+  text-align: center;
+  padding: 32px 0 40px;
+}
+
+.landing-heroEmoji {
+  display: block;
+  font-size: 40px;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.landing-heroTitle {
+  margin: 0 0 12px;
+  font-family: var(--font-bebas), "Bebas Neue", sans-serif;
+  font-size: clamp(42px, 12vw, 56px);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 0.95;
+  color: var(--text-primary);
+}
+
+.landing-heroAccent {
+  color: var(--accent);
+}
+
+.landing-tagline {
+  margin: 0 auto 28px;
+  max-width: 28ch;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.landing-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background var(--motion-fast),
+    color var(--motion-fast),
+    border-color var(--motion-fast);
+}
+
+.landing-btnPrimary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+}
+
+.landing-btnPrimary:focus-visible {
+  outline: 1px solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
+}
+
+.landing-btnGhost {
+  background: var(--surface-glass);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+
+.landing-btnGhost:focus-visible {
+  outline: 1px solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
+}
+
+.landing-section {
+  padding: 28px 0;
+  border-top: 1px solid var(--bg-border);
+}
+
+.landing-sectionTitle {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.landing-sectionHeadline {
+  margin: 0 0 18px;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.landing-cardGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.landing-card {
+  padding: 16px 14px;
+  border: 1px solid var(--bg-border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-inset);
+}
+
+.landing-cardTitle {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.landing-cardText {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.landing-featureList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.landing-feature {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px;
+  border: 1px solid var(--bg-border);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(168deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
+}
+
+.landing-featureIcon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: var(--accent-muted);
+  border: 1px solid var(--accent-border);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.landing-featureBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.landing-featureTitle {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.landing-featureText {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.landing-cta {
+  text-align: center;
+  padding: 36px 16px 8px;
+  border-top: 1px solid var(--bg-border);
+}
+
+.landing-ctaTitle {
+  margin: 0 0 8px;
+  font-family: var(--font-bebas), "Bebas Neue", sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--text-primary);
+}
+
+.landing-ctaText {
+  margin: 0 0 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.landing-footer {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 10px;
+  color: var(--text-faint);
+  letter-spacing: 0.04em;
+}
+
+@media (min-width: 640px) {
+  .landing-main {
+    padding: 40px 24px 64px;
+  }
+
+  .landing-cardGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+}
