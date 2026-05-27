@@ -1,6 +1,7 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, Search } from "lucide-react";
+import { Search } from "lucide-react";
+import { UserMenu } from "@/features/auth/components/UserMenu";
 import { CompanionLayoutShell } from "@/components/companion/CompanionLayoutShell";
 import { QuickActionsProvider } from "@/components/navigation";
 import { ClinicalSearchProvider, useClinicalSearch } from "@/components/search/ClinicalSearchProvider";
@@ -11,7 +12,6 @@ import {
   type NavItem,
 } from "@/config/navigation";
 import { GlobalFooter } from "@/components/layout/GlobalFooter";
-import { logout } from "@/lib/auth";
 import { shouldShowGlobalFooter } from "@/lib/layout-footer";
 import { fonts } from "@/lib/typography";
 import { theme } from "@/lib/theme";
@@ -49,11 +49,6 @@ function AppLayoutShell({ children, user }: { children: React.ReactNode; user: U
   const bottomNavItems = getBottomNavItems();
   const showGlobalFooter = shouldShowGlobalFooter(pathname);
 
-  function handleLogout() {
-    logout();
-    router.push("/login");
-  }
-
   return (
     <div style={{ minHeight: "100vh", display: "flex" }}>
       <aside className="app-sidebar">
@@ -62,42 +57,12 @@ function AppLayoutShell({ children, user }: { children: React.ReactNode; user: U
           <p className="brand-tagline">Visualiza el problema. Actúa con certeza.</p>
         </div>
 
-        <div className="app-sidebar__profile" style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: "50%",
-              background: theme.surface.glass,
-              border: "none",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 12,
-              color: theme.accent.primary,
-              fontWeight: 600,
-              flexShrink: 0,
-              fontFamily: fonts.sans,
-            }}
-          >
-            {user.initials}
-          </div>
-          <div style={{ minWidth: 0 }}>
-            <div
-              style={{
-                fontSize: 13,
-                fontWeight: 600,
-                color: theme.text.primary,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                fontFamily: fonts.sans,
-              }}
-            >
-              {user.name}
-            </div>
-            <div style={{ fontSize: 11, color: theme.text.muted, fontFamily: fonts.sans }}>{user.specialty}</div>
-          </div>
+        <div className="app-sidebar__profile">
+          <UserMenu
+            displayName={user.name}
+            displayMeta={user.specialty}
+            initials={user.initials}
+          />
         </div>
 
         <div className="app-sidebar__search">
@@ -129,12 +94,7 @@ function AppLayoutShell({ children, user }: { children: React.ReactNode; user: U
           ))}
         </nav>
 
-        <div className="app-sidebar__footer">
-          <button type="button" onClick={handleLogout} className="nav-link" style={{ width: "100%", color: theme.text.muted }}>
-            <LogOut size={16} strokeWidth={1.5} />
-            Cerrar sesión
-          </button>
-        </div>
+        <div className="app-sidebar__footer" aria-hidden style={{ minHeight: 4 }} />
       </aside>
 
       <main className="app-main">

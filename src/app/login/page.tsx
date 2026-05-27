@@ -1,92 +1,47 @@
 "use client";
+
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2, Lock, Mail, Shield } from "lucide-react";
-import { login } from "@/lib/auth";
-import { Btn } from "@/components/ui/base";
-import { theme } from "@/lib/theme";
+import { Btn, Card, Input } from "@/components/ui";
+import { useAuth } from "@/features/auth/useAuth";
+import styles from "@/features/auth/auth.module.css";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login, loginAsGuest } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [code, setCode] = useState("");
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   async function handleLogin() {
     setError("");
-    if (!email || !password || !code) {
-      setError("Completa todos los campos.");
-      return;
-    }
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 600));
-    const result = login(email, password, code.toUpperCase());
+    await new Promise((r) => setTimeout(r, 400));
+    const result = login(email, password);
     setLoading(false);
-    if (result.error) {
+    if (!result.ok) {
       setError(result.error);
       return;
     }
-    const role = result.user!.role;
-    router.push(role === "instructor" ? "/instructor" : "/dashboard");
+    router.push("/dashboard");
   }
 
-  const inputStyle: React.CSSProperties = {
-    width: "100%",
-    background: theme.bg.primary,
-    border: `1px solid ${theme.bg.border}`,
-    borderRadius: theme.radius.sm,
-    padding: "11px 12px 11px 40px",
-    fontSize: 13,
-    color: theme.text.primary,
-    fontFamily: "'IBM Plex Sans', sans-serif",
-    outline: "none",
-    transition: "border-color 200ms ease-out",
-  };
-
-  const focusBorder = theme.accent.borderStrong;
-  const blurBorder = theme.bg.border;
+  function handleGuest() {
+    loginAsGuest();
+    router.push("/dashboard");
+  }
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: theme.bg.primary,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "24px 16px",
-      }}
-    >
-      <div
-        aria-hidden
-        style={{
-          position: "fixed",
-          inset: 0,
-          background:
-            "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.006) 3px, rgba(255,255,255,0.006) 4px)",
-          pointerEvents: "none",
-        }}
-      />
-
-      <div style={{ width: "100%", maxWidth: 420, position: "relative" }}>
-        <header style={{ textAlign: "center", marginBottom: 32 }}>
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 56,
-              height: 56,
-              borderRadius: theme.radius.md,
-              background: theme.accent.muted,
-              border: `1px solid ${theme.accent.border}`,
-              marginBottom: 18,
-            }}
-          >
-            <Shield size={26} color={theme.accent.primary} strokeWidth={1.5} />
+    <main className={styles.authLoginPage}>
+      <div className={styles.authLoginScan} aria-hidden />
+      <div className={styles.authLoginWrap}>
+        <header className={styles.authLoginHeader}>
+          <div className={styles.authLoginIcon}>
+            <Shield size={26} strokeWidth={1.5} />
           </div>
           <p className="brand-wordmark" style={{ fontSize: 14, marginBottom: 8 }}>
             SONOCRÍTICO
@@ -96,146 +51,78 @@ export default function LoginPage() {
           </p>
         </header>
 
-        <div
-          className="scan-line"
-          style={{
-            background: theme.bg.card,
-            border: `1px solid ${theme.bg.border}`,
-            borderRadius: theme.radius.lg,
-            padding: 28,
-            boxShadow: theme.shadow.card,
-          }}
-        >
-          <h1 style={{ fontSize: 16, fontWeight: 600, color: theme.text.primary, margin: "0 0 4px" }}>
-            Acceso al curso
-          </h1>
-          <p style={{ fontSize: 12, color: theme.text.muted, margin: "0 0 22px" }}>
-            Credenciales y código de curso
+        <Card className={styles.authLoginCard} glow>
+          <h1 className={styles.authLoginTitle}>Iniciar sesión</h1>
+          <p className={styles.authLoginSubtitle}>Acceso mock — listo para API</p>
+
+          <label className={styles.authField}>
+            <span className={styles.authLabel}>Email</span>
+            <Input
+              type="email"
+              autoComplete="email"
+              placeholder="tu@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+              iconLeft={<Mail size={15} strokeWidth={1.5} className={styles.authIconLeft} />}
+            />
+          </label>
+
+          <label className={styles.authField}>
+            <span className={styles.authLabel}>Contraseña</span>
+            <Input
+              type={showPwd ? "text" : "password"}
+              autoComplete="current-password"
+              placeholder="········"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+              iconLeft={<Lock size={15} strokeWidth={1.5} className={styles.authIconLeft} />}
+              adornmentRight={
+                <button
+                  type="button"
+                  className={styles.authPwdToggle}
+                  onClick={() => setShowPwd((v) => !v)}
+                  aria-label={showPwd ? "Ocultar contraseña" : "Mostrar contraseña"}
+                >
+                  {showPwd ? <EyeOff size={15} strokeWidth={1.5} /> : <Eye size={15} strokeWidth={1.5} />}
+                </button>
+              }
+            />
+          </label>
+
+          <p style={{ margin: "0 0 14px", fontSize: 11, color: "var(--text-muted)" }}>
+            Demo instructor: <strong>instructor@demo.com</strong> + cualquier contraseña
           </p>
 
-          <label style={{ display: "block", marginBottom: 12 }}>
-            <span style={{ fontSize: 10, color: theme.text.secondary, letterSpacing: "0.06em", fontWeight: 600 }}>
-              EMAIL
-            </span>
-            <div style={{ position: "relative", marginTop: 6 }}>
-              <Mail
-                size={15}
-                strokeWidth={1.5}
-                style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: theme.text.muted }}
-              />
-              <input
-                type="email"
-                placeholder="tu@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-                style={inputStyle}
-                onFocus={(e) => (e.target.style.borderColor = focusBorder)}
-                onBlur={(e) => (e.target.style.borderColor = blurBorder)}
-              />
-            </div>
-            <span style={{ fontSize: 10, color: theme.text.muted, marginTop: 4, display: "block" }}>
-              instructor@... para rol instructor
-            </span>
-          </label>
+          {error ? <div className={styles.authError}>{error}</div> : null}
 
-          <label style={{ display: "block", marginBottom: 12 }}>
-            <span style={{ fontSize: 10, color: theme.text.secondary, letterSpacing: "0.06em", fontWeight: 600 }}>
-              CONTRASEÑA
-            </span>
-            <div style={{ position: "relative", marginTop: 6 }}>
-              <Lock
-                size={15}
-                strokeWidth={1.5}
-                style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: theme.text.muted }}
-              />
-              <input
-                type={showPwd ? "text" : "password"}
-                placeholder="········"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-                style={{ ...inputStyle, paddingRight: 40 }}
-                onFocus={(e) => (e.target.style.borderColor = focusBorder)}
-                onBlur={(e) => (e.target.style.borderColor = blurBorder)}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPwd(!showPwd)}
-                style={{
-                  position: "absolute",
-                  right: 12,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  cursor: "pointer",
-                  color: theme.text.muted,
-                  background: "none",
-                  border: "none",
-                  padding: 0,
-                }}
-              >
-                {showPwd ? <EyeOff size={15} strokeWidth={1.5} /> : <Eye size={15} strokeWidth={1.5} />}
-              </button>
-            </div>
-          </label>
+          <div className={styles.authActions}>
+            <Btn variant="primary" fullWidth onClick={handleLogin} disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader2 size={15} strokeWidth={1.5} style={{ animation: "auth-spin 1s linear infinite" }} />
+                  Verificando…
+                </>
+              ) : (
+                "Ingresar"
+              )}
+            </Btn>
+            <button type="button" className={styles.authGuestLink} onClick={handleGuest}>
+              Continuar como invitado
+            </button>
+          </div>
+        </Card>
 
-          <label style={{ display: "block", marginBottom: 20 }}>
-            <span style={{ fontSize: 10, color: theme.text.secondary, letterSpacing: "0.06em", fontWeight: 600 }}>
-              CÓDIGO DE CURSO
-            </span>
-            <div style={{ position: "relative", marginTop: 6 }}>
-              <Shield
-                size={15}
-                strokeWidth={1.5}
-                style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: theme.text.muted }}
-              />
-              <input
-                type="text"
-                placeholder="SONO2024"
-                value={code}
-                onChange={(e) => setCode(e.target.value.toUpperCase())}
-                onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-                style={{ ...inputStyle, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: 2 }}
-                onFocus={(e) => (e.target.style.borderColor = focusBorder)}
-                onBlur={(e) => (e.target.style.borderColor = blurBorder)}
-              />
-            </div>
-          </label>
-
-          {error && (
-            <div
-              style={{
-                background: theme.state.errorMuted,
-                border: `1px solid ${theme.state.errorBorder}`,
-                borderRadius: theme.radius.sm,
-                padding: "8px 12px",
-                fontSize: 12,
-                color: theme.state.error,
-                marginBottom: 16,
-              }}
-            >
-              {error}
-            </div>
-          )}
-
-          <Btn variant="primary" fullWidth onClick={handleLogin} disabled={loading}>
-            {loading ? (
-              <>
-                <Loader2 size={15} strokeWidth={1.5} style={{ animation: "spin 1s linear infinite" }} />
-                Verificando...
-              </>
-            ) : (
-              "Ingresar al curso"
-            )}
-          </Btn>
-        </div>
-
-        <p style={{ textAlign: "center", marginTop: 20, fontSize: 10, color: theme.text.muted }}>
-          Companion USG · UCI
+        <p className={styles.authFooterNote}>
+          <Link href="/planes" style={{ color: "var(--accent)" }}>
+            Ver planes Free y Pro
+          </Link>
+          {" · Companion USG"}
         </p>
       </div>
 
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <style>{`@keyframes auth-spin { to { transform: rotate(360deg); } }`}</style>
     </main>
   );
 }

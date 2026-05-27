@@ -62,6 +62,7 @@ export function getStoredUser(): User | null {
 export function logout() {
   if (typeof window !== "undefined") {
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem("sonocritico_saas_auth");
     localStorage.removeItem("sonocritico_progress");
   }
 }

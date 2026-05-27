@@ -3,6 +3,7 @@ import {
   Activity,
   BookOpen,
   Brain,
+  GraduationCap,
   Image,
   LayoutDashboard,
   User,
@@ -26,7 +27,8 @@ export type NavItemId =
   | "calculadoras"
   | "casos"
   | "repaso"
-  | "progreso";
+  | "progreso"
+  | "instructor";
 
 export type NavItem = {
   id: NavItemId;
@@ -95,6 +97,13 @@ export const NAV_ITEMS: readonly NavItem[] = [
     title: "Progreso",
     route: "/progreso",
     icon: User,
+    section: "entrenamiento",
+  },
+  {
+    id: "instructor",
+    title: "Instructor",
+    route: "/instructor",
+    icon: GraduationCap,
     section: "entrenamiento",
   },
 ] as const;

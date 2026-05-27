@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { OfflineBootstrap } from "@/components/offline/OfflineBootstrap";
+import { AppProviders } from "@/components/providers/AppProviders";
 import { ProtocolProvider } from "@/components/protocols/ProtocolContext";
 import "./globals.css";
 
@@ -20,7 +21,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body style={{ background: "var(--bg-primary)", color: "var(--text-primary)", minHeight: "100vh" }}>
         <OfflineBootstrap />
-        <ProtocolProvider>{children}</ProtocolProvider>
+        <AppProviders>
+          <ProtocolProvider>{children}</ProtocolProvider>
+        </AppProviders>
       </body>
     </html>
   );

@@ -1,30 +1,34 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getStoredUser } from "@/lib/auth";
+import { useAuth as useSaasAuth } from "@/features/auth/useAuth";
+import { toLegacyUser } from "@/features/auth/legacy";
 import { theme } from "@/lib/theme";
 import type { User } from "@/types";
 
 export function useAuth(requiredRole?: "student" | "instructor") {
   const router = useRouter();
+  const { user: saasUser, isLoading, isAuthenticated } = useSaasAuth();
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const stored = getStoredUser();
-    if (!stored) {
+    if (isLoading) return;
+    if (!isAuthenticated || !saasUser) {
       router.push("/login");
       return;
     }
-    if (requiredRole && stored.role !== requiredRole) {
-      router.push(stored.role === "instructor" ? "/instructor" : "/dashboard");
+    const legacy = toLegacyUser(saasUser);
+    if (requiredRole && legacy.role !== requiredRole) {
+      router.push(legacy.role === "instructor" ? "/instructor" : "/dashboard");
       return;
     }
-    setUser(stored);
-    setLoading(false);
-  }, [router, requiredRole]);
+    setUser(legacy);
+    setReady(true);
+  }, [isAuthenticated, isLoading, requiredRole, router, saasUser]);
 
-  return { user, loading };
+  return { user, loading: isLoading || !ready };
 }
 
 export function LoadingScreen() {
