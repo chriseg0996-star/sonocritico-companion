@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🫁 SONOCRÍTICO — Companion USG Crítico
 
-## Getting Started
+> Visualiza el problema. Actúa con certeza. Marca la diferencia.
 
-First, run the development server:
+Companion clínico de decisión para médicos en cuidados intensivos.  
+Protocolos · Atlas · Entrenamiento · Guía en tiempo real — en un solo flujo.
+
+**Demo en vivo → [chriseg0996-star.github.io/sonocritico-companion](https://chriseg0996-star.github.io/sonocritico-companion/dashboard/)**
+
+---
+
+## Qué hace
+
+SONOCRÍTICO conecta protocolos de ultrasonido point-of-care, atlas anatómico,
+casos clínicos adaptativos y un companion en tiempo real en un solo flujo diagnóstico —
+diseñado para médicos intensivistas que tienen 4 pantallas y 0 segundos.
+
+---
+
+## Roadmap
+
+| Fase | Nombre | Estado |
+|------|--------|--------|
+| F1 | Foundation — HUD, Dashboard, Sidebar | ✅ 100% |
+| F2 | Atlas & Viewer — 14 vistas clínicas | ✅ 100% |
+| F3 | Motor de Protocolos — BLUE, FAST, VExUS, RUSH | ✅ 100% |
+| F4 | Training — Casos adaptativos, scoring, progreso | ✅ 100% |
+| F5 | Companion — Guard mode, workflow, diagnóstico diferencial | 🟡 60% |
+| F6 | Dashboard Instructor | ⚪ Pendiente |
+| F7 | SaaS — Auth, billing, multi-tenant | ⚪ Pendiente |
+
+**Versión actual: v0.6.4** — F5.4 Multi-window Companion en desarrollo.
+
+---
+
+## Stack tecnológico
+
+- **Next.js** (App Router) · TypeScript · Tailwind CSS
+- Export estático → GitHub Pages
+- Mobile-first (390px) · UI dark estilo workstation clínico
+
+---
+
+## Desarrollo local
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev       # localhost:3000
+npm run build     # export estático — verificar antes de cada push
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Reglas de arquitectura
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Las nuevas features van en `src/features/<nombre>/` o `src/components/clinical/<nombre>/`.  
+El shell, sidebar, Hero y tokens CSS están congelados en el commit `ea27bc6`.  
+Leer `AGENTS.md`, `BASELINE-UI.md` y `UI_REGISTRY.md` antes de contribuir.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Autor
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Christopher Godínez** · Medicina Crítica  
+Construido con Claude + Cursor
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*SONOCRÍTICO es una herramienta de educación clínica, no un sustituto del juicio médico.*
