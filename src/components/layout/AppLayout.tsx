@@ -57,14 +57,6 @@ function AppLayoutShell({ children, user }: { children: React.ReactNode; user: U
           <p className="brand-tagline">Visualiza el problema. Actúa con certeza.</p>
         </div>
 
-        <div className="app-sidebar__profile">
-          <UserMenu
-            displayName={user.name}
-            displayMeta={user.specialty}
-            initials={user.initials}
-          />
-        </div>
-
         <div className="app-sidebar__search">
           <button
             type="button"
@@ -94,7 +86,14 @@ function AppLayoutShell({ children, user }: { children: React.ReactNode; user: U
           ))}
         </nav>
 
-        <div className="app-sidebar__footer" aria-hidden style={{ minHeight: 4 }} />
+        <div className="app-sidebar__profile">
+          <UserMenu
+            compact
+            displayName={user.name}
+            displayMeta={user.specialty}
+            initials={user.initials}
+          />
+        </div>
       </aside>
 
       <main className="app-main">

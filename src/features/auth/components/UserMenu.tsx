@@ -14,6 +14,8 @@ type Props = {
   displayName?: string;
   displayMeta?: string;
   initials?: string;
+  /** Variante compacta en el fondo del sidebar. */
+  compact?: boolean;
 };
 
 function rolLabel(rol: string): string {
@@ -54,7 +56,7 @@ function resolveDisplayMeta(
   return displayMeta ?? "Companion";
 }
 
-export function UserMenu({ displayName, displayMeta, initials }: Props) {
+export function UserMenu({ displayName, displayMeta, initials, compact = false }: Props) {
   const router = useRouter();
   const auth = useAuthOptional();
   const [open, setOpen] = useState(false);
@@ -125,16 +127,19 @@ export function UserMenu({ displayName, displayMeta, initials }: Props) {
         aria-haspopup="menu"
         onClick={() => setOpen((v) => !v)}
       >
-        <span className={styles.authAvatar} aria-hidden>
+        <span
+          className={`${styles.authAvatar} ${compact ? styles.authAvatarCompact : ""}`}
+          aria-hidden
+        >
           {avatar}
         </span>
         <span className={styles.authUserText}>
           <span className={styles.authUserName}>{nombre}</span>
-          <span className={styles.authUserMeta}>{meta}</span>
+          {compact ? null : <span className={styles.authUserMeta}>{meta}</span>}
         </span>
-        {user ? (
-          <Chip variant={user.plan === "pro" ? "brand" : "gray"}>
-            {user.plan}
+        {user || compact ? (
+          <Chip variant={(user?.plan ?? "free") === "pro" ? "brand" : "gray"}>
+            {(user?.plan ?? "free").toUpperCase()}
           </Chip>
         ) : null}
         <ChevronUp
