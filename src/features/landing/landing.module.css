@@ -1,256 +1,192 @@
-/* Scoped tokens so the landing renders dark even if :root from globals.css fails to load */
-.landingPage {
-  --bg-primary: #0b0e12;
-  --bg-card: #11151b;
-  --bg-elevated: #171c24;
-  --bg-border: rgba(255, 255, 255, 0.04);
-  --text-primary: #f5f7fa;
-  --text-secondary: #b7c0cc;
-  --text-muted: #7e8897;
-  --text-faint: #5c6573;
-  --accent: #8fa7c4;
-  --accent-muted: rgba(143, 167, 196, 0.1);
-  --accent-border: rgba(143, 167, 196, 0.18);
-  --btn-primary-bg: #5d7396;
-  --btn-primary-text: #f5f7fa;
-  --surface-glass: rgba(255, 255, 255, 0.03);
-  --radius-sm: 8px;
-  --motion-fast: 140ms cubic-bezier(0.4, 0, 0.2, 1);
-  --focus-outline-color: rgba(143, 167, 196, 0.45);
-  --focus-outline-offset: 2px;
-  --shadow-inset: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+/* Landing — estilos aislados (prefijo landing*), sin tokens del dashboard */
 
+.landingPage {
   min-height: 100vh;
-  background: #0b0e12;
-  background: var(--bg-primary);
-  color: #f5f7fa;
-  color: var(--text-primary);
-  font-family: var(--font-ibm-plex-sans, "IBM Plex Sans"), system-ui, sans-serif;
+  background: #0a0a0a;
+  color: #f0f4f8;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 .landingMain {
-  max-width: 480px;
+  width: 100%;
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 24px 16px 48px;
+  padding: 0 20px 48px;
+  box-sizing: border-box;
 }
+
+/* —— Hero —— */
 
 .landingHero {
   text-align: center;
-  padding: 32px 0 40px;
+  padding-top: 80px;
+  margin-bottom: 80px;
 }
 
-.landingHeroEmoji {
+.landingHeroLogo {
   display: block;
-  font-size: 40px;
+  font-size: 48px;
   line-height: 1;
-  margin-bottom: 12px;
+  margin: 0 0 20px;
 }
 
 .landingHeroTitle {
-  margin: 0 0 12px;
-  font-family: var(--font-bebas, "Bebas Neue"), sans-serif;
-  font-size: clamp(42px, 12vw, 56px);
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  line-height: 0.95;
-  color: var(--text-primary, #f5f7fa);
+  margin: 0 0 16px;
+  font-size: clamp(40px, 10vw, 64px);
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1.05;
+  color: #f0f4f8;
 }
 
-.landingHeroAccent {
-  color: var(--accent, #8fa7c4);
-}
-
-.landingTagline {
-  margin: 0 auto 28px;
-  max-width: 28ch;
-  font-size: 15px;
-  line-height: 1.5;
-  color: var(--text-secondary, #b7c0cc);
-}
-
-.landingBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  min-width: 44px;
-  padding: 12px 24px;
-  border: none;
-  border-radius: var(--radius-sm, 8px);
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    background var(--motion-fast, 140ms ease),
-    color var(--motion-fast, 140ms ease),
-    border-color var(--motion-fast, 140ms ease);
+.landingHeroTagline {
+  margin: 0 auto 32px;
+  max-width: 22ch;
+  font-size: clamp(17px, 4.5vw, 20px);
+  line-height: 1.4;
+  color: #8fa7c4;
 }
 
 .landingBtnPrimary {
-  background: var(--btn-primary-bg, #5d7396);
-  color: var(--btn-primary-text, #f5f7fa);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  min-width: 44px;
+  padding: 14px 32px;
+  background: #4a9eff;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.landingBtnPrimary:active {
+  transform: scale(0.98);
 }
 
 .landingBtnPrimary:focus-visible {
-  outline: 1px solid var(--focus-outline-color, rgba(143, 167, 196, 0.45));
-  outline-offset: var(--focus-outline-offset, 2px);
+  outline: 2px solid #4a9eff;
+  outline-offset: 3px;
 }
 
-.landingBtnGhost {
-  background: var(--surface-glass, rgba(255, 255, 255, 0.03));
-  color: var(--accent, #8fa7c4);
-  border: 1px solid var(--accent-border, rgba(143, 167, 196, 0.18));
-}
-
-.landingBtnGhost:focus-visible {
-  outline: 1px solid var(--focus-outline-color, rgba(143, 167, 196, 0.45));
-  outline-offset: var(--focus-outline-offset, 2px);
-}
+/* —— Secciones problema / solución —— */
 
 .landingSection {
-  padding: 28px 0;
-  border-top: 1px solid var(--bg-border, rgba(255, 255, 255, 0.04));
+  margin-bottom: 64px;
 }
 
-.landingSectionTitle {
-  margin: 0 0 6px;
-  font-size: 11px;
+.landingSectionLabel {
+  margin: 0 0 8px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-muted, #7e8897);
+  color: #6b7a8d;
+  text-align: center;
 }
 
-.landingSectionHeadline {
-  margin: 0 0 18px;
-  font-size: 22px;
-  font-weight: 600;
+.landingSectionHeading {
+  margin: 0 0 28px;
+  font-size: clamp(22px, 5vw, 28px);
+  font-weight: 700;
   line-height: 1.2;
-  color: var(--text-primary, #f5f7fa);
+  color: #f0f4f8;
+  text-align: center;
 }
 
-.landingCardGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.landingGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
 
 .landingCard {
-  padding: 16px 14px;
-  border: 1px solid var(--bg-border, rgba(255, 255, 255, 0.04));
-  border-radius: var(--radius-sm, 8px);
-  background: var(--bg-card, #11151b);
-  box-shadow: var(--shadow-inset, 0 1px 0 rgba(255, 255, 255, 0.04) inset);
+  background: #111111;
+  border: 1px solid #242424;
+  border-radius: 16px;
+  padding: 28px;
+  box-sizing: border-box;
 }
 
 .landingCardTitle {
-  margin: 0 0 6px;
-  font-size: 15px;
+  margin: 0 0 10px;
+  font-size: 18px;
   font-weight: 600;
-  color: var(--text-primary, #f5f7fa);
+  line-height: 1.3;
+  color: #f0f4f8;
 }
 
 .landingCardText {
   margin: 0;
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--text-secondary, #b7c0cc);
-}
-
-.landingFeatureList {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.landingFeature {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  padding: 14px;
-  border: 1px solid var(--bg-border, rgba(255, 255, 255, 0.04));
-  border-radius: var(--radius-sm, 8px);
-  background: linear-gradient(
-    168deg,
-    var(--bg-card, #11151b) 0%,
-    var(--bg-elevated, #171c24) 100%
-  );
-}
-
-.landingFeatureIcon {
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-sm, 8px);
-  background: var(--accent-muted, rgba(143, 167, 196, 0.1));
-  border: 1px solid var(--accent-border, rgba(143, 167, 196, 0.18));
-  font-size: 18px;
-  line-height: 1;
-}
-
-.landingFeatureBody {
-  flex: 1;
-  min-width: 0;
-}
-
-.landingFeatureTitle {
-  margin: 0 0 4px;
   font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary, #f5f7fa);
+  line-height: 1.6;
+  color: #6b7a8d;
 }
 
-.landingFeatureText {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.45;
-  color: var(--text-muted, #7e8897);
+/* Solución: barra accent superior */
+.landingCardAccent {
+  border-top: 3px solid #4a9eff;
+  padding-top: 25px;
 }
+
+/* —— CTA final —— */
 
 .landingCta {
   text-align: center;
-  padding: 36px 16px 8px;
-  border-top: 1px solid var(--bg-border, rgba(255, 255, 255, 0.04));
+  padding: 80px 24px;
+  box-sizing: border-box;
 }
 
 .landingCtaTitle {
-  margin: 0 0 8px;
-  font-family: var(--font-bebas, "Bebas Neue"), sans-serif;
-  font-size: 28px;
-  font-weight: 400;
-  line-height: 1.05;
-  color: var(--text-primary, #f5f7fa);
+  margin: 0 0 28px;
+  font-size: clamp(28px, 7vw, 36px);
+  font-weight: 700;
+  line-height: 1.2;
+  color: #f0f4f8;
 }
 
-.landingCtaText {
-  margin: 0 0 20px;
-  font-size: 13px;
-  color: var(--text-secondary, #b7c0cc);
+.landingCtaActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 
-.landingFooter {
-  margin-top: 32px;
-  text-align: center;
-  font-size: 10px;
-  color: var(--text-faint, #5c6573);
-  letter-spacing: 0.04em;
+.landingLinkSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #6b7a8d;
+  text-decoration: none;
 }
 
-@media (min-width: 640px) {
+.landingLinkSecondary:focus-visible {
+  outline: 2px solid #6b7a8d;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media (min-width: 768px) {
   .landingMain {
-    padding: 40px 24px 64px;
+    padding: 0 32px 64px;
   }
 
-  .landingCardGrid {
-    display: grid;
+  .landingGrid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: 20px;
+  }
+
+  .landingHeroTagline {
+    max-width: none;
   }
 }

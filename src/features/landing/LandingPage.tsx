@@ -18,51 +18,42 @@ const PROBLEMS = [
 
 const SOLUTIONS = [
   {
-    icon: "🖼",
     title: "Atlas USG interactivo",
     text: "Hallazgos normales y patológicos con viewer POCUS, filmstrip y búsqueda clínica.",
   },
   {
-    icon: "📋",
     title: "Protocolos BLUE / FAST / VExUS / RUSH",
     text: "Árboles de decisión y checklists alineados a la práctica en UCI y urgencias.",
   },
   {
-    icon: "🩺",
     title: "Companion de guardia",
     text: "Modo guardia: queja → protocolo → atlas o calculadora sin perder contexto.",
   },
 ] as const;
 
-const LANDING_ROOT_STYLE = {
-  background: "var(--bg-primary, #0b0e12)",
-  color: "var(--text-primary, #f5f7fa)",
-  minHeight: "100vh",
-} as const;
-
 export function LandingPage() {
   return (
-    <div className={styles.landingPage} style={LANDING_ROOT_STYLE}>
+    <div className={styles.landingPage}>
       <main className={styles.landingMain}>
         <section className={styles.landingHero} aria-labelledby="landing-hero-title">
-          <span className={styles.landingHeroEmoji} aria-hidden>
+          <span className={styles.landingHeroLogo} aria-hidden>
             🫁
           </span>
           <h1 className={styles.landingHeroTitle} id="landing-hero-title">
-            <span className={styles.landingHeroAccent}>SONO</span>CRÍTICO
+            SONOCRÍTICO
           </h1>
-          <p className={styles.landingTagline}>Visualiza el problema. Actúa con certeza.</p>
-          <Link href="/dashboard" className={`${styles.landingBtn} ${styles.landingBtnPrimary}`}>
+          <p className={styles.landingHeroTagline}>Visualiza el problema. Actúa con certeza.</p>
+          <Link href="/dashboard" className={styles.landingBtnPrimary}>
             Abrir app
           </Link>
         </section>
 
         <section className={styles.landingSection} aria-labelledby="landing-problem-title">
-          <p className={styles.landingSectionTitle}>El problema</p>
-          <h2 className={styles.landingSectionHeadline} id="landing-problem-title">
+          <p className={styles.landingSectionLabel}>El problema</p>
+          <h2 className={styles.landingSectionHeading} id="landing-problem-title">
             POCUS en guardia, sin sistema
           </h2>
-          <div className={styles.landingCardGrid}>
+          <div className={styles.landingGrid}>
             {PROBLEMS.map((item) => (
               <article key={item.title} className={styles.landingCard}>
                 <h3 className={styles.landingCardTitle}>{item.title}</h3>
@@ -73,43 +64,36 @@ export function LandingPage() {
         </section>
 
         <section className={styles.landingSection} aria-labelledby="landing-solution-title">
-          <p className={styles.landingSectionTitle}>La solución</p>
-          <h2 className={styles.landingSectionHeadline} id="landing-solution-title">
+          <p className={styles.landingSectionLabel}>La solución</p>
+          <h2 className={styles.landingSectionHeading} id="landing-solution-title">
             Companion USG en una sola app
           </h2>
-          <ul className={styles.landingFeatureList}>
+          <div className={styles.landingGrid}>
             {SOLUTIONS.map((item) => (
-              <li key={item.title} className={styles.landingFeature}>
-                <span className={styles.landingFeatureIcon} aria-hidden>
-                  {item.icon}
-                </span>
-                <div className={styles.landingFeatureBody}>
-                  <h3 className={styles.landingFeatureTitle}>{item.title}</h3>
-                  <p className={styles.landingFeatureText}>{item.text}</p>
-                </div>
-              </li>
+              <article
+                key={item.title}
+                className={`${styles.landingCard} ${styles.landingCardAccent}`}
+              >
+                <h3 className={styles.landingCardTitle}>{item.title}</h3>
+                <p className={styles.landingCardText}>{item.text}</p>
+              </article>
             ))}
-          </ul>
+          </div>
         </section>
 
         <section className={styles.landingCta} aria-labelledby="landing-cta-title">
           <h2 className={styles.landingCtaTitle} id="landing-cta-title">
-            Listo para la guardia
+            Listo para usarlo en guardia
           </h2>
-          <p className={styles.landingCtaText}>
-            Acceso demo sin backend — mismo HUD clínico en tu bolsillo.
-          </p>
-          <Link href="/dashboard" className={`${styles.landingBtn} ${styles.landingBtnPrimary}`}>
-            Comenzar gratis
-          </Link>
-          <p style={{ marginTop: 14 }}>
-            <Link href="/login" className={`${styles.landingBtn} ${styles.landingBtnGhost}`}>
+          <div className={styles.landingCtaActions}>
+            <Link href="/dashboard" className={styles.landingBtnPrimary}>
+              Abrir app
+            </Link>
+            <Link href="/login" className={styles.landingLinkSecondary}>
               Iniciar sesión
             </Link>
-          </p>
+          </div>
         </section>
-
-        <footer className={styles.landingFooter}>SONOCRÍTICO Companion · USG crítico</footer>
       </main>
     </div>
   );
