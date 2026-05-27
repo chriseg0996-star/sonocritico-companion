@@ -1,4 +1,4 @@
-/** Prefijo para GitHub Pages (ej. /sonocritico-companion). Vacío en dev y Vercel. */
+/** Prefijo opcional vía NEXT_PUBLIC_BASE_PATH. Vacío con dominio propio en raíz. */
 export const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 /** Rutas y assets en public/ bajo subpath del repo. */
