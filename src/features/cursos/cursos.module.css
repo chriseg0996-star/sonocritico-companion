@@ -1,0 +1,403 @@
+/* Scoped tokens — no editar globals.css */
+.cursoPage {
+  --color-surface: #1a1f2e;
+  --color-surface-elevated: #222836;
+  --color-accent: #38bdf8;
+  --color-accent-muted: rgba(56, 189, 248, 0.12);
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-text: #f0f4f8;
+  --color-text-muted: #8fa7c4;
+  --color-text-faint: #6b7a8d;
+  --color-success: #3ecf8e;
+  --color-danger: #ff6b6b;
+
+  min-height: 100vh;
+  background: #0b0e12;
+  color: var(--color-text);
+  font-family: var(--font-ibm-plex-sans, "IBM Plex Sans"), system-ui, sans-serif;
+}
+
+.cursoShell {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 390px) {
+  .cursoShell {
+    padding: 24px 20px 56px;
+  }
+}
+
+.cursoBack {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.cursoBack:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.cursoHero {
+  background: linear-gradient(168deg, var(--color-surface) 0%, #141820 100%);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 24px 20px;
+  margin-bottom: 20px;
+}
+
+.cursoEyebrow {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.cursoTitle {
+  margin: 0 0 12px;
+  font-size: clamp(22px, 5.5vw, 28px);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-text);
+}
+
+.cursoDesc {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.cursoMetaGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 480px) {
+  .cursoMetaGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.cursoMetaItem {
+  padding: 12px 14px;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+}
+
+.cursoMetaLabel {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.cursoMetaValue {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.cursoPriceBlock {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+.cursoPrice {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-accent);
+  line-height: 1;
+}
+
+.cursoPriceNote {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--color-text-faint);
+}
+
+.cursoSection {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 22px 18px;
+  margin-bottom: 16px;
+}
+
+.cursoSectionTitle {
+  margin: 0 0 14px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.cursoTemario {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cursoTemarioItem {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--color-text-muted);
+}
+
+.cursoTemarioItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.cursoTemarioBullet {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  margin-top: 7px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.cursoForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cursoField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cursoLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.cursoInput,
+.cursoSelect {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  box-sizing: border-box;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  font-size: 16px;
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.cursoInput:focus,
+.cursoSelect:focus {
+  border-color: var(--color-accent);
+}
+
+.cursoInput::placeholder {
+  color: var(--color-text-faint);
+}
+
+.cursoPhoneRow {
+  display: flex;
+  gap: 8px;
+}
+
+.cursoPhonePrefix {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  min-height: 48px;
+  padding: 0 12px;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.cursoPhoneRow .cursoInput {
+  flex: 1;
+}
+
+.cursoToggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 48px;
+  padding: 12px 14px;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+}
+
+.cursoToggleLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.cursoToggleHint {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--color-text-faint);
+}
+
+.cursoToggle {
+  position: relative;
+  flex-shrink: 0;
+  width: 48px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 14px;
+  background: var(--color-border);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.cursoToggleOn {
+  background: var(--color-accent);
+}
+
+.cursoToggleKnob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.15s ease;
+}
+
+.cursoToggleOn .cursoToggleKnob {
+  transform: translateX(20px);
+}
+
+.cursoResidentPrice {
+  padding: 12px 14px;
+  background: var(--color-accent-muted);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 10px;
+  font-size: 14px;
+  color: var(--color-accent);
+}
+
+.cursoResidentPrice strong {
+  font-weight: 700;
+}
+
+.cursoSubmit {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 4px;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
+  background: var(--color-accent);
+  font-size: 16px;
+  font-weight: 700;
+  color: #0b0e12;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.cursoSubmit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.cursoSubmit:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.cursoStatus {
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.cursoStatusSending {
+  background: var(--color-accent-muted);
+  color: var(--color-accent);
+}
+
+.cursoStatusSuccess {
+  background: rgba(62, 207, 142, 0.12);
+  color: var(--color-success);
+}
+
+.cursoStatusError {
+  background: rgba(255, 107, 107, 0.12);
+  color: var(--color-danger);
+}
+
+.cursoPayBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 14px 20px;
+  border: 1px solid var(--color-accent);
+  border-radius: 12px;
+  background: transparent;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-accent);
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.cursoPayBtn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.cursoNotFound {
+  text-align: center;
+  padding: 48px 20px;
+}
+
+.cursoNotFoundTitle {
+  margin: 0 0 12px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.cursoNotFoundText {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
