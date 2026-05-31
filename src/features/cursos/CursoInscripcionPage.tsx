@@ -96,18 +96,14 @@ export function CursoInscripcionPage({ slug }: Props) {
     };
 
     try {
-      const res = await fetch(webhook, {
+      await fetch(webhook, {
         method: "POST",
+        mode: "no-cors",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
-      const data = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
-
-      if (!res.ok || !data?.ok) {
-        throw new Error(data?.error ?? `Error ${res.status}`);
-      }
-
+      // Con no-cors la respuesta es opaca; asumir éxito si no hay excepción
       setSubmitState("success");
     } catch (err) {
       setSubmitState("error");
