@@ -67,12 +67,8 @@ export function CursoInscripcionPage({ slug }: Props) {
     setErrorMessage("");
     if (!curso) return;
 
-    const webhook = process.env.NEXT_PUBLIC_SHEETS_WEBHOOK?.trim();
-    if (!webhook) {
-      setSubmitState("error");
-      setErrorMessage("Webhook no configurado (NEXT_PUBLIC_SHEETS_WEBHOOK).");
-      return;
-    }
+    const webhookUrl =
+      "https://script.google.com/macros/s/AKfycbzMJh_7UaHXP1v-MvHlMN_Vql0Q8G-61ab_LY2A-PuG0CNDxUxo-v78dmCZVY3IQzw-oQ/exec";
 
     if (!form.nombre.trim() || !form.email.trim()) {
       setSubmitState("error");
@@ -96,7 +92,7 @@ export function CursoInscripcionPage({ slug }: Props) {
     };
 
     try {
-      await fetch(webhook, {
+      await fetch(webhookUrl, {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
