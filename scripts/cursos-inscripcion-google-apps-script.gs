@@ -2,7 +2,7 @@
  * Google Apps Script — Inscripciones SONOCRÍTICO
  *
  * 1. Crear Google Sheet con columnas (fila 1):
- *    Timestamp | Nombre | Especialidad | Institución | Email | WhatsApp | EsResidente | CodigoDescuento | Curso | Slug
+ *    Timestamp | Nombre | Especialidad | Institución | Email | WhatsApp | EsResidente | CodigoDescuento | Curso | Slug | Referencia
  * 2. Extensiones → Apps Script → pegar este código
  * 3. Implementar → Nueva implementación → Aplicación web
  *    - Ejecutar como: Yo
@@ -26,6 +26,7 @@ function doPost(e) {
       body.codigoDescuento || "",
       body.curso || "",
       body.slug || "",
+      body.referencia || "",
     ];
 
     sheet.appendRow(row);

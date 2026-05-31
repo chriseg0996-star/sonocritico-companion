@@ -31,11 +31,19 @@ type Props = {
   slug: string;
 };
 
+function generateReferencia(): string {
+  const digits = Math.floor(Math.random() * 10000)
+    .toString()
+    .padStart(4, "0");
+  return `SONO-${digits}`;
+}
+
 export function CursoInscripcionPage({ slug }: Props) {
   const curso = useMemo(() => getCursoBySlug(slug), [slug]);
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [referencia, setReferencia] = useState("");
 
   if (!curso) {
     return (
@@ -78,6 +86,8 @@ export function CursoInscripcionPage({ slug }: Props) {
 
     setSubmitState("sending");
 
+    const referenciaPago = generateReferencia();
+
     const payload = {
       nombre: form.nombre.trim(),
       especialidad: form.especialidad.trim(),
@@ -86,6 +96,7 @@ export function CursoInscripcionPage({ slug }: Props) {
       whatsapp: `+52${form.whatsapp.replace(/\D/g, "")}`,
       esResidente: form.esResidente,
       codigoDescuento: form.codigoDescuento.trim(),
+      referencia: referenciaPago,
       curso: curso.titulo,
       slug: curso.slug,
       precio: precioActual,
@@ -100,6 +111,7 @@ export function CursoInscripcionPage({ slug }: Props) {
       });
 
       // Con no-cors la respuesta es opaca; asumir éxito si no hay excepción
+      setReferencia(referenciaPago);
       setSubmitState("success");
     } catch (err) {
       setSubmitState("error");
@@ -292,9 +304,19 @@ export function CursoInscripcionPage({ slug }: Props) {
             ) : null}
 
             {submitState === "success" ? (
-              <p className={`${styles.cursoStatus} ${styles.cursoStatusSuccess}`} role="status">
-                Inscripción registrada. Completa el pago para confirmar tu lugar.
-              </p>
+              <div className={styles.cursoSuccessBlock} role="status">
+                <p className={`${styles.cursoStatus} ${styles.cursoStatusSuccess}`}>
+                  Inscripción registrada exitosamente
+                </p>
+                <div className={styles.cursoReferenciaCard}>
+                  <p className={styles.cursoReferenciaLabel}>Tu número de referencia de pago</p>
+                  <p className={styles.cursoReferenciaCode}>{referencia}</p>
+                  <p className={styles.cursoReferenciaHint}>
+                    Anota este número. Al pagar en Mercado Pago, escríbelo en el campo
+                    &quot;Concepto&quot; o &quot;Referencia&quot;
+                  </p>
+                </div>
+              </div>
             ) : null}
 
             {submitState === "error" ? (
